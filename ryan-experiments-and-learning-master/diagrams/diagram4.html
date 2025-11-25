@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Conflicts Map - Interactive | Payerset</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="shared/diagram-common.css">
+    <style>
+        /* Diagram 4 Specific Styles */
+        .conflict-selector {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .conflict-btn {
+            padding: 8px 14px;
+            border: 2px solid var(--color-problem);
+            background: white;
+            color: var(--color-problem);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .conflict-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .conflict-btn.active {
+            background: var(--color-problem);
+            color: white;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--payerset-blue);
+            background: white;
+            color: var(--payerset-blue);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-btn:hover {
+            background: #fff0f0;
+        }
+
+        .toggle-btn.active {
+            background: #c0392b;
+            color: white;
+        }
+
+        .legend-symbol {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid #333;
+        }
+
+        .conflict-panel {
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffebeb 100%);
+            border-bottom: 2px solid #ffcccc;
+        }
+
+        .conflict-card {
+            background: white;
+            border-radius: 6px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #e74c3c;
+        }
+
+        .conflict-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+
+        .conflict-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .detail-box {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        .detail-box h5 {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .detail-box p {
+            font-size: 13px;
+            color: #333;
+            margin: 0;
+        }
+
+        .stakes {
+            background: #fff9e6;
+            border-left-color: #f39c12;
+        }
+
+        .current-winner {
+            background: #ffe6e6;
+            border-left-color: #e74c3c;
+        }
+
+        .transparency-impact {
+            background: #e6ffe6;
+            border-left-color: #27ae60;
+        }
+
+        .tooltip .wants {
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .tooltip .weapon {
+            color: var(--color-problem);
+            font-style: italic;
+        }
+
+        .tooltip li:before {
+            content: "⚔";
+            position: absolute;
+            left: 0;
+            color: var(--color-problem);
+        }
+
+        .resolution-box {
+            margin-top: 10px;
+            padding: 12px;
+            background: rgba(39, 174, 96, 0.1);
+            border-left: 4px solid #27ae60;
+            border-radius: 4px;
+        }
+
+        .resolution-box strong {
+            color: #27ae60;
+        }
+
+        @media (max-width: 768px) {
+            .conflict-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="diagram-nav">
+        <div class="nav-left">
+            <a href="../index.html" class="nav-logo">Payerset</a>
+            <span class="nav-divider">|</span>
+            <span class="diagram-title">Conflicts Map</span>
+        </div>
+        <div class="nav-right">
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-toggle">Diagrams <i class="fas fa-chevron-down"></i></button>
+                <div class="nav-dropdown-menu">
+                    <a href="diagram1.html" class="nav-dropdown-item"><i class="fas fa-network-wired"></i> Ecosystem Map</a>
+                    <a href="diagram2.html" class="nav-dropdown-item"><i class="fas fa-dollar-sign"></i> Money Flows</a>
+                    <a href="diagram3.html" class="nav-dropdown-item"><i class="fas fa-bolt"></i> Power Map</a>
+                    <a href="diagram4.html" class="nav-dropdown-item active"><i class="fas fa-shield-alt"></i> Conflicts Map</a>
+                    <a href="diagram5.html" class="nav-dropdown-item"><i class="fas fa-sync-alt"></i> Transformation</a>
+                    <a href="diagram-test.html" class="nav-dropdown-item"><i class="fas fa-flask"></i> Data Explorer <span class="alpha-badge">Alpha</span></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="diagram-header">
+            <h1>⚔️ Healthcare's Seven Wars</h1>
+            <p>Adversarial relationships, misaligned incentives, and how transparency changes the battlefield</p>
+        </div>
+
+        <div class="controls">
+            <div>
+                <div style="margin-bottom: 8px; font-weight: 600; font-size: 14px;">Select Conflict:</div>
+                <div class="conflict-selector">
+                    <button class="conflict-btn active" data-conflict="all">
+                        All Conflicts
+                    </button>
+                    <button class="conflict-btn" data-conflict="0">
+                        1. Employer vs TPA
+                    </button>
+                    <button class="conflict-btn" data-conflict="1">
+                        2. Employer vs Consultant
+                    </button>
+                    <button class="conflict-btn" data-conflict="2">
+                        3. Employer vs PBM
+                    </button>
+                    <button class="conflict-btn" data-conflict="3">
+                        4. Employer vs Hospital
+                    </button>
+                    <button class="conflict-btn" data-conflict="4">
+                        5. Good vs Bad Providers
+                    </button>
+                    <button class="conflict-btn" data-conflict="5">
+                        6. Patient vs System
+                    </button>
+                    <button class="conflict-btn" data-conflict="6">
+                        7. Independent vs Consolidated
+                    </button>
+                </div>
+            </div>
+
+            <div class="view-toggle">
+                <span style="font-size: 13px; font-weight: 600;">Show:</span>
+                <button class="toggle-btn active" data-view="current">
+                    Current State
+                </button>
+                <button class="toggle-btn" data-view="transparency">
+                    With Transparency
+                </button>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-symbol" style="background: #e74c3c;"></div>
+                    <span>Adversary</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol" style="background: #f39c12;"></div>
+                    <span>Stakes</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol" style="background: #95a5a6;"></div>
+                    <span>Weapon</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">Layout Controls</div>
+                <div class="save-load-buttons">
+                    <button id="saveLayout" class="action-btn">
+                        <i class="fas fa-save"></i> Save Layout
+                    </button>
+                    <button id="resetLayout" class="action-btn secondary">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                    <button id="exportLayout" class="action-btn secondary">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button id="importLayout" class="action-btn secondary">
+                        <i class="fas fa-upload"></i> Import
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="conflict-panel" id="conflict-panel">
+            <!-- Conflict details will be dynamically inserted here -->
+        </div>
+
+        <div id="cy"></div>
+        <div class="tooltip" id="tooltip"></div>
+
+        <div class="footer">
+            <strong>Key Insight:</strong> Almost every healthcare problem stems from misaligned incentives creating adversarial relationships.
+            <div class="resolution-box" id="resolution-message">
+                <strong>Transparency Changes Everything:</strong> When information asymmetry is eliminated, 
+                conflicts resolve through market forces rather than extraction.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Conflict data structure
+        const conflictData = {
+            conflicts: [
+                // Conflict 0: Employer vs TPA
+                {
+                    id: 0,
+                    name: "Employer vs. TPA/Carrier",
+                    subtitle: "Fair Prices vs. Spread Pricing",
+                    current: {
+                        description: "Employer wants fair rates. TPA wants maximum spread.",
+                        stakes: "$8M spread on $75M spend (10-11% hidden markup)",
+                        currentWinner: "TPA (Employer doesn't know about spread)",
+                        employerWeapons: ["Market power (underused)", "Fiduciary duty (post-CAA)", "Can switch vendors", "Can direct contract"],
+                        tpaWeapons: ["Data withholding", "Spread pricing", "Float income", "Contract lock-in", "Complexity"],
+                        nodes: [
+                            { id: 'e0-employer', label: 'EMPLOYER', side: 'left', type: 'combatant', wants: 'Fair prices, transparency' },
+                            { id: 'e0-tpa', label: 'TPA/CARRIER', side: 'right', type: 'combatant', wants: 'Maximum spread, opacity' },
+                            { id: 'e0-stakes', label: 'STAKES:\n$8M Spread', type: 'stakes', center: true },
+                            { id: 'e0-w1', label: 'Market Power', side: 'left', type: 'weapon' },
+                            { id: 'e0-w2', label: 'Fiduciary Duty', side: 'left', type: 'weapon' },
+                            { id: 'e0-w3', label: 'Data Withhold', side: 'right', type: 'weapon' },
+                            { id: 'e0-w4', label: 'Spread Pricing', side: 'right', type: 'weapon' },
+                            { id: 'e0-w5', label: 'Complexity', side: 'right', type: 'weapon' }
+                        ],
+                        edges: [
+                            { source: 'e0-employer', target: 'e0-tpa', label: 'Pays but being overcharged', type: 'conflict' },
+                            { source: 'e0-employer', target: 'e0-w1', label: 'Has but underuses', type: 'has' },
+                            { source: 'e0-employer', target: 'e0-w2', label: 'Has (post-2021)', type: 'has' },
+                            { source: 'e0-tpa', target: 'e0-w3', label: 'Uses', type: 'uses' },
+                            { source: 'e0-tpa', target: 'e0-w4', label: 'Uses', type: 'uses' },
+                            { source: 'e0-tpa', target: 'e0-w5', label: 'Uses', type: 'uses' },
+                            { source: 'e0-w1', target: 'e0-stakes', label: 'Could win', type: 'attacks' },
+                            { source: 'e0-w2', target: 'e0-stakes', label: 'Could win', type: 'attacks' },
+                            { source: 'e0-w3', target: 'e0-stakes', label: 'Defending', type: 'defends' },
+                            { source: 'e0-w4', target: 'e0-stakes', label: 'Defending', type: 'defends' },
+                            { source: 'e0-stakes', target: 'e0-tpa', label: 'Currently captured by', type: 'winner' }
+                        ]
+                    },
+                    transparency: {
+                        description: "Transparency exposes spread. Employer takes action.",
+                        stakes: "$8M recovered through accountability",
+                        currentWinner: "Employer (Data enables leverage)",
+                        resolution: "TPA forced to eliminate spread or lose business. Direct contracting becomes attractive alternative.",
+                        nodes: [
+                            { id: 'e0-employer', label: 'EMPLOYER', side: 'left', type: 'combatant', wants: 'Fair prices, transparency' },
+                            { id: 'e0-tpa', label: 'TPA/CARRIER', side: 'right', type: 'combatant', wants: 'Adapt or lose business' },
+                            { id: 'e0-stakes', label: 'STAKES:\n$8M Recovered', type: 'stakes', center: true },
+                            { id: 'e0-w1', label: 'Market Power\n✓ USING', side: 'left', type: 'weapon-active' },
+                            { id: 'e0-w2', label: 'Transparency Data\n✓ USING', side: 'left', type: 'weapon-active' },
+                            { id: 'e0-w3', label: 'Direct Contracts\n✓ USING', side: 'left', type: 'weapon-active' },
+                            { id: 'e0-w4', label: 'Data Withhold\n❌ Illegal', side: 'right', type: 'weapon-neutralized' },
+                            { id: 'e0-w5', label: 'Spread Pricing\n❌ Exposed', side: 'right', type: 'weapon-neutralized' }
+                        ],
+                        edges: [
+                            { source: 'e0-employer', target: 'e0-tpa', label: 'Demands accountability', type: 'winning' },
+                            { source: 'e0-employer', target: 'e0-w1', label: 'Using effectively', type: 'uses-active' },
+                            { source: 'e0-employer', target: 'e0-w2', label: 'Using effectively', type: 'uses-active' },
+                            { source: 'e0-employer', target: 'e0-w3', label: 'Using effectively', type: 'uses-active' },
+                            { source: 'e0-tpa', target: 'e0-w4', label: 'Neutralized', type: 'neutralized' },
+                            { source: 'e0-tpa', target: 'e0-w5', label: 'Neutralized', type: 'neutralized' },
+                            { source: 'e0-w1', target: 'e0-stakes', label: 'Winning', type: 'attacks' },
+                            { source: 'e0-w2', target: 'e0-stakes', label: 'Winning', type: 'attacks' },
+                            { source: 'e0-stakes', target: 'e0-employer', label: 'Captured by', type: 'winner' }
+                        ]
+                    }
+                },
+
+                // Conflict 1: Employer vs Consultant
+                {
+                    id: 1,
+                    name: "Employer vs. Consultant",
+                    subtitle: "Unbiased Advice vs. Commission",
+                    current: {
+                        description: "Employer wants unbiased advice. Consultant wants commission from carriers.",
+                        stakes: "5-8% commission on $100M = $5-8M annually",
+                        currentWinner: "Conflicted Consultant (Employer doesn't know about commission)",
+                        employerWeapons: ["Can demand fee-only", "Can request disclosure", "Can switch consultants", "Fiduciary standard"],
+                        consultantWeapons: ["Relationships (years of trust)", "Complexity leverage", "Information asymmetry", "Undisclosed commissions"],
+                        nodes: [
+                            { id: 'e1-employer', label: 'EMPLOYER', side: 'left', type: 'combatant' },
+                            { id: 'e1-consultant', label: 'CONFLICTED\nCONSULTANT', side: 'right', type: 'combatant' },
+                            { id: 'e1-stakes', label: 'STAKES:\n$5-8M Commission', type: 'stakes', center: true },
+                            { id: 'e1-w1', label: 'Demand Fee-Only', side: 'left', type: 'weapon' },
+                            { id: 'e1-w2', label: 'Request Disclosure', side: 'left', type: 'weapon' },
+                            { id: 'e1-w3', label: 'Trust/Relationships', side: 'right', type: 'weapon' },
+                            { id: 'e1-w4', label: 'Hidden Commissions', side: 'right', type: 'weapon' },
+                            { id: 'e1-w5', label: 'Complexity', side: 'right', type: 'weapon' }
+                        ],
+                        edges: [
+                            { source: 'e1-employer', target: 'e1-consultant', label: 'Trusts but being misled', type: 'conflict' },
+                            { source: 'e1-employer', target: 'e1-w1', label: 'Could demand', type: 'has' },
+                            { source: 'e1-employer', target: 'e1-w2', label: 'Could demand', type: 'has' },
+                            { source: 'e1-consultant', target: 'e1-w3', label: 'Uses', type: 'uses' },
+                            { source: 'e1-consultant', target: 'e1-w4', label: 'Uses', type: 'uses' },
+                            { source: 'e1-consultant', target: 'e1-w5', label: 'Uses', type: 'uses' },
+                            { source: 'e1-stakes', target: 'e1-consultant', label: 'Currently captured by', type: 'winner' }
+                        ]
+                    },
+                    transparency: {
+                        description: "Transparency reveals conflicts. Employer demands fee-only or switches.",
+                        stakes: "$5-8M reallocated to aligned advice",
+                        currentWinner: "Employer (Can see conflicts, can choose unconflicted)",
+                        resolution: "Conflicted consultants lose business. Unconflicted consultants prove value with data.",
+                        nodes: [
+                            { id: 'e1-employer', label: 'EMPLOYER', side: 'left', type: 'combatant' },
+                            { id: 'e1-consultant', label: 'CONFLICTED\nCONSULTANT', side: 'right', type: 'combatant' },
+                            { id: 'e1-good-consultant', label: 'UNCONFLICTED\nCONSULTANT', side: 'left', type: 'ally' },
+                            { id: 'e1-stakes', label: 'STAKES:\nAligned Advice', type: 'stakes', center: true },
+                            { id: 'e1-w1', label: 'Transparency Data\n✓ USING', side: 'left', type: 'weapon-active' },
+                            { id: 'e1-w2', label: 'Conflict Exposure\n✓ USING', side: 'left', type: 'weapon-active' },
+                            { id: 'e1-w3', label: 'Trust/Relationships\n❌ Broken', side: 'right', type: 'weapon-neutralized' },
+                            { id: 'e1-w4', label: 'Hidden Commissions\n❌ Exposed', side: 'right', type: 'weapon-neutralized' }
+                        ],
+                        edges: [
+                            { source: 'e1-employer', target: 'e1-good-consultant', label: 'Hires aligned advisor', type: 'ally' },
+                            { source: 'e1-employer', target: 'e1-consultant', label: 'Fires or demands reform', type: 'winning' },
+                            { source: 'e1-employer', target: 'e1-w1', label: 'Using', type: 'uses-active' },
+                            { source: 'e1-employer', target: 'e1-w2', label: 'Using', type: 'uses-active' },
+                            { source: 'e1-good-consultant', target: 'e1-stakes', label: 'Provides', type: 'provides' },
+                            { source: 'e1-stakes', target: 'e1-employer', label: 'Captured by', type: 'winner' }
+                        ]
+                    }
+                },
+
+                // Conflict 2: Employer vs PBM
+                {
+                    id: 2,
+                    name: "Employer vs. PBM",
+                    subtitle: "Low Drug Costs vs. Spread Pricing",
+                    current: {
+                        description: "Employer wants low net drug costs. PBM wants high spread and rebate retention.",
+                        stakes: "$4M spread + $2M rebates = $6M on $15M pharmacy spend (40%!)",
+                        currentWinner: "PBM (Employer doesn't know actual drug costs)",
+                        employerWeapons: ["NADAC benchmarking", "Pass-through contracts", "Formulary control", "Switch to Cost Plus Drugs"],
+                        pbmWeapons: ["Spread pricing (100-600%)", "Rebate retention", "DIR fees", "MAC list opacity", "Specialty pharmacy mandates"],
+                        nodes: [
+                            { id: 'e2-employer', label: 'EMPLOYER', side: 'left', type: 'combatant' },
+                            { id: 'e2-pbm', label: 'TRADITIONAL PBM', side: 'right', type: 'combatant' },
+                            { id: 'e2-stakes', label: 'STAKES:\n$6M Spread+Rebates', type: 'stakes', center: true },
+                            { id: 'e2-w1', label: 'NADAC Benchmark', side: 'left', type: 'weapon' },
+                            { id: 'e2-w2', label: 'Pass-Through Contract', side: 'left', type: 'weapon' },
+                            { id: 'e2-w3', label: 'Spread Pricing', side: 'right', type: 'weapon' },
+                            { id: 'e2-w4', label: 'Rebate Retention', side: 'right', type: 'weapon' },
+                            { id: 'e2-w5', label: 'DIR Fees', side: 'right', type: 'weapon' },
+                            { id: 'e2-w6', label: 'Opaque Pricing', side: 'right', type: 'weapon' }
+                        ],
+                        edges: [
+                            { source: 'e2-employer', target: 'e2-pbm', label: 'Overpaying massively', type: 'conflict' },
+                            { source: 'e2-employer', target: 'e2-w1', label: 'Could use', type: 'has' },
+                            { source: 'e2-employer', target: 'e2-w2', label: 'Could demand', type: 'has' },
+                            { source: 'e2-pbm', target: 'e2-w3', label: 'Uses', type: 'uses' },
+                            { source: 'e2-pbm', target: 'e2-w4', label: 'Uses', type: 'uses' },
+                            { source: 'e2-pbm', target: 'e2-w5', label: 'Uses', type: 'uses' },
+                            { source: 'e2-pbm', target: 'e2-w6', label: 'Uses', type: 'uses' },
+                            { source: 'e2-stakes', target: 'e2-pbm', label: 'Currently captured by', type: 'winner' }
+                        ]
+                    },
+                    transparency: {
+                        description: "NADAC benchmarking exposes spread. Employers migrate to pass-through PBMs.",
+                        stakes: "$6M recovered, drugs at cost + transparent fee",
+                        currentWinner: "Employer (Transparency exposes massive spread)",
+                        resolution: "Traditional PBMs forced to reform or lose business. Pass-through model becomes standard.",
+                        nodes: [
+                            { id: 'e2-employer', label: 'EMPLOYER', side: 'left', type: 'combatant' },
+                            { id: 'e2-pbm', label: 'TRADITIONAL PBM', side: 'right', type: 'combatant' },
+                            { id: 'e2-passthru', label: 'PASS-THROUGH\nPBM', side: 'left', type: 'ally' },
+                            { id: 'e2-stakes', label: 'STAKES:\n$6M Recovered', type: 'stakes', center: true },
+                            { id: 'e2-w1', label: 'NADAC Benchmark\n✓ USING', side: 'left', type: 'weapon-active' },
+                            { id: 'e2-w2', label: 'Cost Plus Drugs\n✓ USING', side: 'left', type: 'weapon-active' },
+                            { id: 'e2-w3', label: 'Spread Pricing\n❌ Exposed', side: 'right', type: 'weapon-neutralized' },
+                            { id: 'e2-w4', label: 'Rebate Retention\n❌ Required pass-through', side: 'right', type: 'weapon-neutralized' }
+                        ],
+                        edges: [
+                            { source: 'e2-employer', target: 'e2-passthru', label: 'Migrates to transparent', type: 'ally' },
+                            { source: 'e2-employer', target: 'e2-pbm', label: 'Fires or forces reform', type: 'winning' },
+                            { source: 'e2-employer', target: 'e2-w1', label: 'Using', type: 'uses-active' },
+                            { source: 'e2-employer', target: 'e2-w2', label: 'Using', type: 'uses-active' },
+                            { source: 'e2-passthru', target: 'e2-stakes', label: 'Delivers', type: 'provides' },
+                            { source: 'e2-stakes', target: 'e2-employer', label: 'Captured by', type: 'winner' }
+                        ]
+                    }
+                },
+
+                // Conflict 3: Employer vs Hospital System
+                {
+                    id: 3,
+                    name: "Employer vs. Hospital System",
+                    subtitle: "Fair Prices vs. Monopoly Pricing",
+                    current: {
+                        description: "Employer wants fair prices for quality care. Hospital system wants maximum prices regardless of quality.",
+                        stakes: "$42K for hip replacement vs. $18K at high-quality alternative",
+                        currentWinner: "Hospital System (Market dominance, TPA won't exclude them)",
+                        employerWeapons: ["Direct contracts", "Narrow network", "Financial incentives", "Travel benefits", "Exclude from network"],
+                        hospitalWeapons: ["Market dominance", "All-or-nothing contracts", "Anti-steering clauses", "Brand marketing", "Political influence"],
+                        nodes: [
+                            { id: 'e3-employer', label: 'EMPLOYER', side: 'left', type: 'combatant' },
+                            { id: 'e3-hospital', label: 'MONOPOLY\nHOSPITAL SYSTEM', side: 'right', type: 'combatant' },
+                            { id: 'e3-stakes', label: 'STAKES:\n$24K overpayment\nper hip replacement', type: 'stakes', center: true },
+                            { id: 'e3-w1', label: 'Direct Contracts', side: 'left', type: 'weapon' },
+                            { id: 'e3-w2', label: 'Network Exclusion', side: 'left', type: 'weapon' },
+                            { id: 'e3-w3', label: 'Market Dominance', side: 'right', type: 'weapon' },
+                            { id: 'e3-w4', label: 'All-or-Nothing', side: 'right', type: 'weapon' },
+                            { id: 'e3-w5', label: 'Anti-Steering', side: 'right', type: 'weapon' },
+                            { id: 'e3-w6', label: 'Brand Marketing', side: 'right', type: 'weapon' }
+                        ],
+                        edges: [
+                            { source: 'e3-employer', target: 'e3-hospital', label: 'Overpaying 2-3x', type: 'conflict' },
+                            { source: 'e3-employer', target: 'e3-w1', label: 'Could use', type: 'has' },
+                            { source: 'e3-employer', target: 'e3-w2', label: 'Could use', type: 'has' },
+                            { source: 'e3-hospital', target: 'e3-w3', label: 'Uses', type: 'uses' },
+                            { source: 'e3-hospital', target: 'e3-w4', label: 'Uses', type: 'uses' },
+                            { source: 'e3-hospital', target: 'e3-w5', label: 'Uses', type: 'uses' },
+                            { source: 'e3-hospital', target: 'e3-w6', label: 'Uses', type: 'uses' },
+                            { source: 'e3-stakes', target: 'e3-hospital', label: 'Currently captured by', type: 'winner' }
+                        ]
+                    },
+                    transparency: {
+                        description: "Quality + price data reveals poor value. Employer narrows network or direct contracts.",
+                        stakes: "$24K saved per procedure, steered to safer hospitals",
+                        currentWinner: "Employer (32BJ case study: removed hospital, huge savings)",
+                        resolution: "Hospital must compete on value or lose volume. Quality becomes visible, not just brand.",
+                        nodes: [
+                            { id: 'e3-employer', label: 'EMPLOYER', side: 'left', type: 'combatant' },
+                            { id: 'e3-hospital', label: 'MONOPOLY\nHOSPITAL SYSTEM', side: 'right', type: 'combatant' },
+                            { id: 'e3-alternative', label: 'HIGH-QUALITY\nALTERNATIVE', side: 'left', type: 'ally' },
+                            { id: 'e3-stakes', label: 'STAKES:\n$24K Savings\n+ Better Safety', type: 'stakes', center: true },
+                            { id: 'e3-w1', label: 'Quality Data\n✓ USING', side: 'left', type: 'weapon-active' },
+                            { id: 'e3-w2', label: 'Network Exclusion\n✓ USING', side: 'left', type: 'weapon-active' },
+                            { id: 'e3-w3', label: 'Market Dominance\n❌ Bypassed', side: 'right', type: 'weapon-neutralized' },
+                            { id: 'e3-w4', label: 'Brand Marketing\n❌ Quality exposed', side: 'right', type: 'weapon-neutralized' }
+                        ],
+                        edges: [
+                            { source: 'e3-employer', target: 'e3-alternative', label: 'Direct contract + incentives', type: 'ally' },
+                            { source: 'e3-employer', target: 'e3-hospital', label: 'Excludes or forces price cut', type: 'winning' },
+                            { source: 'e3-employer', target: 'e3-w1', label: 'Using', type: 'uses-active' },
+                            { source: 'e3-employer', target: 'e3-w2', label: 'Using', type: 'uses-active' },
+                            { source: 'e3-alternative', target: 'e3-stakes', label: 'Delivers', type: 'provides' },
+                            { source: 'e3-stakes', target: 'e3-employer', label: 'Captured by', type: 'winner' }
+                        ]
+                    }
+                },
+
+                // Conflict 4: Good Provider vs Bad Provider
+                {
+                    id: 4,
+                    name: "Good Provider vs. Bad Provider",
+                    subtitle: "Merit-Based Competition vs. Brand Protection",
+                    current: {
+                        description: "High-quality providers want to compete on merit. Low-quality providers hide behind brand.",
+                        stakes: "Patient lives, provider volume, market share",
+                        currentWinner: "Bad Provider (Quality invisible, brand wins)",
+                        goodWeapons: ["Actual quality", "Patient satisfaction", "Outcomes data", "Willingness to be transparent"],
+                        badWeapons: ["Brand marketing", "TPA relationships", "Opacity", "All-or-nothing contracts"],
+                        nodes: [
+                            { id: 'e4-good', label: 'HIGH-QUALITY\nPROVIDER', side: 'left', type: 'combatant' },
+                            { id: 'e4-bad', label: 'LOW-QUALITY\nEXPENSIVE PROVIDER', side: 'right', type: 'combatant' },
+                            { id: 'e4-stakes', label: 'STAKES:\nPatient Volume\n& Market Share', type: 'stakes', center: true },
+                            { id: 'e4-w1', label: 'Quality (A grade)', side: 'left', type: 'weapon' },
+                            { id: 'e4-w2', label: 'Outcomes Data', side: 'left', type: 'weapon' },
+                            { id: 'e4-w3', label: 'Transparent Pricing', side: 'left', type: 'weapon' },
+                            { id: 'e4-w4', label: 'Brand Marketing', side: 'right', type: 'weapon' },
+                            { id: 'e4-w5', label: 'TPA Relationships', side: 'right', type: 'weapon' },
+                            { id: 'e4-w6', label: 'Opacity', side: 'right', type: 'weapon' }
+                        ],
+                        edges: [
+                            { source: 'e4-good', target: 'e4-bad', label: 'Competing but losing', type: 'conflict' },
+                            { source: 'e4-good', target: 'e4-w1', label: 'Has but invisible', type: 'has' },
+                            { source: 'e4-good', target: 'e4-w2', label: 'Has but invisible', type: 'has' },
+                            { source: 'e4-good', target: 'e4-w3', label: 'Willing to offer', type: 'has' },
+                            { source: 'e4-bad', target: 'e4-w4', label: 'Uses', type: 'uses' },
+                            { source: 'e4-bad', target: 'e4-w5', label: 'Uses', type: 'uses' },
+                            { source: 'e4-bad', target: 'e4-w6', label: 'Uses', type: 'uses' },
+                            { source: 'e4-stakes', target: 'e4-bad', label: 'Currently captured by', type: 'winner' }
+                        ]
+                    },
+                    transparency: {
+                        description: "Quality data becomes visible. Employers steer to high-value providers.",
+                        stakes: "Merit-based competition, better outcomes, fair pricing",
+                        currentWinner: "Good Provider (Dr. Rodis example: improved to A grade, now visible)",
+                        resolution: "Quality visible via Leapfrog. Employers design incentives. Good providers win volume on merit.",
+                        nodes: [
+                            { id: 'e4-good', label: 'HIGH-QUALITY\nPROVIDER', side: 'left', type: 'combatant' },
+                            { id: 'e4-bad', label: 'LOW-QUALITY\nEXPENSIVE PROVIDER', side: 'right', type: 'combatant' },
+                            { id: 'e4-stakes', label: 'STAKES:\nMerit-Based\nCompetition', type: 'stakes', center: true },
+                            { id: 'e4-w1', label: 'Quality Data\n✓ VISIBLE', side: 'left', type: 'weapon-active' },
+                            { id: 'e4-w2', label: 'Fair Pricing\n✓ VISIBLE', side: 'left', type: 'weapon-active' },
+                            { id: 'e4-w3', label: 'Employer Steering\n✓ ACTIVE', side: 'left', type: 'weapon-active' },
+                            { id: 'e4-w4', label: 'Brand Marketing\n❌ Quality exposed', side: 'right', type: 'weapon-neutralized' },
+                            { id: 'e4-w5', label: 'Opacity\n❌ Transparency eliminates', side: 'right', type: 'weapon-neutralized' }
+                        ],
+                        edges: [
+                            { source: 'e4-good', target: 'e4-bad', label: 'Winning on merit', type: 'winning' },
+                            { source: 'e4-good', target: 'e4-w1', label: 'Using', type: 'uses-active' },
+                            { source: 'e4-good', target: 'e4-w2', label: 'Using', type: 'uses-active' },
+                            { source: 'e4-good', target: 'e4-w3', label: 'Benefits from', type: 'uses-active' },
+                            { source: 'e4-stakes', target: 'e4-good', label: 'Captured by', type: 'winner' }
+                        ]
+                    }
+                },
+
+                // Conflict 5: Patient vs System
+                {
+                    id: 5,
+                    name: "Patient vs. The System",
+                    subtitle: "Affordability vs. Extraction",
+                    current: {
+                        description: "Patients want affordable care. Almost everyone else profits from high prices.",
+                        stakes: "$5,000 per family annually (could be in wages/savings instead)",
+                        currentWinner: "The System (Patients functionally uninsured, can't shop)",
+                        patientWeapons: ["Can delay care (get sicker)", "Can negotiate bills", "Can declare bankruptcy", "Can complain"],
+                        systemWeapons: ["High deductibles", "Surprise bills", "No price transparency", "Medical necessity", "Complexity"],
+                        nodes: [
+                            { id: 'e5-patient', label: 'PATIENTS &\nFAMILIES', side: 'left', type: 'combatant' },
+                            { id: 'e5-system', label: 'THE SYSTEM\n(Everyone profiting)', side: 'right', type: 'combatant' },
+                            { id: 'e5-stakes', label: 'STAKES:\n$5,000 per family\nannually', type: 'stakes', center: true },
+                            { id: 'e5-w1', label: 'Delay Care', side: 'left', type: 'weapon' },
+                            { id: 'e5-w2', label: 'Medical Debt', side: 'left', type: 'weapon' },
+                            { id: 'e5-w3', label: 'Bankruptcy', side: 'left', type: 'weapon' },
+                            { id: 'e5-w4', label: 'High Deductibles', side: 'right', type: 'weapon' },
+                            { id: 'e5-w5', label: 'Surprise Bills', side: 'right', type: 'weapon' },
+                            { id: 'e5-w6', label: 'No Price Info', side: 'right', type: 'weapon' },
+                            { id: 'e5-w7', label: 'Complexity', side: 'right', type: 'weapon' }
+                        ],
+                        edges: [
+                            { source: 'e5-patient', target: 'e5-system', label: 'Being exploited', type: 'conflict' },
+                            { source: 'e5-patient', target: 'e5-w1', label: 'Forced to (harmful)', type: 'has' },
+                            { source: 'e5-patient', target: 'e5-w2', label: 'Forced into', type: 'has' },
+                            { source: 'e5-patient', target: 'e5-w3', label: 'Last resort', type: 'has' },
+                            { source: 'e5-system', target: 'e5-w4', label: 'Uses', type: 'uses' },
+                            { source: 'e5-system', target: 'e5-w5', label: 'Uses', type: 'uses' },
+                            { source: 'e5-system', target: 'e5-w6', label: 'Uses', type: 'uses' },
+                            { source: 'e5-system', target: 'e5-w7', label: 'Uses', type: 'uses' },
+                            { source: 'e5-stakes', target: 'e5-system', label: 'Currently captured by', type: 'winner' }
+                        ]
+                    },
+                    transparency: {
+                        description: "Employers use transparency to design patient-friendly benefits. Price visible, quality clear.",
+                        stakes: "$5,000 returned to families (wages/lower premiums/better benefits)",
+                        currentWinner: "Patients (Employers as fiduciaries fight for them)",
+                        resolution: "Transparency enables employers to redesign benefits: lower deductibles, $0 copays at preferred providers, know costs before care.",
+                        nodes: [
+                            { id: 'e5-patient', label: 'PATIENTS &\nFAMILIES', side: 'left', type: 'combatant' },
+                            { id: 'e5-employer', label: 'EMPLOYERS\n(As fiduciaries)', side: 'left', type: 'ally' },
+                            { id: 'e5-system', label: 'THE SYSTEM', side: 'right', type: 'combatant' },
+                            { id: 'e5-stakes', label: 'STAKES:\n$5K to Families\n+ Affordability', type: 'stakes', center: true },
+                            { id: 'e5-w1', label: 'Know Costs Before Care\n✓', side: 'left', type: 'weapon-active' },
+                            { id: 'e5-w2', label: 'Lower/No Deductibles\n✓', side: 'left', type: 'weapon-active' },
+                            { id: 'e5-w3', label: 'Quality Data\n✓', side: 'left', type: 'weapon-active' },
+                            { id: 'e5-w4', label: 'High Deductibles\n❌ Reformed', side: 'right', type: 'weapon-neutralized' },
+                            { id: 'e5-w5', label: 'Surprise Bills\n❌ Eliminated', side: 'right', type: 'weapon-neutralized' },
+                            { id: 'e5-w6', label: 'No Price Info\n❌ Full transparency', side: 'right', type: 'weapon-neutralized' }
+                        ],
+                        edges: [
+                            { source: 'e5-employer', target: 'e5-patient', label: 'Advocates for', type: 'ally' },
+                            { source: 'e5-patient', target: 'e5-w1', label: 'Can use', type: 'uses-active' },
+                            { source: 'e5-patient', target: 'e5-w2', label: 'Benefits from', type: 'uses-active' },
+                            { source: 'e5-patient', target: 'e5-w3', label: 'Can use', type: 'uses-active' },
+                            { source: 'e5-employer', target: 'e5-stakes', label: 'Delivers', type: 'provides' },
+                            { source: 'e5-stakes', target: 'e5-patient', label: 'Captured by', type: 'winner' }
+                        ]
+                    }
+                },
+
+                // Conflict 6: Independent vs Consolidated
+                {
+                    id: 6,
+                    name: "Independent vs. Consolidated Providers",
+                    subtitle: "Survival vs. Acquisition",
+                    current: {
+                        description: "Independent providers want to survive on merit. Consolidated systems want to acquire or price them out.",
+                        stakes: "Market diversity, competition, quality care",
+                        currentWinner: "Consolidated (Network leverage, access to capital)",
+                        independentWeapons: ["Lower overhead", "Personal relationships", "Often better quality", "Flexibility"],
+                        consolidatedWeapons: ["Network negotiating power", "Access to capital", "Brand recognition", "Volume leverage", "Can operate at loss"],
+                        nodes: [
+                            { id: 'e6-independent', label: 'INDEPENDENT\nPROVIDERS', side: 'left', type: 'combatant' },
+                            { id: 'e6-consolidated', label: 'CONSOLIDATED\nSYSTEMS', side: 'right', type: 'combatant' },
+                            { id: 'e6-stakes', label: 'STAKES:\nMarket Diversity\n& Competition', type: 'stakes', center: true },
+                            { id: 'e6-w1', label: 'Lower Overhead', side: 'left', type: 'weapon' },
+                            { id: 'e6-w2', label: 'Quality', side: 'left', type: 'weapon' },
+                            { id: 'e6-w3', label: 'Flexibility', side: 'left', type: 'weapon' },
+                            { id: 'e6-w4', label: 'Network Power', side: 'right', type: 'weapon' },
+                            { id: 'e6-w5', label: 'Capital', side: 'right', type: 'weapon' },
+                            { id: 'e6-w6', label: 'Brand/Scale', side: 'right', type: 'weapon' }
+                        ],
+                        edges: [
+                            { source: 'e6-independent', target: 'e6-consolidated', label: 'Struggling to compete', type: 'conflict' },
+                            { source: 'e6-independent', target: 'e6-w1', label: 'Has but not enough', type: 'has' },
+                            { source: 'e6-independent', target: 'e6-w2', label: 'Has but invisible', type: 'has' },
+                            { source: 'e6-independent', target: 'e6-w3', label: 'Has', type: 'has' },
+                            { source: 'e6-consolidated', target: 'e6-w4', label: 'Uses', type: 'uses' },
+                            { source: 'e6-consolidated', target: 'e6-w5', label: 'Uses', type: 'uses' },
+                            { source: 'e6-consolidated', target: 'e6-w6', label: 'Uses', type: 'uses' },
+                            { source: 'e6-stakes', target: 'e6-consolidated', label: 'Currently captured by', type: 'winner' }
+                        ]
+                    },
+                    transparency: {
+                        description: "Quality visible. Direct contracting accessible. Independent providers can compete on merit.",
+                        stakes: "Market remains competitive, quality drives choice",
+                        currentWinner: "Independent (Can prove value, direct contract easily)",
+                        resolution: "Transparency + direct contracting gives independent providers path to survive and thrive on merit.",
+                        nodes: [
+                            { id: 'e6-independent', label: 'INDEPENDENT\nPROVIDERS', side: 'left', type: 'combatant' },
+                            { id: 'e6-consolidated', label: 'CONSOLIDATED\nSYSTEMS', side: 'right', type: 'combatant' },
+                            { id: 'e6-stakes', label: 'STAKES:\nMerit-Based\nCompetition', type: 'stakes', center: true },
+                            { id: 'e6-w1', label: 'Quality Data\n✓ VISIBLE', side: 'left', type: 'weapon-active' },
+                            { id: 'e6-w2', label: 'Direct Contracts\n✓ ACCESSIBLE', side: 'left', type: 'weapon-active' },
+                            { id: 'e6-w3', label: 'Employer Support\n✓', side: 'left', type: 'weapon-active' },
+                            { id: 'e6-w4', label: 'Network Power\n❌ Bypassed', side: 'right', type: 'weapon-neutralized' },
+                            { id: 'e6-w5', label: 'Brand\n❌ Quality matters more', side: 'right', type: 'weapon-neutralized' }
+                        ],
+                        edges: [
+                            { source: 'e6-independent', target: 'e6-consolidated', label: 'Competing on merit', type: 'winning' },
+                            { source: 'e6-independent', target: 'e6-w1', label: 'Using', type: 'uses-active' },
+                            { source: 'e6-independent', target: 'e6-w2', label: 'Using', type: 'uses-active' },
+                            { source: 'e6-independent', target: 'e6-w3', label: 'Benefits from', type: 'uses-active' },
+                            { source: 'e6-stakes', target: 'e6-independent', label: 'Balanced toward', type: 'winner' }
+                        ]
+                    }
+                }
+            ]
+        };
+
+        // Cytoscape initialization
+        let cy;
+        let currentConflict = 'all';
+        let currentView = 'current';
+
+        function getConflictData(conflictId, view) {
+            if (conflictId === 'all') {
+                // Return combined data for all conflicts
+                return combineAllConflicts(view);
+            } else {
+                const conflict = conflictData.conflicts[conflictId];
+                return conflict[view];
+            }
+        }
+
+        function combineAllConflicts(view) {
+            // Combine all conflicts into one diagram
+            let allNodes = [];
+            let allEdges = [];
+            
+            conflictData.conflicts.forEach((conflict, idx) => {
+                const data = conflict[view];
+                allNodes = allNodes.concat(data.nodes);
+                allEdges = allEdges.concat(data.edges);
+            });
+            
+            return { nodes: allNodes, edges: allEdges };
+        }
+
+        function updateConflictPanel(conflictId, view) {
+            const panel = document.getElementById('conflict-panel');
+            
+            if (conflictId === 'all') {
+                panel.innerHTML = `
+                    <div class="conflict-card">
+                        <div class="conflict-title">All Seven Conflicts</div>
+                        <p style="margin: 10px 0; color: #666;">
+                            Showing all adversarial relationships in the healthcare system. 
+                            Select a specific conflict above to see detailed breakdown.
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            const conflict = conflictData.conflicts[conflictId];
+            const data = conflict[view];
+            
+            let html = `
+                <div class="conflict-card">
+                    <div class="conflict-title">${conflict.name}</div>
+                    <p style="font-size: 15px; color: #666; margin: 5px 0 15px 0;">${conflict.subtitle}</p>
+                    <p style="margin-bottom: 15px;">${data.description}</p>
+                    <div class="conflict-details">
+                        <div class="detail-box stakes">
+                            <h5>Stakes</h5>
+                            <p>${data.stakes}</p>
+                        </div>
+                        <div class="detail-box current-winner">
+                            <h5>Current Winner</h5>
+                            <p>${data.currentWinner}</p>
+                        </div>
+            `;
+            
+            if (view === 'transparency' && data.resolution) {
+                html += `
+                        <div class="detail-box transparency-impact">
+                            <h5>Resolution</h5>
+                            <p>${data.resolution}</p>
+                        </div>
+                `;
+            }
+            
+            html += `
+                    </div>
+                </div>
+            `;
+            
+            panel.innerHTML = html;
+        }
+
+        function updateFooterMessage(view) {
+            const msg = document.getElementById('resolution-message');
+            if (view === 'transparency') {
+                msg.innerHTML = `
+                    <strong>Conflicts Resolved:</strong> Transparency shifts from zero-sum extraction to positive-sum value creation. 
+                    Employers save money, patients get better care, good providers thrive.
+                `;
+            } else {
+                msg.innerHTML = `
+                    <strong>Transparency Changes Everything:</strong> When information asymmetry is eliminated, 
+                    conflicts resolve through market forces rather than extraction.
+                `;
+            }
+        }
+
+        async function initCytoscape(conflictId, view) {
+            const data = getConflictData(conflictId, view);
+
+            // Update conflict panel
+            updateConflictPanel(conflictId, view);
+            updateFooterMessage(view);
+
+            // Check for saved layout (localStorage or default file)
+            const savedLayout = await loadSavedLayout(conflictId, view);
+
+            // Transform data into Cytoscape format
+            const elements = [
+                ...data.nodes.map(n => ({
+                    data: {
+                        id: n.id,
+                        label: n.label,
+                        type: n.type,
+                        side: n.side || 'center',
+                        center: n.center || false,
+                        wants: n.wants || ''
+                    }
+                })),
+                ...data.edges.map(e => ({
+                    data: {
+                        id: `${e.source}-${e.target}-${Math.random()}`,
+                        source: e.source,
+                        target: e.target,
+                        label: e.label || '',
+                        type: e.type || 'visible'
+                    }
+                }))
+            ];
+
+            // Destroy existing instance if it exists
+            if (cy) {
+                cy.destroy();
+            }
+
+            // Determine layout based on saved layout or conflict type
+            const layoutName = savedLayout ? 'preset' : (conflictId === 'all' ? 'cose' : 'preset');
+            let layoutConfig = {
+                name: layoutName,
+                animate: !savedLayout,
+                animationDuration: savedLayout ? 0 : 1000
+            };
+
+            if (layoutName === 'preset' && savedLayout) {
+                // Use saved positions
+                layoutConfig.positions = function(node) {
+                    const savedPos = savedLayout.positions[node.id()];
+                    return savedPos || { x: 0, y: 0 };
+                };
+            } else if (layoutName === 'preset') {
+                // Custom positioning for single conflict view
+                layoutConfig.positions = function(node) {
+                    const data = node.data();
+                    const baseY = 400;
+                    const leftX = 200;
+                    const rightX = 1000;
+                    const centerX = 600;
+                    
+                    if (data.center) {
+                        return { x: centerX, y: baseY };
+                    } else if (data.side === 'left') {
+                        if (data.type === 'combatant') {
+                            return { x: leftX, y: baseY };
+                        } else if (data.type === 'ally') {
+                            return { x: leftX - 100, y: baseY - 150 };
+                        } else {
+                            // Weapon
+                            const weaponIndex = data.id.split('-w')[1] || 0;
+                            return { x: leftX - 50, y: baseY + 100 + (weaponIndex * 80) };
+                        }
+                    } else if (data.side === 'right') {
+                        if (data.type === 'combatant') {
+                            return { x: rightX, y: baseY };
+                        } else {
+                            // Weapon
+                            const weaponIndex = data.id.split('-w')[1] || 0;
+                            return { x: rightX + 50, y: baseY + 100 + (weaponIndex * 80) };
+                        }
+                    }
+                    return { x: centerX, y: baseY };
+                };
+            } else {
+                // Cose layout for all conflicts
+                layoutConfig.nodeRepulsion = 8000;
+                layoutConfig.idealEdgeLength = 150;
+                layoutConfig.edgeElasticity = 100;
+                layoutConfig.gravity = 1;
+                layoutConfig.numIter = 1000;
+            }
+
+            // Create new instance
+            cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: elements,
+                style: [
+                    // Base node style
+                    {
+                        selector: 'node',
+                        style: {
+                            'label': 'data(label)',
+                            'text-valign': 'center',
+                            'text-halign': 'center',
+                            'font-size': '11px',
+                            'font-weight': 'bold',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '100px',
+                            'width': 80,
+                            'height': 80,
+                            'border-width': 3,
+                            'transition-property': 'background-color, border-color, border-width',
+                            'transition-duration': '0.3s'
+                        }
+                    },
+                    // Node types
+                    {
+                        selector: 'node[type="combatant"]',
+                        style: {
+                            'shape': 'ellipse',
+                            'background-color': '#e74c3c',
+                            'border-color': '#c0392b',
+                            'width': 100,
+                            'height': 100,
+                            'color': '#fff'
+                        }
+                    },
+                    {
+                        selector: 'node[type="ally"]',
+                        style: {
+                            'shape': 'ellipse',
+                            'background-color': '#27ae60',
+                            'border-color': '#229954',
+                            'width': 90,
+                            'height': 90,
+                            'color': '#fff'
+                        }
+                    },
+                    {
+                        selector: 'node[type="stakes"]',
+                        style: {
+                            'shape': 'diamond',
+                            'background-color': '#f39c12',
+                            'border-color': '#d68910',
+                            'width': 120,
+                            'height': 120,
+                            'font-size': '12px',
+                            'color': '#fff'
+                        }
+                    },
+                    {
+                        selector: 'node[type="weapon"]',
+                        style: {
+                            'shape': 'rectangle',
+                            'background-color': '#95a5a6',
+                            'border-color': '#7f8c8d',
+                            'width': 70,
+                            'height': 60,
+                            'font-size': '9px'
+                        }
+                    },
+                    {
+                        selector: 'node[type="weapon-active"]',
+                        style: {
+                            'shape': 'rectangle',
+                            'background-color': '#27ae60',
+                            'border-color': '#229954',
+                            'width': 70,
+                            'height': 60,
+                            'font-size': '9px',
+                            'border-width': 4,
+                            'color': '#fff'
+                        }
+                    },
+                    {
+                        selector: 'node[type="weapon-neutralized"]',
+                        style: {
+                            'shape': 'rectangle',
+                            'background-color': '#bdc3c7',
+                            'border-color': '#95a5a6',
+                            'border-style': 'dashed',
+                            'width': 70,
+                            'height': 60,
+                            'font-size': '9px',
+                            'opacity': 0.5
+                        }
+                    },
+                    {
+                        selector: 'node:hover',
+                        style: {
+                            'border-width': 6,
+                            'border-color': '#2c3e50'
+                        }
+                    },
+                    // Edge types
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 2,
+                            'line-color': '#666',
+                            'target-arrow-color': '#666',
+                            'target-arrow-shape': 'triangle',
+                            'curve-style': 'bezier',
+                            'label': 'data(label)',
+                            'font-size': '9px',
+                            'text-background-color': '#fff',
+                            'text-background-opacity': 0.9,
+                            'text-background-padding': '2px',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '80px'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="conflict"]',
+                        style: {
+                            'line-color': '#e74c3c',
+                            'target-arrow-color': '#e74c3c',
+                            'width': 5,
+                            'line-style': 'solid'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="winning"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 5,
+                            'line-style': 'solid'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="has"]',
+                        style: {
+                            'line-color': '#95a5a6',
+                            'target-arrow-color': '#95a5a6',
+                            'width': 1,
+                            'line-style': 'dotted'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="uses"]',
+                        style: {
+                            'line-color': '#e74c3c',
+                            'target-arrow-color': '#e74c3c',
+                            'width': 2,
+                            'line-style': 'dashed'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="uses-active"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 3,
+                            'line-style': 'solid'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="neutralized"]',
+                        style: {
+                            'line-color': '#bdc3c7',
+                            'target-arrow-color': '#bdc3c7',
+                            'width': 1,
+                            'line-style': 'dashed',
+                            'opacity': 0.5
+                        }
+                    },
+                    {
+                        selector: 'edge[type="attacks"]',
+                        style: {
+                            'line-color': '#95a5a6',
+                            'target-arrow-color': '#95a5a6',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="defends"]',
+                        style: {
+                            'line-color': '#e74c3c',
+                            'target-arrow-color': '#e74c3c',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="winner"]',
+                        style: {
+                            'line-color': '#f39c12',
+                            'target-arrow-color': '#f39c12',
+                            'width': 4
+                        }
+                    },
+                    {
+                        selector: 'edge[type="ally"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 3
+                        }
+                    },
+                    {
+                        selector: 'edge[type="provides"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 3
+                        }
+                    }
+                ],
+                layout: layoutConfig,
+                wheelSensitivity: 0.2
+            });
+
+            // Apply saved zoom and pan if available
+            if (savedLayout) {
+                cy.zoom(savedLayout.zoom);
+                cy.pan(savedLayout.pan);
+            }
+
+            // Add interactivity
+            setupInteractivity();
+        }
+
+        function setupInteractivity() {
+            const tooltip = document.getElementById('tooltip');
+
+            // Hover tooltips for nodes
+            cy.on('mouseover', 'node', function(evt) {
+                const node = evt.target;
+                const data = node.data();
+
+                let content = `<h4>${data.label}</h4>`;
+                if (data.wants) {
+                    content += `<p class="wants">Wants: ${data.wants}</p>`;
+                }
+                if (data.type && data.type.includes('weapon')) {
+                    content += `<p class="weapon">Weapon/Tactic</p>`;
+                }
+
+                tooltip.innerHTML = content;
+                tooltip.style.display = 'block';
+            });
+
+            cy.on('mousemove', 'node', function(evt) {
+                tooltip.style.left = evt.originalEvent.pageX + 15 + 'px';
+                tooltip.style.top = evt.originalEvent.pageY + 15 + 'px';
+            });
+
+            cy.on('mouseout', 'node', function() {
+                tooltip.style.display = 'none';
+            });
+
+            // Edge tooltips
+            cy.on('mouseover', 'edge', function(evt) {
+                const edge = evt.target;
+                const data = edge.data();
+
+                if (data.label) {
+                    let content = `<h4>Relationship</h4><p>${data.label}</p>`;
+                    tooltip.innerHTML = content;
+                    tooltip.style.display = 'block';
+                }
+            });
+
+            cy.on('mouseout', 'edge', function() {
+                tooltip.style.display = 'none';
+            });
+        }
+
+        // Layout management functions
+        function saveLayout() {
+            const positions = {};
+            cy.nodes().forEach(node => {
+                positions[node.id()] = node.position();
+            });
+
+            const layoutData = {
+                conflict: currentConflict,
+                view: currentView,
+                positions: positions,
+                zoom: cy.zoom(),
+                pan: cy.pan()
+            };
+
+            localStorage.setItem(`diagram4_layout_${currentConflict}_${currentView}`, JSON.stringify(layoutData));
+
+            // Visual feedback
+            const btn = document.getElementById('saveLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+            btn.style.borderColor = 'var(--payerset-green)';
+            btn.style.color = 'var(--payerset-green)';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.borderColor = '';
+                btn.style.color = '';
+            }, 2000);
+        }
+
+        // Load saved layout from localStorage or default file
+        async function loadSavedLayout(conflictId, view) {
+            // First, check localStorage (user's saved layout)
+            const savedData = localStorage.getItem(`diagram4_layout_${conflictId}_${view}`);
+            if (savedData) {
+                try {
+                    const layoutData = JSON.parse(savedData);
+                    console.log('Loaded layout from localStorage');
+                    return layoutData;
+                } catch (e) {
+                    console.error('Error loading saved layout from localStorage:', e);
+                }
+            }
+
+            // If no localStorage data, try to load default layout
+            try {
+                const response = await fetch(`layouts/diagram4-conflict${conflictId}-${view}.json`);
+                if (response.ok) {
+                    const layoutData = await response.json();
+                    console.log('Loaded default layout from file');
+                    return layoutData;
+                }
+            } catch (e) {
+                console.log('No default layout file found, will use algorithmic layout');
+            }
+
+            return null;
+        }
+
+        function exportLayout() {
+            const positions = {};
+            cy.nodes().forEach(node => {
+                positions[node.id()] = node.position();
+            });
+
+            const layoutData = {
+                diagram: 'diagram4',
+                conflict: currentConflict,
+                view: currentView,
+                positions: positions,
+                zoom: cy.zoom(),
+                pan: cy.pan(),
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(layoutData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `diagram4-conflict${currentConflict}-${currentView}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            // Visual feedback
+            const btn = document.getElementById('exportLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Exported!';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 1500);
+        }
+
+        function importLayout() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const layoutData = JSON.parse(event.target.result);
+
+                        // Validate it's the right diagram
+                        if (layoutData.diagram !== 'diagram4') {
+                            alert('This layout file is not for Diagram 4');
+                            return;
+                        }
+
+                        // Save to localStorage
+                        localStorage.setItem(`diagram4_layout_${layoutData.conflict}_${layoutData.view}`, JSON.stringify(layoutData));
+
+                        // If it's for current conflict and view, apply immediately
+                        if (layoutData.conflict === currentConflict && layoutData.view === currentView) {
+                            initCytoscape(currentConflict, currentView);
+                        }
+
+                        // Show feedback
+                        const btn = document.getElementById('importLayout');
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="fas fa-check"></i> Imported!';
+
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                        }, 1500);
+
+                    } catch (error) {
+                        alert('Error importing layout file: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function resetLayout() {
+            localStorage.removeItem(`diagram4_layout_${currentConflict}_${currentView}`);
+            initCytoscape(currentConflict, currentView);
+
+            // Visual feedback
+            const btn = document.getElementById('resetLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Reset!';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 1500);
+        }
+
+        // Conflict selection
+        document.querySelectorAll('.conflict-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const conflict = this.dataset.conflict;
+                
+                // Update active button
+                document.querySelectorAll('.conflict-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Reinitialize with new conflict
+                currentConflict = conflict;
+                initCytoscape(conflict, currentView);
+            });
+        });
+
+        // View toggle
+        document.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const view = this.dataset.view;
+
+                // Update active button
+                document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Reinitialize with new view
+                currentView = view;
+                initCytoscape(currentConflict, view);
+            });
+        });
+
+        // Layout control buttons
+        document.getElementById('saveLayout').addEventListener('click', saveLayout);
+        document.getElementById('resetLayout').addEventListener('click', resetLayout);
+        document.getElementById('exportLayout').addEventListener('click', exportLayout);
+        document.getElementById('importLayout').addEventListener('click', importLayout);
+
+        // Dropdown navigation toggle
+        const dropdown = document.querySelector('.nav-dropdown');
+        const dropdownToggle = document.querySelector('.nav-dropdown-toggle');
+        dropdownToggle.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('open'); });
+        document.addEventListener('click', (e) => { if (!dropdown.contains(e.target)) dropdown.classList.remove('open'); });
+
+        // Initialize with all conflicts, current state
+        initCytoscape('all', 'current');
+    </script>
+</body>
+</html>

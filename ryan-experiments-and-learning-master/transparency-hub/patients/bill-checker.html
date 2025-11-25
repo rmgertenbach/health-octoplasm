@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Checker | Healthcare Transparency Hub</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../shared/css/core.css">
+    <link rel="stylesheet" href="../shared/css/components.css">
+    <link rel="stylesheet" href="../shared/css/animations.css">
+
+    <style>
+        body {
+            background: var(--gray-50);
+        }
+
+        .wizard-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: var(--space-md) 0;
+            position: sticky;
+            top: 0;
+            z-index: var(--z-sticky);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .wizard-header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .wizard-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--gray-900);
+            font-weight: var(--font-bold);
+            font-size: 1.125rem;
+        }
+
+        .wizard-logo i {
+            color: var(--payerset-blue);
+            font-size: 1.5rem;
+        }
+
+        .wizard-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+        }
+
+        .wizard-step {
+            display: none;
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-2xl);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .wizard-step.active {
+            display: block;
+        }
+
+        .step-content h1 {
+            margin-bottom: var(--space-md);
+        }
+
+        .button-row {
+            display: flex;
+            gap: var(--space-md);
+            justify-content: space-between;
+            margin-top: var(--space-2xl);
+            flex-wrap: wrap;
+        }
+
+        .verdict-card {
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            text-align: center;
+            margin-bottom: var(--space-xl);
+        }
+
+        .verdict-card.overcharged {
+            background: var(--danger-red-light);
+            border: 2px solid var(--danger-red);
+        }
+
+        .verdict-card.fair {
+            background: var(--info-blue-light);
+            border: 2px solid var(--info-blue);
+        }
+
+        .verdict-card.excellent {
+            background: var(--success-green-light);
+            border: 2px solid var(--success-green);
+        }
+
+        .verdict-icon {
+            font-size: 4rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .verdict-card.overcharged .verdict-icon {
+            color: var(--danger-red);
+        }
+
+        .verdict-card.fair .verdict-icon {
+            color: var(--info-blue);
+        }
+
+        .verdict-card.excellent .verdict-icon {
+            color: var(--success-green);
+        }
+
+        .verdict-card h2 {
+            margin-bottom: var(--space-sm);
+        }
+
+        .savings-amount {
+            font-size: 2rem;
+            font-weight: var(--font-extrabold);
+            margin-top: var(--space-lg);
+        }
+
+        .savings-amount strong {
+            color: var(--success-green);
+        }
+
+        .comparison-table {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            margin-bottom: var(--space-xl);
+            border: 1px solid var(--gray-200);
+        }
+
+        .comparison-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            padding: var(--space-md) var(--space-lg);
+            border-bottom: 1px solid var(--gray-200);
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .comparison-row.header {
+            background: var(--gray-50);
+            font-weight: var(--font-semibold);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .comparison-row:last-child {
+            border-bottom: none;
+        }
+
+        .comparison-label {
+            color: var(--gray-900);
+            font-weight: var(--font-medium);
+        }
+
+        .comparison-value {
+            text-align: right;
+            font-weight: var(--font-semibold);
+        }
+
+        .comparison-value.overpriced {
+            color: var(--danger-red);
+        }
+
+        .comparison-value.fair {
+            color: var(--success-green);
+        }
+
+        .action-cards {
+            display: grid;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .action-card {
+            background: var(--white);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--gray-200);
+            transition: all var(--transition-normal);
+        }
+
+        .action-card:hover {
+            border-color: var(--payerset-blue);
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: var(--radius-circle);
+            background: var(--payerset-blue-soft);
+            color: var(--payerset-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .action-card h3 {
+            margin-bottom: var(--space-sm);
+            font-size: 1.25rem;
+        }
+
+        .action-card p {
+            margin-bottom: var(--space-md);
+            color: var(--gray-600);
+        }
+
+        .extracted-field {
+            margin-bottom: var(--space-md);
+        }
+
+        .extracted-field label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: var(--font-semibold);
+            color: var(--gray-700);
+        }
+
+        .extracted-field input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+        }
+
+        .extracted-field input:focus {
+            outline: none;
+            border-color: var(--payerset-blue);
+            box-shadow: 0 0 0 3px var(--payerset-blue-soft);
+        }
+
+        .field-source {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.75rem;
+            color: var(--success-green);
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 768px) {
+            .wizard-container {
+                padding: var(--space-md);
+            }
+
+            .wizard-step {
+                padding: var(--space-lg);
+            }
+
+            .comparison-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .comparison-value {
+                text-align: left;
+            }
+
+            .button-row {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="wizard-header">
+        <div class="wizard-header-content">
+            <a href="../index.html" class="wizard-logo">
+                <i class="fas fa-heart-pulse"></i>
+                <span>Bill Checker</span>
+            </a>
+            <div class="small text-gray">
+                <i class="fas fa-shield-halved"></i>
+                Your data is private & secure
+            </div>
+        </div>
+    </header>
+
+    <main class="wizard-container">
+        <!-- Progress Indicator -->
+        <div class="step-indicator fade-in">
+            <div class="step-item active" data-step="1">
+                <div class="step-number">1</div>
+                <div class="step-label">Upload Bill</div>
+            </div>
+            <div class="step-item" data-step="2">
+                <div class="step-number">2</div>
+                <div class="step-label">Review Details</div>
+            </div>
+            <div class="step-item" data-step="3">
+                <div class="step-number">3</div>
+                <div class="step-label">Get Results</div>
+            </div>
+            <div class="step-item" data-step="4">
+                <div class="step-number">4</div>
+                <div class="step-label">Take Action</div>
+            </div>
+        </div>
+
+        <!-- Step 1: Upload Bill -->
+        <div class="wizard-step active" id="step-1">
+            <div class="step-content">
+                <h1>Let's Check Your Medical Bill</h1>
+                <p class="subtitle">Upload a photo or PDF of your bill, and we'll analyze it for you. Or enter details manually.</p>
+
+                <div class="upload-zone" id="uploadZone" style="margin-top: 2rem;">
+                    <i class="fas fa-cloud-upload upload-icon"></i>
+                    <h3>Drag your bill here</h3>
+                    <p>or click to browse</p>
+                    <span class="upload-hint">Supports: PDF, JPG, PNG (max 10MB)</span>
+                    <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" hidden>
+                </div>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <button class="btn btn-secondary btn-block" onclick="wizard.skipToManual()">
+                    <i class="fas fa-keyboard"></i>
+                    Enter Details Manually
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Review Details -->
+        <div class="wizard-step" id="step-2">
+            <div class="step-content">
+                <h1>We Found These Details</h1>
+                <p class="subtitle">Please verify the information we extracted from your bill.</p>
+
+                <div id="extractedData"></div>
+
+                <div class="button-row">
+                    <button class="btn btn-ghost" onclick="wizard.prevStep()">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </button>
+                    <button class="btn btn-primary" onclick="wizard.analyzeAndProceed()">
+                        Looks Good <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Analysis & Results -->
+        <div class="wizard-step" id="step-3">
+            <!-- Loading state -->
+            <div class="loading-state" id="loadingState">
+                <div class="spinner"></div>
+                <h2>Analyzing Your Bill...</h2>
+                <p>Comparing against <strong>18,000+ real negotiated rates</strong></p>
+                <p class="small text-gray" style="margin-top: 1rem;">This usually takes just a few seconds</p>
+            </div>
+
+            <!-- Results state -->
+            <div id="resultsState" style="display: none;">
+                <h1 class="mb-lg">Here's What We Found</h1>
+
+                <div id="verdictCard"></div>
+
+                <div class="comparison-table" id="comparisonTable"></div>
+
+                <div class="alert alert-info">
+                    <div class="alert-icon"><i class="fas fa-circle-info"></i></div>
+                    <div class="alert-content">
+                        <div class="alert-title">How we calculated this</div>
+                        <div class="alert-message">
+                            We compared your charge against Medicare rates and negotiated rates from 18,000+ contracts across the U.S.
+                            Our data comes from federally-mandated hospital and payer transparency files.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <button class="btn btn-ghost" onclick="wizard.reset()">
+                        <i class="fas fa-redo"></i> Check Another Bill
+                    </button>
+                    <button class="btn btn-primary" onclick="wizard.nextStep()">
+                        What Can I Do? <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Action Plan -->
+        <div class="wizard-step" id="step-4">
+            <div class="step-content">
+                <h1>Here's Your Action Plan</h1>
+                <p class="subtitle mb-xl">Follow these steps to dispute the overcharge and pay a fair price.</p>
+
+                <div class="action-cards">
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <h3>1. Call the Billing Department</h3>
+                        <p>Use our script to negotiate your bill down to the fair price. Most hospitals will reduce charges if you ask politely and cite market data.</p>
+                        <button class="btn btn-secondary" onclick="downloadNegotiationScript()">
+                            <i class="fas fa-file-alt"></i> Download Script
+                        </button>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <h3>2. Request an Itemized Bill</h3>
+                        <p>Get a detailed breakdown of every charge. This often reveals errors and duplicate charges that reduce your bill automatically.</p>
+                        <button class="btn btn-secondary" onclick="downloadItemizedRequest()">
+                            <i class="fas fa-file-alt"></i> Sample Letter
+                        </button>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h3>3. Share Your Experience</h3>
+                        <p>Help others avoid overcharges by rating this provider. Your review helps build pricing transparency for everyone.</p>
+                        <button class="btn btn-secondary" onclick="window.location.href='../providers/reviews.html'">
+                            <i class="fas fa-star"></i> Leave Review
+                        </button>
+                    </div>
+                </div>
+
+                <div class="button-row">
+                    <button class="btn btn-secondary" onclick="wizard.reset()">
+                        <i class="fas fa-redo"></i> Check Another Bill
+                    </button>
+                    <button class="btn btn-primary" onclick="wizard.downloadReport()">
+                        <i class="fas fa-download"></i> Download Full Report
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../shared/js/wizard.js"></script>
+    <script src="../shared/js/animations.js"></script>
+
+    <script>
+        // Initialize wizard
+        const wizard = new WizardEngine({
+            totalSteps: 4,
+            data: {}
+        });
+
+        // Setup file upload
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('drag-over');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('drag-over');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('drag-over');
+            const file = e.dataTransfer.files[0];
+            handleFileUpload(file);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            handleFileUpload(file);
+        });
+
+        // Handle file upload
+        async function handleFileUpload(file) {
+            if (!file) return;
+
+            uploadZone.innerHTML = `
+                <div class="spinner"></div>
+                <h3>Processing your bill...</h3>
+                <p>Extracting information</p>
+            `;
+
+            // Simulate OCR processing
+            await new Promise(resolve => setTimeout(resolve, 2000));
+
+            // Mock extracted data
+            wizard.setData('procedure', 'MRI Scan - Brain without and with contrast');
+            wizard.setData('procedureCode', 'CPT 70553');
+            wizard.setData('chargedAmount', 2800);
+            wizard.setData('provider', 'Central Regional Hospital');
+            wizard.setData('providerNPI', '1234567890');
+            wizard.setData('dateOfService', '2024-11-15');
+            wizard.setData('zipCode', '78701');
+
+            displayExtractedData();
+            wizard.nextStep();
+        }
+
+        // Skip to manual entry
+        wizard.skipToManual = function() {
+            // Pre-fill with placeholder data
+            wizard.setData('procedure', '');
+            wizard.setData('procedureCode', '');
+            wizard.setData('chargedAmount', '');
+            wizard.setData('provider', '');
+            wizard.setData('dateOfService', '');
+
+            displayExtractedData();
+            wizard.nextStep();
+        };
+
+        // Display extracted data
+        function displayExtractedData() {
+            const container = document.getElementById('extractedData');
+            const data = wizard.getData();
+
+            container.innerHTML = `
+                <div class="extracted-field">
+                    <label for="procedure">Procedure</label>
+                    <input type="text" id="procedure" value="${data.procedure || ''}"
+                           onchange="wizard.setData('procedure', this.value)" required>
+                    ${data.procedure ? '<span class="field-source"><i class="fas fa-robot"></i> Auto-detected</span>' : ''}
+                </div>
+
+                <div class="extracted-field">
+                    <label for="procedureCode">Procedure Code (CPT)</label>
+                    <input type="text" id="procedureCode" value="${data.procedureCode || ''}"
+                           onchange="wizard.setData('procedureCode', this.value)" required>
+                    ${data.procedureCode ? '<span class="field-source"><i class="fas fa-robot"></i> Auto-detected</span>' : ''}
+                </div>
+
+                <div class="extracted-field">
+                    <label for="chargedAmount">Amount Charged ($)</label>
+                    <input type="number" id="chargedAmount" value="${data.chargedAmount || ''}"
+                           onchange="wizard.setData('chargedAmount', parseFloat(this.value))" required>
+                    ${data.chargedAmount ? '<span class="field-source"><i class="fas fa-robot"></i> Auto-detected</span>' : ''}
+                </div>
+
+                <div class="extracted-field">
+                    <label for="provider">Provider / Hospital Name</label>
+                    <input type="text" id="provider" value="${data.provider || ''}"
+                           onchange="wizard.setData('provider', this.value)" required>
+                    ${data.provider ? '<span class="field-source"><i class="fas fa-robot"></i> Auto-detected</span>' : ''}
+                </div>
+
+                <div class="extracted-field">
+                    <label for="dateOfService">Date of Service</label>
+                    <input type="date" id="dateOfService" value="${data.dateOfService || ''}"
+                           onchange="wizard.setData('dateOfService', this.value)" required>
+                </div>
+            `;
+        }
+
+        // Analyze and proceed
+        wizard.analyzeAndProceed = async function() {
+            wizard.nextStep();
+
+            // Show loading state
+            document.getElementById('loadingState').style.display = 'block';
+            document.getElementById('resultsState').style.display = 'none';
+
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 2500));
+
+            // Calculate results (mock data)
+            const chargedAmount = wizard.getData('chargedAmount');
+            const fairPrice = 425;
+            const medicareRate = 380;
+            const savings = chargedAmount - fairPrice;
+            const percentageOver = Math.round((savings / fairPrice) * 100);
+
+            wizard.setData('fairPrice', fairPrice);
+            wizard.setData('medicareRate', medicareRate);
+            wizard.setData('savings', savings);
+            wizard.setData('percentageOver', percentageOver);
+
+            // Determine verdict
+            let verdict = 'excellent';
+            if (savings > fairPrice * 0.3) {
+                verdict = 'overcharged';
+            } else if (savings > 0) {
+                verdict = 'fair';
+            }
+
+            wizard.setData('verdict', verdict);
+
+            // Display results
+            displayResults();
+
+            // Hide loading, show results
+            document.getElementById('loadingState').style.display = 'none';
+            document.getElementById('resultsState').style.display = 'block';
+
+            // Celebrate if good result
+            if (verdict === 'excellent') {
+                setTimeout(() => animationUtils.celebrate(), 500);
+            }
+        };
+
+        // Display results
+        function displayResults() {
+            const data = wizard.getData();
+            const verdictCard = document.getElementById('verdictCard');
+            const comparisonTable = document.getElementById('comparisonTable');
+
+            // Verdict card
+            if (data.verdict === 'overcharged') {
+                verdictCard.className = 'verdict-card overcharged success-bounce';
+                verdictCard.innerHTML = `
+                    <div class="verdict-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                    <h2>You're Being Overcharged</h2>
+                    <p>This provider charged you <strong>${data.percentageOver}% more</strong> than the fair market price.</p>
+                    <div class="savings-amount">
+                        Potential Savings: <strong>$${data.savings.toLocaleString()}</strong>
+                    </div>
+                `;
+            } else if (data.verdict === 'fair') {
+                verdictCard.className = 'verdict-card fair success-bounce';
+                verdictCard.innerHTML = `
+                    <div class="verdict-icon"><i class="fas fa-circle-check"></i></div>
+                    <h2>Fair Price Range</h2>
+                    <p>This charge is within the normal market range, though you could still save a bit.</p>
+                    <div class="savings-amount">
+                        Small Savings: <strong>$${data.savings.toLocaleString()}</strong>
+                    </div>
+                `;
+            } else {
+                verdictCard.className = 'verdict-card excellent success-bounce';
+                verdictCard.innerHTML = `
+                    <div class="verdict-icon"><i class="fas fa-star"></i></div>
+                    <h2>Excellent Deal!</h2>
+                    <p>Great news! You got a very competitive price for this procedure.</p>
+                    <div class="savings-amount">You're already saving money!</div>
+                `;
+            }
+
+            // Comparison table
+            comparisonTable.innerHTML = `
+                <div class="comparison-row header">
+                    <div>Item</div>
+                    <div>Amount</div>
+                    <div>% of Medicare</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">What You Were Charged</div>
+                    <div class="comparison-value overpriced">$${data.chargedAmount.toLocaleString()}</div>
+                    <div class="comparison-value overpriced">${Math.round((data.chargedAmount / data.medicareRate) * 100)}%</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">Fair Market Price</div>
+                    <div class="comparison-value fair">$${data.fairPrice.toLocaleString()}</div>
+                    <div class="comparison-value fair">${Math.round((data.fairPrice / data.medicareRate) * 100)}%</div>
+                </div>
+                <div class="comparison-row">
+                    <div class="comparison-label">Medicare Rate (Benchmark)</div>
+                    <div class="comparison-value">$${data.medicareRate.toLocaleString()}</div>
+                    <div class="comparison-value">100%</div>
+                </div>
+            `;
+        }
+
+        // Download negotiation script
+        function downloadNegotiationScript() {
+            const data = wizard.getData();
+            const script = `NEGOTIATION SCRIPT
+Provider: ${data.provider}
+Procedure: ${data.procedure}
+Amount Charged: $${data.chargedAmount}
+Fair Price: $${data.fairPrice}
+Target Savings: $${data.savings}
+
+STEP 1: Call billing department
+"Hello, I received a bill for ${data.procedure} on ${data.dateOfService}. The amount charged was $${data.chargedAmount}. I've researched this procedure and found that the fair market price is around $${data.fairPrice}, which is ${Math.round((data.fairPrice / data.medicareRate) * 100)}% of Medicare rates. I'd like to discuss reducing my bill to this fair price."
+
+STEP 2: If they resist
+"I understand you have standard rates, but this charge is ${data.percentageOver}% above fair market value. I have data from federally-mandated transparency files showing negotiated rates for this exact procedure. Can you offer a cash discount or payment plan that gets closer to the fair price?"
+
+STEP 3: Request supervisor if needed
+"I appreciate your help. Could I speak with a supervisor or patient advocate who can authorize an adjustment?"
+
+IMPORTANT: Be polite but firm. Many hospitals will reduce charges if you're persistent and cite market data.`;
+
+            const blob = new Blob([script], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `negotiation-script-${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            ToastNotification.show('Negotiation script downloaded!', 'success');
+        }
+
+        // Download itemized request
+        function downloadItemizedRequest() {
+            const data = wizard.getData();
+            const letter = `[Your Name]
+[Your Address]
+[City, State ZIP]
+[Date]
+
+${data.provider}
+Billing Department
+[Hospital Address]
+
+RE: Request for Itemized Bill
+Account Number: [Your Account Number]
+Date of Service: ${data.dateOfService}
+
+Dear Billing Department,
+
+I am writing to request a fully itemized bill for the medical services I received on ${data.dateOfService}.
+
+Please provide:
+1. Detailed list of all services, procedures, and supplies
+2. Individual cost for each item
+3. Any applicable discounts or insurance adjustments
+4. Medical codes (CPT, HCPCS) for all procedures
+
+This is my right under federal law (Section 2799B-6 of the Public Health Service Act).
+
+Please send the itemized bill to the address above within 30 days.
+
+Thank you for your assistance.
+
+Sincerely,
+[Your Signature]
+[Your Name]`;
+
+            const blob = new Blob([letter], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `itemized-bill-request-${Date.now()}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            ToastNotification.show('Request letter downloaded!', 'success');
+        }
+
+        // Download full report
+        wizard.downloadReport = function() {
+            const report = {
+                ...wizard.getData(),
+                generatedAt: new Date().toISOString(),
+                citations: [
+                    {
+                        source: "CMS Physician Fee Schedule 2024",
+                        url: "https://www.cms.gov/medicare/payment/fee-schedules/physician"
+                    },
+                    {
+                        source: "Hospital Price Transparency Data",
+                        url: "https://www.cms.gov/hospital-price-transparency"
+                    }
+                ]
+            };
+
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `bill-analysis-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            ToastNotification.show('Report downloaded!', 'success');
+        };
+    </script>
+</body>
+</html>

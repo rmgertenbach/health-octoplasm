@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rate Your Provider - Help Others Find Quality Care | Healthcare Transparency</title>
+    <meta name="description" content="Share your experience to help others find quality healthcare. Rate providers on care quality, communication, wait times, and billing transparency.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --payerset-blue: #0092CA;
+            --payerset-blue-light: #33A9D6;
+            --payerset-blue-dark: #006B96;
+            --patient-primary: #3B82F6;
+            --patient-light: #DBEAFE;
+            --success-green: #10B981;
+            --warning-orange: #F59E0B;
+            --danger-red: #EF4444;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-600: #4B5563;
+            --gray-900: #111827;
+            --white: #FFFFFF;
+            --star-yellow: #FBBF24;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-900);
+            background: var(--gray-50);
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--payerset-blue);
+            text-decoration: none;
+        }
+
+        .back-link {
+            color: var(--gray-600);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+
+        .back-link:hover {
+            color: var(--payerset-blue);
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--patient-primary) 0%, var(--payerset-blue-dark) 100%);
+            color: var(--white);
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .hero-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+        }
+
+        .hero-stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Card */
+        .card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--gray-900);
+        }
+
+        .section-subtitle {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 2rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--gray-900);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--patient-primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Star Rating */
+        .star-rating {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .star {
+            font-size: 2rem;
+            color: var(--gray-200);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .star:hover,
+        .star.active {
+            color: var(--star-yellow);
+            transform: scale(1.1);
+        }
+
+        .rating-label {
+            margin-left: 1rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+
+        /* Rating Categories */
+        .rating-grid {
+            display: grid;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .rating-category {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: 16px;
+        }
+
+        .rating-category-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .rating-category-icon {
+            color: var(--patient-primary);
+            font-size: 1.25rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--patient-primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--payerset-blue-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Info Box */
+        .info-box {
+            background: var(--patient-light);
+            border: 1px solid var(--patient-primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            display: flex;
+            gap: 1rem;
+        }
+
+        .info-box-icon {
+            font-size: 1.5rem;
+            color: var(--patient-primary);
+        }
+
+        /* Recent Reviews */
+        .review-card {
+            background: var(--white);
+            border: 1px solid var(--gray-200);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .review-provider {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--gray-900);
+        }
+
+        .review-date {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .review-stars {
+            display: flex;
+            gap: 0.25rem;
+            margin: 0.5rem 0;
+        }
+
+        .review-star {
+            color: var(--star-yellow);
+            font-size: 1rem;
+        }
+
+        .review-text {
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin: 1rem 0;
+        }
+
+        .review-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .review-category-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .review-category-label {
+            color: var(--gray-600);
+        }
+
+        .review-category-rating {
+            font-weight: 600;
+            color: var(--patient-primary);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--gray-50);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--patient-primary);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            margin-top: 0.5rem;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+            border: 2px solid var(--success-green);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--success-green);
+            margin-bottom: 1rem;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 1.5rem 2rem;
+            }
+
+            .card {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero-stats {
+                gap: 2rem;
+            }
+
+            .review-header {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="../index.html" class="logo">
+                <i class="fas fa-star"></i> Provider Reviews
+            </a>
+            <a href="bill-checker.html" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Bill Checker
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1><i class="fas fa-star"></i> Rate Your Provider</h1>
+        <p class="hero-subtitle">
+            Help others find quality care by sharing your experience. Your feedback helps thousands of patients make better healthcare decisions.
+        </p>
+        <div class="hero-stats">
+            <div>
+                <span class="hero-stat-number">8,429</span>
+                <span class="hero-stat-label">Provider reviews</span>
+            </div>
+            <div>
+                <span class="hero-stat-number">2,341</span>
+                <span class="hero-stat-label">Providers rated</span>
+            </div>
+            <div>
+                <span class="hero-stat-number">4.2</span>
+                <span class="hero-stat-label">Average rating</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Info Box -->
+        <div class="info-box">
+            <div class="info-box-icon">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+            <div>
+                <strong>Why your review matters:</strong>
+                <p style="margin: 0.5rem 0 0;">Traditional quality data (like Leapfrog grades) is hard to get and often unreliable. Your real experience helps fill this gap and gives patients the information they actually need.</p>
+            </div>
+        </div>
+
+        <!-- Review Form -->
+        <div class="card" id="reviewForm">
+            <h2 class="section-title">Share Your Experience</h2>
+            <p class="section-subtitle">
+                Rate your recent healthcare visit. All fields are optional except provider name and overall rating.
+            </p>
+
+            <form id="providerReviewForm">
+                <!-- Provider Info -->
+                <div class="form-group">
+                    <label class="form-label">Provider or Facility Name *</label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        id="providerName"
+                        placeholder="e.g., Austin Imaging Center, Dr. Smith at Community Hospital..."
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Location (City, State)</label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        id="providerLocation"
+                        placeholder="e.g., Austin, TX"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Procedure or Service</label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        id="procedureType"
+                        placeholder="e.g., MRI Scan, Hip Replacement, Annual Checkup..."
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Visit Date</label>
+                    <input
+                        type="month"
+                        class="form-input"
+                        id="visitDate"
+                    >
+                </div>
+
+                <!-- Overall Rating -->
+                <div class="form-group">
+                    <label class="form-label">Overall Rating *</label>
+                    <div style="display: flex; align-items: center;">
+                        <div class="star-rating" id="overallRating">
+                            <i class="fas fa-star star" data-rating="1"></i>
+                            <i class="fas fa-star star" data-rating="2"></i>
+                            <i class="fas fa-star star" data-rating="3"></i>
+                            <i class="fas fa-star star" data-rating="4"></i>
+                            <i class="fas fa-star star" data-rating="5"></i>
+                        </div>
+                        <span class="rating-label" id="overallLabel">Select rating</span>
+                    </div>
+                    <input type="hidden" id="overallRatingValue" required>
+                </div>
+
+                <!-- Detailed Ratings -->
+                <div class="rating-grid">
+                    <div class="rating-category">
+                        <div class="rating-category-title">
+                            <i class="fas fa-user-doctor rating-category-icon"></i>
+                            Quality of Care
+                        </div>
+                        <div class="star-rating" id="careRating">
+                            <i class="fas fa-star star" data-rating="1"></i>
+                            <i class="fas fa-star star" data-rating="2"></i>
+                            <i class="fas fa-star star" data-rating="3"></i>
+                            <i class="fas fa-star star" data-rating="4"></i>
+                            <i class="fas fa-star star" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="careRatingValue">
+                    </div>
+
+                    <div class="rating-category">
+                        <div class="rating-category-title">
+                            <i class="fas fa-comments rating-category-icon"></i>
+                            Communication
+                        </div>
+                        <div class="star-rating" id="commRating">
+                            <i class="fas fa-star star" data-rating="1"></i>
+                            <i class="fas fa-star star" data-rating="2"></i>
+                            <i class="fas fa-star star" data-rating="3"></i>
+                            <i class="fas fa-star star" data-rating="4"></i>
+                            <i class="fas fa-star star" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="commRatingValue">
+                    </div>
+
+                    <div class="rating-category">
+                        <div class="rating-category-title">
+                            <i class="fas fa-clock rating-category-icon"></i>
+                            Wait Time
+                        </div>
+                        <div class="star-rating" id="waitRating">
+                            <i class="fas fa-star star" data-rating="1"></i>
+                            <i class="fas fa-star star" data-rating="2"></i>
+                            <i class="fas fa-star star" data-rating="3"></i>
+                            <i class="fas fa-star star" data-rating="4"></i>
+                            <i class="fas fa-star star" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="waitRatingValue">
+                    </div>
+
+                    <div class="rating-category">
+                        <div class="rating-category-title">
+                            <i class="fas fa-file-invoice-dollar rating-category-icon"></i>
+                            Billing Transparency
+                        </div>
+                        <div class="star-rating" id="billingRating">
+                            <i class="fas fa-star star" data-rating="1"></i>
+                            <i class="fas fa-star star" data-rating="2"></i>
+                            <i class="fas fa-star star" data-rating="3"></i>
+                            <i class="fas fa-star star" data-rating="4"></i>
+                            <i class="fas fa-star star" data-rating="5"></i>
+                        </div>
+                        <input type="hidden" id="billingRatingValue">
+                    </div>
+                </div>
+
+                <!-- Written Review -->
+                <div class="form-group">
+                    <label class="form-label">Tell us about your experience (optional)</label>
+                    <textarea
+                        class="form-textarea"
+                        id="reviewText"
+                        placeholder="What went well? What could be improved? How was the facility? Would you recommend this provider?"
+                    ></textarea>
+                </div>
+
+                <!-- Price Info (Optional) -->
+                <div class="form-group">
+                    <label class="form-label">What were you charged? (optional, helps others compare)</label>
+                    <input
+                        type="number"
+                        class="form-input"
+                        id="chargedAmount"
+                        placeholder="e.g., 2800"
+                    >
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-paper-plane"></i>
+                    Submit Review
+                </button>
+            </form>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+            <div class="success-icon"><i class="fas fa-circle-check"></i></div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Thank You!</h3>
+            <p style="font-size: 1.1rem; color: var(--gray-600);">
+                Your review has been submitted and will help thousands of patients find quality care.
+            </p>
+            <button class="btn btn-primary" onclick="location.reload()" style="margin-top: 1.5rem;">
+                <i class="fas fa-plus"></i>
+                Submit Another Review
+            </button>
+        </div>
+
+        <!-- Recent Reviews Section -->
+        <div class="card">
+            <h2 class="section-title">Recent Reviews</h2>
+            <p class="section-subtitle">See what other patients are saying</p>
+
+            <div id="recentReviews">
+                <!-- Sample Review 1 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <div>
+                            <div class="review-provider">HighQuality Imaging Center</div>
+                            <div class="review-stars">
+                                <i class="fas fa-star review-star"></i>
+                                <i class="fas fa-star review-star"></i>
+                                <i class="fas fa-star review-star"></i>
+                                <i class="fas fa-star review-star"></i>
+                                <i class="fas fa-star review-star"></i>
+                            </div>
+                        </div>
+                        <div class="review-date">2 days ago</div>
+                    </div>
+                    <div class="review-text">
+                        "Excellent experience getting an MRI here. Professional staff, clean facility, and they were upfront about costs. Saved $2,000 compared to the hospital quote. Highly recommend!"
+                    </div>
+                    <div class="review-categories">
+                        <div class="review-category-item">
+                            <span class="review-category-label">Care Quality:</span>
+                            <span class="review-category-rating">5.0</span>
+                        </div>
+                        <div class="review-category-item">
+                            <span class="review-category-label">Wait Time:</span>
+                            <span class="review-category-rating">5.0</span>
+                        </div>
+                        <div class="review-category-item">
+                            <span class="review-category-label">Billing:</span>
+                            <span class="review-category-rating">5.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Review 2 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <div>
+                            <div class="review-provider">Austin Orthopedics Group</div>
+                            <div class="review-stars">
+                                <i class="fas fa-star review-star"></i>
+                                <i class="fas fa-star review-star"></i>
+                                <i class="fas fa-star review-star"></i>
+                                <i class="fas fa-star review-star"></i>
+                                <i class="far fa-star review-star" style="color: var(--gray-200);"></i>
+                            </div>
+                        </div>
+                        <div class="review-date">1 week ago</div>
+                    </div>
+                    <div class="review-text">
+                        "Dr. Johnson was thorough and explained everything clearly before my hip replacement. Recovery has been smooth. Only complaint was a 30-minute wait past my appointment time."
+                    </div>
+                    <div class="review-categories">
+                        <div class="review-category-item">
+                            <span class="review-category-label">Care Quality:</span>
+                            <span class="review-category-rating">5.0</span>
+                        </div>
+                        <div class="review-category-item">
+                            <span class="review-category-label">Communication:</span>
+                            <span class="review-category-rating">5.0</span>
+                        </div>
+                        <div class="review-category-item">
+                            <span class="review-category-label">Wait Time:</span>
+                            <span class="review-category-rating">3.0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sample Review 3 -->
+                <div class="review-card">
+                    <div class="review-header">
+                        <div>
+                            <div class="review-provider">Community Health Center</div>
+                            <div class="review-stars">
+                                <i class="fas fa-star review-star"></i>
+                                <i class="fas fa-star review-star"></i>
+                                <i class="fas fa-star review-star"></i>
+                                <i class="fas fa-star review-star"></i>
+                                <i class="fas fa-star review-star"></i>
+                            </div>
+                        </div>
+                        <div class="review-date">2 weeks ago</div>
+                    </div>
+                    <div class="review-text">
+                        "Great experience for my colonoscopy screening. Staff made me feel comfortable throughout the process. Fair pricing and they worked with my insurance to minimize my out-of-pocket."
+                    </div>
+                    <div class="review-categories">
+                        <div class="review-category-item">
+                            <span class="review-category-label">Care Quality:</span>
+                            <span class="review-category-rating">5.0</span>
+                        </div>
+                        <div class="review-category-item">
+                            <span class="review-category-label">Communication:</span>
+                            <span class="review-category-rating">5.0</span>
+                        </div>
+                        <div class="review-category-item">
+                            <span class="review-category-label">Billing:</span>
+                            <span class="review-category-rating">5.0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Platform Stats -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-number">8,429</span>
+                <span class="stat-label">Total Reviews</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">2,341</span>
+                <span class="stat-label">Providers Rated</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">4.2</span>
+                <span class="stat-label">Avg Rating</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">92%</span>
+                <span class="stat-label">Would Recommend</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Star rating functionality
+        function setupStarRating(containerId, hiddenInputId, labelId = null) {
+            const container = document.getElementById(containerId);
+            const hiddenInput = document.getElementById(hiddenInputId);
+            const label = labelId ? document.getElementById(labelId) : null;
+            const stars = container.querySelectorAll('.star');
+
+            let selectedRating = 0;
+
+            stars.forEach(star => {
+                star.addEventListener('click', function() {
+                    selectedRating = parseInt(this.dataset.rating);
+                    hiddenInput.value = selectedRating;
+
+                    if (label) {
+                        const labels = ['Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+                        label.textContent = labels[selectedRating - 1];
+                    }
+
+                    updateStars(selectedRating);
+                });
+
+                star.addEventListener('mouseenter', function() {
+                    const rating = parseInt(this.dataset.rating);
+                    updateStars(rating);
+                });
+            });
+
+            container.addEventListener('mouseleave', function() {
+                updateStars(selectedRating);
+            });
+
+            function updateStars(rating) {
+                stars.forEach((star, index) => {
+                    if (index < rating) {
+                        star.classList.add('active');
+                    } else {
+                        star.classList.remove('active');
+                    }
+                });
+            }
+        }
+
+        // Setup all star ratings
+        setupStarRating('overallRating', 'overallRatingValue', 'overallLabel');
+        setupStarRating('careRating', 'careRatingValue');
+        setupStarRating('commRating', 'commRatingValue');
+        setupStarRating('waitRating', 'waitRatingValue');
+        setupStarRating('billingRating', 'billingRatingValue');
+
+        // Form submission
+        document.getElementById('providerReviewForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = {
+                providerName: document.getElementById('providerName').value,
+                location: document.getElementById('providerLocation').value,
+                procedure: document.getElementById('procedureType').value,
+                visitDate: document.getElementById('visitDate').value,
+                ratings: {
+                    overall: parseInt(document.getElementById('overallRatingValue').value),
+                    care: parseInt(document.getElementById('careRatingValue').value) || null,
+                    communication: parseInt(document.getElementById('commRatingValue').value) || null,
+                    waitTime: parseInt(document.getElementById('waitRatingValue').value) || null,
+                    billing: parseInt(document.getElementById('billingRatingValue').value) || null
+                },
+                reviewText: document.getElementById('reviewText').value,
+                chargedAmount: document.getElementById('chargedAmount').value || null,
+                submittedAt: new Date().toISOString()
+            };
+
+            // In production, this would be an API call:
+            // await fetch('/api/v1/reviews', { method: 'POST', body: JSON.stringify(formData) });
+
+            console.log('Review submitted:', formData);
+
+            // Show success message
+            document.getElementById('reviewForm').style.display = 'none';
+            document.getElementById('successMessage').classList.add('show');
+
+            // Scroll to success message
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+
+            // TODO: Update stats counters
+            // TODO: Add review to recent reviews list
+        });
+    </script>
+</body>
+</html>

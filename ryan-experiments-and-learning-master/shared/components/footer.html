@@ -1,0 +1,252 @@
+<!-- Unified Site Footer -->
+<footer class="site-footer">
+    <div class="footer-container">
+        <!-- About Section -->
+        <div class="footer-section">
+            <div class="footer-logo">
+                <span class="footer-logo-mark">PS</span>
+                <span class="footer-logo-text">Payerset</span>
+            </div>
+            <p class="footer-tagline">Making healthcare pricing transparent and fair.</p>
+            <div class="footer-social">
+                <a href="https://payerset.com" target="_blank" rel="noopener noreferrer" aria-label="Visit Payerset website">
+                    <i class="fas fa-globe"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Tools Section -->
+        <div class="footer-section">
+            <h4 class="footer-title">Tools</h4>
+            <nav class="footer-links">
+                <a href="/tools/patients/index.html">For Patients</a>
+                <a href="/tools/employers/index.html">For Employers</a>
+                <a href="/tools/providers/index.html">For Providers</a>
+            </nav>
+        </div>
+
+        <!-- Learn Section -->
+        <div class="footer-section">
+            <h4 class="footer-title">Learn</h4>
+            <nav class="footer-links">
+                <a href="/story/index.html">Our Story</a>
+                <a href="/learn/index.html">Healthcare Transparency</a>
+                <a href="/2025-11/index.html">Resources</a>
+            </nav>
+        </div>
+
+        <!-- Connect Section -->
+        <div class="footer-section">
+            <h4 class="footer-title">Connect</h4>
+            <nav class="footer-links">
+                <a href="https://payerset.com" target="_blank" rel="noopener noreferrer">
+                    Payerset.com
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+                <a href="https://github.com/payerset" target="_blank" rel="noopener noreferrer">
+                    GitHub
+                    <i class="fas fa-external-link-alt"></i>
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+        <div class="footer-bottom-container">
+            <p class="footer-copyright">
+                &copy; 2024 Payerset. Educational and informational purposes only.
+            </p>
+            <p class="footer-disclaimer">
+                This site provides educational information about healthcare pricing.
+                It is not medical or financial advice. Always consult qualified professionals.
+            </p>
+        </div>
+    </div>
+</footer>
+
+<style>
+/* ============================================================================
+   FOOTER STYLES
+   ============================================================================ */
+
+.site-footer {
+    background: var(--gray-900);
+    color: var(--gray-300);
+    padding: var(--space-2xl) var(--space-lg) var(--space-lg);
+    margin-top: var(--space-2xl);
+}
+
+/* ============================================================================
+   FOOTER CONTAINER
+   ============================================================================ */
+
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xl);
+}
+
+/* ============================================================================
+   FOOTER SECTIONS
+   ============================================================================ */
+
+.footer-section {
+    min-width: 0; /* Prevent grid overflow */
+}
+
+.footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: var(--space-sm);
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--white);
+}
+
+.footer-logo-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--payerset-blue);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.875rem;
+}
+
+.footer-logo-text {
+    color: var(--white);
+}
+
+.footer-tagline {
+    color: var(--gray-400);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    margin-bottom: var(--space-md);
+}
+
+.footer-social {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.footer-social a {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--gray-800);
+    color: var(--gray-300);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all var(--transition-fast);
+}
+
+.footer-social a:hover {
+    background: var(--payerset-blue);
+    color: var(--white);
+    transform: translateY(-2px);
+}
+
+.footer-title {
+    margin-bottom: var(--space-sm);
+    color: var(--payerset-blue-light);
+    font-size: 1.125rem;
+    font-weight: 600;
+}
+
+.footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.footer-links a {
+    color: var(--gray-300);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.footer-links a:hover {
+    color: var(--white);
+}
+
+.footer-links a i {
+    font-size: 0.75rem;
+    opacity: 0.7;
+}
+
+/* ============================================================================
+   FOOTER BOTTOM
+   ============================================================================ */
+
+.footer-bottom {
+    border-top: 1px solid var(--gray-800);
+    padding-top: var(--space-lg);
+}
+
+.footer-bottom-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.footer-copyright {
+    color: var(--gray-500);
+    font-size: 0.875rem;
+    margin-bottom: var(--space-xs);
+}
+
+.footer-disclaimer {
+    color: var(--gray-600);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* ============================================================================
+   RESPONSIVE STYLES
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .site-footer {
+        padding: var(--space-xl) var(--space-md) var(--space-md);
+    }
+
+    .footer-container {
+        grid-template-columns: 1fr;
+        gap: var(--space-lg);
+    }
+
+    .footer-section:first-child {
+        padding-bottom: var(--space-md);
+        border-bottom: 1px solid var(--gray-800);
+    }
+
+    .footer-bottom-container {
+        text-align: left;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-logo-text {
+        font-size: 1.125rem;
+    }
+
+    .footer-title {
+        font-size: 1rem;
+    }
+}
+</style>

@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spread Pricing Detector | Healthcare Transparency Hub</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../shared/css/core.css">
+    <link rel="stylesheet" href="../shared/css/components.css">
+    <link rel="stylesheet" href="../shared/css/animations.css">
+
+    <style>
+        body {
+            background: var(--gray-50);
+        }
+
+        .app-header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            padding: var(--space-md) 0;
+            position: sticky;
+            top: 0;
+            z-index: var(--z-sticky);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .app-header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--gray-900);
+            font-weight: var(--font-bold);
+            font-size: 1.125rem;
+        }
+
+        .app-logo i {
+            color: var(--success-green);
+            font-size: 1.5rem;
+        }
+
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-lg);
+        }
+
+        .dashboard-hero {
+            background: linear-gradient(135deg, var(--success-green), #059669);
+            color: var(--white);
+            padding: var(--space-2xl);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-xl);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
+        }
+
+        .hero-stat {
+            text-align: center;
+            padding: var(--space-lg);
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-stat-number {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: var(--font-extrabold);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .hero-stat-label {
+            font-size: 0.9375rem;
+            opacity: 0.9;
+        }
+
+        .heat-map-card {
+            background: var(--white);
+            padding: var(--space-xl);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .heat-map-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: var(--space-lg);
+            flex-wrap: wrap;
+            gap: var(--space-md);
+        }
+
+        .heat-map-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+            padding: var(--space-md);
+            border-bottom: 1px solid var(--gray-200);
+            align-items: center;
+            gap: var(--space-md);
+            transition: background var(--transition-fast);
+        }
+
+        .heat-map-row.header {
+            background: var(--gray-50);
+            font-weight: var(--font-semibold);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: sticky;
+            top: 64px;
+            z-index: 100;
+        }
+
+        .heat-map-row:not(.header):hover {
+            background: var(--gray-50);
+        }
+
+        .heat-map-row:last-child {
+            border-bottom: none;
+        }
+
+        .spread-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.375rem 0.75rem;
+            border-radius: var(--radius-pill);
+            font-weight: var(--font-bold);
+            font-size: 0.875rem;
+        }
+
+        .spread-badge.critical {
+            background: var(--danger-red);
+            color: var(--white);
+        }
+
+        .spread-badge.high {
+            background: var(--warning-orange);
+            color: var(--white);
+        }
+
+        .spread-badge.moderate {
+            background: var(--info-blue-light);
+            color: var(--info-blue);
+        }
+
+        .spread-badge.low {
+            background: var(--success-green-light);
+            color: var(--success-green);
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .insight-card {
+            background: var(--white);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border-left: 4px solid;
+        }
+
+        .insight-card.danger {
+            border-color: var(--danger-red);
+        }
+
+        .insight-card.warning {
+            border-color: var(--warning-orange);
+        }
+
+        .insight-card.info {
+            border-color: var(--info-blue);
+        }
+
+        .insight-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-circle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .insight-card.danger .insight-icon {
+            background: var(--danger-red-light);
+            color: var(--danger-red);
+        }
+
+        .insight-card.warning .insight-icon {
+            background: var(--warning-orange-light);
+            color: var(--warning-orange);
+        }
+
+        .insight-card.info .insight-icon {
+            background: var(--info-blue-light);
+            color: var(--info-blue);
+        }
+
+        .insight-number {
+            font-size: 1.75rem;
+            font-weight: var(--font-extrabold);
+            margin-bottom: 0.5rem;
+        }
+
+        .insight-label {
+            color: var(--gray-600);
+            font-size: 0.9375rem;
+            margin-bottom: var(--space-md);
+        }
+
+        @media (max-width: 768px) {
+            .heat-map-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+
+            .heat-map-row.header {
+                display: none;
+            }
+
+            .dashboard-hero {
+                padding: var(--space-lg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="app-header">
+        <div class="app-header-content">
+            <a href="../index.html" class="app-logo">
+                <i class="fas fa-magnifying-glass-dollar"></i>
+                <span>Spread Pricing Detector</span>
+            </a>
+            <div class="flex gap-md">
+                <button class="btn btn-ghost btn-sm">
+                    <i class="fas fa-download"></i>
+                    Export Report
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Hero Section -->
+        <div class="dashboard-hero fade-in">
+            <h1 style="margin-bottom: 1rem;">Spread Pricing Analysis</h1>
+            <p style="opacity: 0.95; font-size: 1.125rem; max-width: 700px;">
+                We analyzed your <span class="glossary-term">TPA</span> and <span class="glossary-term">PBM</span> contracts and found significant spread pricing.
+                Here's how much you're losing to middleman fees.
+            </p>
+
+            <div class="hero-stats">
+                <div class="hero-stat stagger-item">
+                    <div class="hero-stat-number" data-counter="2.8" data-prefix="$" data-suffix="M" data-decimals="1">$0M</div>
+                    <div class="hero-stat-label">Annual Leakage Detected</div>
+                </div>
+                <div class="hero-stat stagger-item">
+                    <div class="hero-stat-number" data-counter="247" data-suffix="%">0%</div>
+                    <div class="hero-stat-label">Average Spread Found</div>
+                </div>
+                <div class="hero-stat stagger-item">
+                    <div class="hero-stat-number" data-counter="1842">0</div>
+                    <div class="hero-stat-label">High-Spread Claims</div>
+                </div>
+                <div class="hero-stat stagger-item">
+                    <div class="hero-stat-number" data-counter="94" data-suffix="%">0%</div>
+                    <div class="hero-stat-label">Claims with Spread >50%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Insights -->
+        <div class="insights-grid">
+            <div class="insight-card danger animate-on-scroll">
+                <div class="insight-icon">
+                    <i class="fas fa-triangle-exclamation"></i>
+                </div>
+                <div class="insight-number text-danger">$427,000</div>
+                <div class="insight-label">Highest Single Provider Spread</div>
+                <p class="small">Austin Imaging Center charged employers $892 per MRI while paying providers only $465.</p>
+            </div>
+
+            <div class="insight-card warning animate-on-scroll">
+                <div class="insight-icon">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <div class="insight-number text-warning">387%</div>
+                <div class="insight-label">Worst Spread Percentage</div>
+                <p class="small">Prescription Drug: Humira 40mg pen charged at $3,240, remitted $665.</p>
+            </div>
+
+            <div class="insight-card info animate-on-scroll">
+                <div class="insight-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="insight-number text-primary">23</div>
+                <div class="insight-label">Providers with Consistent Spread</div>
+                <p class="small">These providers show spread pricing across multiple procedure types.</p>
+            </div>
+        </div>
+
+        <!-- Heat Map -->
+        <div class="heat-map-card animate-on-scroll">
+            <div class="heat-map-header">
+                <div>
+                    <h2>High-Spread Providers</h2>
+                    <p class="small text-gray mt-sm">Sorted by total annual leakage</p>
+                </div>
+                <div class="flex gap-sm">
+                    <button class="btn btn-secondary btn-sm">
+                        <i class="fas fa-filter"></i>
+                        Filter
+                    </button>
+                    <button class="btn btn-secondary btn-sm">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <div id="heatMapTable"></div>
+        </div>
+
+        <!-- Action Section -->
+        <div class="card animate-on-scroll">
+            <h2 class="mb-md">Recommended Actions</h2>
+            <p class="text-gray mb-lg">Take these steps to recover leakage and prevent future spread pricing.</p>
+
+            <div class="action-cards">
+                <div class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h3>1. Confront Your TPA</h3>
+                    <p>Use our audit report to demand contract renegotiation or refunds for hidden fees.</p>
+                    <button class="btn btn-primary" onclick="downloadAuditPackage()">
+                        <i class="fas fa-download"></i> Download Confrontation Package
+                    </button>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-handshake"></i>
+                    </div>
+                    <h3>2. Direct Contract with Providers</h3>
+                    <p>Cut out the middleman by negotiating direct rates with high-volume providers.</p>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-users"></i> Identify Direct Contract Targets
+                    </button>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-shield-halved"></i>
+                    </div>
+                    <h3>3. Implement Spread Controls</h3>
+                    <p>Add contractual limits on spread percentage and require monthly reporting.</p>
+                    <button class="btn btn-primary">
+                        <i class="fas fa-file-alt"></i> Contract Language Templates
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../shared/js/animations.js"></script>
+    <script src="../shared/js/glossary.js"></script>
+
+    <script>
+        // Mock data for heat map
+        const heatMapData = [
+            { provider: 'Austin Imaging Center', npi: '1234567890', totalSpread: 427000, avgSpreadPct: 192, claims: 487, severity: 'critical' },
+            { provider: 'Central Regional Hospital', npi: '1234567891', totalSpread: 312000, avgSpreadPct: 247, claims: 234, severity: 'critical' },
+            { provider: 'Northside Surgery Center', npi: '1234567892', totalSpread: 289000, avgSpreadPct: 178, claims: 321, severity: 'critical' },
+            { provider: 'Metro Diagnostics', npi: '1234567893', totalSpread: 256000, avgSpreadPct: 203, claims: 198, severity: 'critical' },
+            { provider: 'HealthFirst Medical Group', npi: '1234567894', totalSpread: 198000, avgSpreadPct: 156, claims: 287, severity: 'high' },
+            { provider: 'Eastside Urgent Care', npi: '1234567895', totalSpread: 187000, avgSpreadPct: 189, claims: 156, severity: 'high' },
+            { provider: 'Valley Physical Therapy', npi: '1234567896', totalSpread: 134000, avgSpreadPct: 142, claims: 243, severity: 'high' },
+            { provider: 'Sunrise Laboratory Services', npi: '1234567897', totalSpread: 112000, avgSpreadPct: 167, claims: 134, severity: 'high' },
+            { provider: 'Community Pharmacy Network', npi: '1234567898', totalSpread: 98000, avgSpreadPct: 128, claims: 892, severity: 'high' },
+            { provider: 'Westside Cardiology', npi: '1234567899', totalSpread: 87000, avgSpreadPct: 119, claims: 176, severity: 'moderate' }
+        ];
+
+        // Populate heat map
+        function populateHeatMap() {
+            const table = document.getElementById('heatMapTable');
+
+            let html = `
+                <div class="heat-map-row header">
+                    <div>Provider / Facility</div>
+                    <div>Total Spread</div>
+                    <div>Avg Spread %</div>
+                    <div>Claims</div>
+                    <div>Severity</div>
+                </div>
+            `;
+
+            heatMapData.forEach((row, index) => {
+                const badgeClass = row.severity;
+                const badgeText = row.severity === 'critical' ? 'Critical' :
+                                 row.severity === 'high' ? 'High' :
+                                 row.severity === 'moderate' ? 'Moderate' : 'Low';
+
+                html += `
+                    <div class="heat-map-row stagger-item">
+                        <div>
+                            <div style="font-weight: 600; margin-bottom: 0.25rem;">${row.provider}</div>
+                            <div class="small text-gray">NPI: ${row.npi}</div>
+                        </div>
+                        <div style="font-weight: 700; color: var(--danger-red);">
+                            $${row.totalSpread.toLocaleString()}
+                        </div>
+                        <div style="font-weight: 700;">
+                            ${row.avgSpreadPct}%
+                        </div>
+                        <div>${row.claims.toLocaleString()}</div>
+                        <div>
+                            <span class="spread-badge ${badgeClass}">${badgeText}</span>
+                        </div>
+                    </div>
+                `;
+            });
+
+            table.innerHTML = html;
+
+            // Animate rows
+            setTimeout(() => {
+                const rows = document.querySelectorAll('.heat-map-row.stagger-item');
+                rows.forEach((row, index) => {
+                    setTimeout(() => {
+                        row.classList.add('visible');
+                    }, index * 50);
+                });
+            }, 100);
+        }
+
+        // Download audit package
+        function downloadAuditPackage() {
+            const report = {
+                generatedAt: new Date().toISOString(),
+                summary: {
+                    totalLeakage: 2800000,
+                    averageSpread: 247,
+                    highSpreadClaims: 1842,
+                    claimsWithSpreadOver50: 94
+                },
+                providers: heatMapData,
+                recommendations: [
+                    "Renegotiate TPA contract with spread caps (max 15%)",
+                    "Pursue direct contracts with top 5 high-spread providers",
+                    "Implement monthly spread reporting requirements",
+                    "Consider RFP for new TPA with transparent pricing"
+                ],
+                citations: [
+                    {
+                        source: "PBGH Healthcare Transparency Study 2023",
+                        finding: "Found 20-30% average overpayment in employer healthcare",
+                        url: "https://www.pbgh.org"
+                    },
+                    {
+                        source: "Transparency in Coverage (TiC) Data",
+                        description: "Federal machine-readable files showing negotiated rates vs actual remittances"
+                    }
+                ]
+            };
+
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `spread-pricing-audit-${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+
+            ToastNotification.show('Audit package downloaded!', 'success');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            populateHeatMap();
+
+            // Animate hero stats
+            const counters = document.querySelectorAll('[data-counter]');
+            counters.forEach(counter => {
+                setTimeout(() => {
+                    const target = parseFloat(counter.dataset.counter);
+                    const prefix = counter.dataset.prefix || '';
+                    const suffix = counter.dataset.suffix || '';
+                    const decimals = parseInt(counter.dataset.decimals) || 0;
+                    const duration = 2000;
+
+                    animateCounter(counter, target, duration, prefix, suffix, decimals);
+                }, 500);
+            });
+
+            // Stagger hero stats
+            const heroStats = document.querySelectorAll('.hero-stat');
+            heroStats.forEach((stat, index) => {
+                setTimeout(() => {
+                    stat.classList.add('visible');
+                }, index * 100);
+            });
+        });
+
+        function animateCounter(element, target, duration, prefix, suffix, decimals) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+
+                const formatted = decimals > 0
+                    ? current.toFixed(decimals)
+                    : Math.floor(current).toLocaleString();
+                element.textContent = `${prefix}${formatted}${suffix}`;
+            }, 16);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://unpkg.com/cytoscape@3.26.0/dist/cytoscape.min.js"></script>
+  <script src="stakeholder-data.js"></script>
+  <style>
+    #cy {
+      width: 800px;
+      height: 600px;
+      border: 2px solid #ccc;
+      background: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+  <h1>Cytoscape Test</h1>
+  <div id="cy"></div>
+
+  <script>
+    console.log('Test page loaded');
+    console.log('typeof cytoscape:', typeof cytoscape);
+    console.log('typeof StakeholderData:', typeof StakeholderData);
+
+    if (typeof StakeholderData !== 'undefined') {
+      console.log('StakeholderData.stakeholders:', Object.keys(StakeholderData.stakeholders).length, 'stakeholders');
+      console.log('StakeholderData.layers.simple:', StakeholderData.layers.simple.nodes.length, 'nodes');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM ready');
+
+      var cy = cytoscape({
+        container: document.getElementById('cy'),
+        elements: [
+          { data: { id: 'a', label: 'Test A' } },
+          { data: { id: 'b', label: 'Test B' } },
+          { data: { source: 'a', target: 'b' } }
+        ],
+        style: [
+          {
+            selector: 'node',
+            style: {
+              'background-color': '#0066CC',
+              'label': 'data(label)',
+              'color': '#fff',
+              'text-valign': 'center',
+              'text-halign': 'center'
+            }
+          }
+        ],
+        layout: { name: 'grid' }
+      });
+
+      console.log('Cytoscape initialized, nodes:', cy.nodes().length);
+    });
+  </script>
+</body>
+</html>

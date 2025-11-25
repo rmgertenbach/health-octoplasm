@@ -1,0 +1,121 @@
+{
+  "description": "Sample provider data from Hospital Transparency + NPPES datasets",
+  "sources": ["Hospital Transparency (Quarterly)", "NPPES (7M NPIs)", "NUCC Taxonomy"],
+  "fields": ["npi", "hospital_id", "system", "gross", "discounted_cash", "min_negotiated", "max_negotiated", "taxonomy_code", "leapfrog_grade"],
+  "sample_records": [
+    {
+      "npi": "1234567890",
+      "entity_type": "Organization",
+      "hospital": "Cleveland Clinic Main Campus",
+      "hospital_id": "CC-360060",
+      "system": "Cleveland Clinic Health System",
+      "address": {
+        "street": "9500 Euclid Avenue",
+        "city": "Cleveland",
+        "state": "OH",
+        "zip": "44195",
+        "county": "Cuyahoga"
+      },
+      "taxonomy": {
+        "code": "282N00000X",
+        "grouping": "Hospitals",
+        "classification": "General Acute Care Hospital",
+        "specialization": "Academic Medical Center"
+      },
+      "sample_pricing": {
+        "procedure": "Hip Replacement (DRG 470)",
+        "gross_charge": "$85,000",
+        "discounted_cash": "$32,000",
+        "min_negotiated": "$24,000",
+        "max_negotiated": "$68,000",
+        "payer_count": 45
+      },
+      "quality_metrics": {
+        "leapfrog_grade": "A",
+        "safety_score": 95,
+        "volume_category": "High"
+      }
+    },
+    {
+      "npi": "9876543210",
+      "entity_type": "Organization",
+      "hospital": "Community Regional Medical Center",
+      "hospital_id": "CRMC-050128",
+      "system": "Independent",
+      "address": {
+        "street": "2823 Fresno Street",
+        "city": "Fresno",
+        "state": "CA",
+        "zip": "93721",
+        "county": "Fresno"
+      },
+      "taxonomy": {
+        "code": "282N00000X",
+        "grouping": "Hospitals",
+        "classification": "General Acute Care Hospital",
+        "specialization": "Community Hospital"
+      },
+      "sample_pricing": {
+        "procedure": "Hip Replacement (DRG 470)",
+        "gross_charge": "$62,000",
+        "discounted_cash": "$22,000",
+        "min_negotiated": "$18,500",
+        "max_negotiated": "$45,000",
+        "payer_count": 28
+      },
+      "quality_metrics": {
+        "leapfrog_grade": "B",
+        "safety_score": 82,
+        "volume_category": "Medium"
+      }
+    },
+    {
+      "npi": "5432167890",
+      "entity_type": "Individual",
+      "provider_name": "Dr. Sarah Johnson, MD",
+      "specialty": "Orthopedic Surgery",
+      "practice_type": "Independent Practice",
+      "address": {
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78701",
+        "county": "Travis"
+      },
+      "taxonomy": {
+        "code": "207X00000X",
+        "grouping": "Allopathic & Osteopathic Physicians",
+        "classification": "Orthopaedic Surgery",
+        "specialization": "Adult Reconstructive Orthopaedic Surgery"
+      },
+      "sample_pricing": {
+        "procedure": "Office Visit (CPT 99214)",
+        "avg_allowed": "$185",
+        "min_remit": "$142",
+        "max_remit": "$220",
+        "payer_count": 18
+      },
+      "quality_metrics": {
+        "board_certified": true,
+        "years_practice": 15
+      }
+    }
+  ],
+  "aggregated_metrics": {
+    "total_npis": "~7M (Type 1 Individual + Type 2 Organization)",
+    "hospital_systems_tracked": "3,500+",
+    "pricing_records": "~2B negotiated rates",
+    "average_price_variation": "3.5x (min to max)",
+    "quality_data_coverage": "Leapfrog: 2,200+ hospitals"
+  },
+  "taxonomy_summary": {
+    "groupings": 16,
+    "classifications": 120,
+    "specializations": 900
+  },
+  "query_examples": [
+    "Find all orthopedic surgeons in Travis County, TX",
+    "Compare hip replacement costs across hospital systems",
+    "Show Leapfrog A-rated hospitals with lowest negotiated rates",
+    "List independent practices vs. hospital-employed for primary care"
+  ]
+}

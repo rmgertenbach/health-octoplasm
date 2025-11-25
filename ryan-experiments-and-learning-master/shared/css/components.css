@@ -1,0 +1,447 @@
+/* Component Styles - Payerset Healthcare Transparency Platform
+ * Reusable UI components
+ * Created: November 21, 2024
+ */
+
+/* ============================================================================
+   BUTTONS
+   ============================================================================ */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    border: none;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-decoration: none;
+    font-family: var(--font-system);
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn:disabled::before {
+    display: none;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--payerset-blue) 0%, var(--payerset-blue-dark) 100%);
+    color: var(--white);
+    box-shadow: 0 2px 8px rgba(0, 146, 202, 0.25);
+}
+
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 146, 202, 0.35);
+}
+
+.btn-primary:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(0, 146, 202, 0.25);
+}
+
+.btn-secondary {
+    background: var(--white);
+    color: var(--payerset-blue);
+    border: 2px solid var(--payerset-blue);
+    box-shadow: 0 2px 4px rgba(0, 146, 202, 0.1);
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: var(--payerset-blue-soft);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 146, 202, 0.2);
+}
+
+.btn-secondary:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 146, 202, 0.1);
+}
+
+.btn-danger {
+    background: var(--danger-red);
+    color: var(--white);
+}
+
+.btn-danger:hover:not(:disabled) {
+    background: #DC2626;
+    transform: translateY(-2px);
+}
+
+.btn-success {
+    background: var(--success-green);
+    color: var(--white);
+}
+
+.btn-success:hover:not(:disabled) {
+    background: #059669;
+    transform: translateY(-2px);
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+.btn-lg {
+    padding: 1.25rem 2.5rem;
+    font-size: 1.125rem;
+}
+
+/* ============================================================================
+   CARDS
+   ============================================================================ */
+
+.card {
+    background: var(--white);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal);
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.card-static {
+    background: var(--white);
+    padding: var(--space-lg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+.card-header {
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.card-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.card-body {
+    margin-bottom: var(--space-md);
+}
+
+.card-footer {
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--gray-200);
+}
+
+/* ============================================================================
+   BADGES
+   ============================================================================ */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.badge-success {
+    background: var(--success-green);
+    color: var(--white);
+}
+
+.badge-warning {
+    background: var(--warning-orange);
+    color: var(--white);
+}
+
+.badge-danger {
+    background: var(--danger-red);
+    color: var(--white);
+}
+
+.badge-info {
+    background: var(--info-blue);
+    color: var(--white);
+}
+
+.badge-gray {
+    background: var(--gray-200);
+    color: var(--gray-700);
+}
+
+/* ============================================================================
+   ALERTS
+   ============================================================================ */
+
+.alert {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    border-left: 4px solid;
+}
+
+.alert-info {
+    background: var(--payerset-blue-soft);
+    border-color: var(--payerset-blue);
+    color: var(--gray-900);
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--success-green);
+    color: var(--gray-900);
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: var(--warning-orange);
+    color: var(--gray-900);
+}
+
+.alert-danger {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: var(--danger-red);
+    color: var(--gray-900);
+}
+
+/* ============================================================================
+   PROGRESS INDICATORS
+   ============================================================================ */
+
+.step-indicator {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto var(--space-xl);
+}
+
+.step-item {
+    flex: 1;
+    text-align: center;
+    position: relative;
+}
+
+.step-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    width: 100%;
+    height: 2px;
+    background: var(--gray-200);
+    z-index: 0;
+}
+
+.step-item.active:not(:last-child)::after,
+.step-item.completed:not(:last-child)::after {
+    background: var(--payerset-blue);
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--gray-200);
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 0.5rem;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+}
+
+.step-item.active .step-number {
+    background: var(--payerset-blue);
+    color: var(--white);
+    box-shadow: 0 0 0 4px var(--payerset-blue-soft);
+}
+
+.step-item.completed .step-number {
+    background: var(--success-green);
+    color: var(--white);
+}
+
+.step-label {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.step-item.active .step-label {
+    color: var(--payerset-blue);
+    font-weight: 600;
+}
+
+.step-item.completed .step-label {
+    color: var(--gray-700);
+}
+
+/* ============================================================================
+   FORMS
+   ============================================================================ */
+
+.form-group {
+    margin-bottom: var(--space-md);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    font-family: var(--font-system);
+    font-size: 1rem;
+    transition: all var(--transition-fast);
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--payerset-blue);
+    box-shadow: 0 0 0 4px var(--payerset-blue-soft);
+}
+
+.form-textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-hint {
+    display: block;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.form-error {
+    color: var(--danger-red);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+/* ============================================================================
+   DIVIDERS
+   ============================================================================ */
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: var(--space-lg) 0;
+}
+
+.divider::before,
+.divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.divider span {
+    padding: 0 var(--space-sm);
+    color: var(--gray-600);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+/* ============================================================================
+   BUTTON GROUPS
+   ============================================================================ */
+
+.button-row {
+    display: flex;
+    gap: var(--space-sm);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: var(--space-lg);
+}
+
+/* ============================================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .step-indicator {
+        max-width: 100%;
+    }
+
+    .step-label {
+        font-size: 0.75rem;
+    }
+
+    .step-number {
+        width: 32px;
+        height: 32px;
+        font-size: 0.875rem;
+    }
+
+    .step-item:not(:last-child)::after {
+        top: 16px;
+    }
+
+    .btn {
+        padding: 0.875rem 1.5rem;
+        font-size: 0.9375rem;
+    }
+
+    .btn-lg {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+
+    .button-row {
+        flex-direction: column;
+    }
+
+    .button-row .btn {
+        width: 100%;
+    }
+
+    .card {
+        padding: var(--space-md);
+    }
+}

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employer Command Center - Stop Overpaying for Healthcare</title>
+  <meta name="description" content="Discover if you're overpaying for healthcare. Benchmark rates, detect spread pricing, optimize your network.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../shared/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="../index.html" class="logo">Healthcare Transparency</a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link active">For Employers</a>
+        <a href="../../use-cases.html" class="nav-link">Use Cases</a>
+        <a href="benchmark.html" class="nav-link">Benchmark Rates</a>
+        <a href="spread-calculator.html" class="nav-link">Detect Spread</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" style="background: linear-gradient(135deg, var(--color-employer-light) 0%, var(--color-white) 100%);">
+    <div class="container">
+      <div style="display: inline-block; background: var(--color-error); color: white; padding: 8px 16px; border-radius: var(--radius-full); font-weight: var(--font-semibold); margin-bottom: 24px;">
+        <i class="fa-solid fa-triangle-exclamation" style="margin-right: 4px;"></i> URGENT: CAA Fiduciary Duty Required
+      </div>
+
+      <h1 class="hero-title" style="color: var(--color-employer-primary);">
+        Stop the Bleeding
+      </h1>
+      <p class="hero-subtitle">
+        Are you overpaying for healthcare? <strong>Most employers pay 30% more than they should.</strong>
+        <br>
+        Find out in 5 minutes with our free audit tool.
+      </p>
+
+      <div style="max-width: 600px; margin: 48px auto 0; text-align: center;">
+        <a href="benchmark.html" class="btn btn-primary btn-xl" style="background-color: var(--color-employer-primary); margin-bottom: 16px; width: 100%; max-width: 400px;">
+          Get Free Healthcare Audit
+        </a>
+        <p style="font-size: var(--text-sm); color: var(--color-gray-600);">
+          No signup required • Instant results • Based on real transparency data
+        </p>
+      </div>
+
+      <div class="alert alert-info" style="max-width: 700px; margin: 32px auto 0;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <i class="fa-solid fa-book-open" style="font-size: 24px;"></i>
+          <div style="flex: 1;">
+            <strong>Why are employers overpaying 30%?</strong>
+            <a href="../../index.html#proof" style="margin-left: 8px; text-decoration: underline;">Read the PBGH study →</a>
+            <span style="margin: 0 8px;">|</span>
+            <a href="../../diagrams/diagram3.html" style="text-decoration: underline;">See power dynamics →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- The Problem -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title" style="color: var(--color-employer-primary);">
+        The $1 Trillion Problem
+      </h2>
+      <p class="section-subtitle">
+        U.S. employers spend over $1 trillion on healthcare annually.
+        <strong>$300+ billion is unnecessary overpayment.</strong>
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div class="card">
+          <div style="font-size: 64px; text-align: center; margin-bottom: 16px;">30%</div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 12px;">
+            Average Overpayment
+          </h3>
+          <p style="text-align: center; color: var(--color-gray-700);">
+            When employers audit their healthcare rates against market benchmarks,
+            they discover they're paying 30% more than necessary.
+          </p>
+          <div style="margin-top: 16px; padding: 12px; background: var(--color-employer-light); border-radius: var(--radius-md); text-align: center;">
+            <strong>Example:</strong> $8M spend = $2.4M overpayment
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 64px; text-align: center; margin-bottom: 16px;">23%</div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 12px;">
+            Hidden Spread Pricing
+          </h3>
+          <p style="text-align: center; color: var(--color-gray-700);">
+            TPAs and PBMs pocket the difference between what you pay and what
+            providers receive. You don't even know it's happening.
+          </p>
+          <div style="margin-top: 16px; padding: 12px; background: var(--color-employer-light); border-radius: var(--radius-md); text-align: center;">
+            <strong>Example:</strong> $13K paid, $10K received = $3K spread
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 64px; text-align: center; margin-bottom: 16px;">0</div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 12px;">
+            Price-Quality Correlation
+          </h3>
+          <p style="text-align: center; color: var(--color-gray-700);">
+            There's zero correlation between price and quality. Your most expensive
+            providers are often lower quality than cheaper alternatives.
+          </p>
+          <div style="margin-top: 16px; padding: 12px; background: var(--color-employer-light); border-radius: var(--radius-md); text-align: center;">
+            <strong>Fact:</strong> Grade C hospitals charge more than Grade A
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Real Case Study -->
+  <section class="section bg-gray-50">
+    <div class="container">
+      <div style="background: white; border-radius: var(--radius-2xl); padding: 48px; box-shadow: var(--shadow-xl); border: 3px solid var(--color-employer-primary);">
+        <div style="text-align: center; margin-bottom: 32px;">
+          <span style="background: var(--color-employer-primary); color: white; padding: 8px 16px; border-radius: var(--radius-full); font-weight: var(--font-semibold);">
+            REAL CASE STUDY
+          </span>
+        </div>
+
+        <h2 style="font-size: var(--text-4xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 24px;">
+          PBGH Transparency Initiative: The Numbers Don't Lie
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" style="margin-top: 32px;">
+          <div>
+            <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); color: var(--color-employer-primary); margin-bottom: 16px;">
+              What They Found:
+            </h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="padding: 12px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <strong>30% overpayment</strong> vs. Medicare benchmarks
+              </li>
+              <li style="padding: 12px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <strong>200-300% of Medicare</strong> for common procedures
+              </li>
+              <li style="padding: 12px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <strong>Good providers losing to bad providers</strong> on price alone
+              </li>
+              <li style="padding: 12px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <strong>Zero price-quality correlation</strong> (expensive ≠ better)
+              </li>
+              <li style="padding: 12px 0;">
+                <strong>TPAs negotiating worse rates</strong> than direct contracts
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); color: var(--color-success); margin-bottom: 16px;">
+              What They Did:
+            </h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="padding: 12px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <i class="fa-solid fa-circle-check" style="color: var(--color-success); margin-right: 8px;"></i> <strong>Audited their rates</strong> against transparency data
+              </li>
+              <li style="padding: 12px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <i class="fa-solid fa-circle-check" style="color: var(--color-success); margin-right: 8px;"></i> <strong>Identified overpayments</strong> by provider and procedure
+              </li>
+              <li style="padding: 12px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <i class="fa-solid fa-circle-check" style="color: var(--color-success); margin-right: 8px;"></i> <strong>Negotiated direct contracts</strong> with high-value providers
+              </li>
+              <li style="padding: 12px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <i class="fa-solid fa-circle-check" style="color: var(--color-success); margin-right: 8px;"></i> <strong>Removed low-value providers</strong> from network
+              </li>
+              <li style="padding: 12px 0;">
+                <i class="fa-solid fa-circle-check" style="color: var(--color-success); margin-right: 8px;"></i> <strong>Saved millions</strong> while improving quality
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px; padding: 24px; background: var(--color-success); color: white; border-radius: var(--radius-xl); text-align: center;">
+          <div style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+            Result: Millions Saved Annually
+          </div>
+          <p style="font-size: var(--text-lg); margin: 0;">
+            Your company can do the same. Start with our free audit.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Your Tools -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Your Healthcare Command Center</h2>
+      <p class="section-subtitle">
+        Everything you need to stop overpaying and meet your fiduciary duty
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+        <!-- Benchmark Dashboard -->
+        <a href="benchmark.html" class="card" style="text-decoration: none; color: inherit; border: 2px solid var(--color-employer-primary);">
+          <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="
+              width: 64px;
+              height: 64px;
+              background: var(--color-employer-light);
+              border-radius: var(--radius-xl);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 32px;
+              flex-shrink: 0;
+              color: var(--color-employer-primary);
+            "><i class="fa-solid fa-chart-line"></i></div>
+            <div style="flex: 1;">
+              <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+                Benchmark Dashboard
+              </h3>
+              <p style="color: var(--color-gray-700); margin-bottom: 12px;">
+                Compare your rates to Medicare and peer employers. Discover overpayment
+                by provider, procedure, and service category. Get instant ROI calculations.
+              </p>
+              <span class="btn btn-primary" style="background-color: var(--color-employer-primary);">Start Free Audit →</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Spread Detector -->
+        <a href="spread-calculator.html" class="card" style="text-decoration: none; color: inherit; border: 2px solid var(--color-employer-primary);">
+          <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="
+              width: 64px;
+              height: 64px;
+              background: var(--color-employer-light);
+              border-radius: var(--radius-xl);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 32px;
+              flex-shrink: 0;
+              color: var(--color-employer-primary);
+            "><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div style="flex: 1;">
+              <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+                Spread Pricing Detector
+              </h3>
+              <p style="color: var(--color-gray-700); margin-bottom: 12px;">
+                Upload your claims data and we'll reveal hidden fees. See the difference
+                between what you paid and what providers actually received.
+              </p>
+              <span class="btn btn-primary" style="background-color: var(--color-employer-primary);">Detect Hidden Fees →</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Network Optimizer -->
+        <a href="#" class="card" style="text-decoration: none; color: inherit;">
+          <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="
+              width: 64px;
+              height: 64px;
+              background: var(--color-employer-light);
+              border-radius: var(--radius-xl);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 32px;
+              flex-shrink: 0;
+              color: var(--color-employer-primary);
+            "><i class="fa-solid fa-bullseye"></i></div>
+            <div style="flex: 1;">
+              <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+                Network Optimizer
+              </h3>
+              <p style="color: var(--color-gray-700); margin-bottom: 12px;">
+                Identify high-value providers to add and low-value providers to remove.
+                Build a network based on quality AND price, not just discounts.
+              </p>
+              <span class="btn btn-secondary">Coming Soon</span>
+            </div>
+          </div>
+        </a>
+
+        <!-- Compliance Toolkit -->
+        <a href="#" class="card" style="text-decoration: none; color: inherit;">
+          <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="
+              width: 64px;
+              height: 64px;
+              background: var(--color-employer-light);
+              border-radius: var(--radius-xl);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 32px;
+              flex-shrink: 0;
+              color: var(--color-employer-primary);
+            "><i class="fa-solid fa-clipboard-check"></i></div>
+            <div style="flex: 1;">
+              <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+                CAA Compliance Toolkit
+              </h3>
+              <p style="color: var(--color-gray-700); margin-bottom: 12px;">
+                Meet your fiduciary duty under the Consolidated Appropriations Act.
+                Generate documentation, audit reports, and compliance checklists.
+              </p>
+              <span class="btn btn-secondary">Learn More →</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CAA Fiduciary Duty -->
+  <section class="section bg-gray-50">
+    <div class="container">
+      <div class="alert alert-error" style="max-width: 900px; margin: 0 auto;">
+        <div style="flex: 1;">
+          <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 12px;">
+            <i class="fa-solid fa-scale-balanced" style="margin-right: 8px;"></i> CAA Fiduciary Duty: You're Legally Required to Act
+          </h3>
+          <p style="margin-bottom: 16px;">
+            The Consolidated Appropriations Act (2021) requires plan sponsors to act as fiduciaries.
+            This means you must ensure healthcare spending is <strong>reasonable and necessary</strong>.
+          </p>
+
+          <div style="background: white; padding: 16px; border-radius: var(--radius-md); margin-bottom: 16px;">
+            <h4 style="font-weight: var(--font-semibold); margin-bottom: 12px;">Your Legal Obligations:</h4>
+            <ul style="margin: 0; padding-left: 24px;">
+              <li style="margin-bottom: 8px;"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Audit healthcare rates against market benchmarks</li>
+              <li style="margin-bottom: 8px;"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Ensure rates are commercially reasonable</li>
+              <li style="margin-bottom: 8px;"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Document due diligence efforts</li>
+              <li style="margin-bottom: 8px;"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Take action to remedy overpayments</li>
+              <li style="margin-bottom: 8px;"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Monitor TPA and PBM contracts for conflicts</li>
+            </ul>
+          </div>
+
+          <p style="margin-bottom: 16px;">
+            <strong>Consequences of Non-Compliance:</strong> DOL audits, personal liability for fiduciaries,
+            potential lawsuits from participants, and financial penalties.
+          </p>
+
+          <a href="benchmark.html" class="btn btn-primary btn-lg" style="background-color: var(--color-employer-primary);">
+            Start Compliance Audit Now
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who This Is For -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Who Should Use This?</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 16px; color: var(--color-success);"><i class="fa-solid fa-circle-check"></i></div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); color: var(--color-success); margin-bottom: 12px;">
+            Self-Insured Employers
+          </h3>
+          <p style="color: var(--color-gray-700);">
+            You pay the actual healthcare costs. You have the most to gain from transparency.
+            Audit your rates, detect spread pricing, optimize your network.
+          </p>
+        </div>
+
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 16px; color: var(--color-success);"><i class="fa-solid fa-circle-check"></i></div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); color: var(--color-success); margin-bottom: 12px;">
+            Benefits Consultants
+          </h3>
+          <p style="color: var(--color-gray-700);">
+            Add value for your clients with data-driven insights. Prove your recommendations
+            with real transparency data. Become the advisor they can't live without.
+          </p>
+        </div>
+
+        <div class="card" style="text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 16px; color: var(--color-success);"><i class="fa-solid fa-circle-check"></i></div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); color: var(--color-success); margin-bottom: 12px;">
+            HR & Benefits Leaders
+          </h3>
+          <p style="color: var(--color-gray-700);">
+            Meet your fiduciary duty. Show ROI to leadership. Reduce costs without
+            cutting benefits. Become a strategic leader, not just an admin.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing Tiers -->
+  <section class="section bg-gray-50">
+    <div class="container">
+      <h2 class="section-title">Simple, Transparent Pricing</h2>
+      <p class="section-subtitle">No hidden fees. No long-term contracts. Cancel anytime.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12" style="max-width: 1100px; margin-left: auto; margin-right: auto;">
+        <!-- Free Tier -->
+        <div class="card" style="text-align: center;">
+          <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+            Free Audit
+          </h3>
+          <div style="font-size: var(--text-4xl); font-weight: var(--font-bold); color: var(--color-employer-primary); margin-bottom: 16px;">
+            $0
+          </div>
+          <p style="color: var(--color-gray-700); margin-bottom: 24px;">
+            Get started with a one-time audit
+          </p>
+          <ul style="list-style: none; padding: 0; margin: 0 0 24px 0; text-align: left;">
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Benchmark 10 sample rates</li>
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Overpayment estimate</li>
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Basic spread detection</li>
+            <li style="padding: 8px 0;"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Downloadable report</li>
+          </ul>
+          <a href="benchmark.html" class="btn btn-outline" style="width: 100%;">Start Free Audit</a>
+        </div>
+
+        <!-- Professional Tier -->
+        <div class="card" style="text-align: center; border: 3px solid var(--color-employer-primary); position: relative;">
+          <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--color-employer-primary); color: white; padding: 4px 16px; border-radius: var(--radius-full); font-size: var(--text-xs); font-weight: var(--font-bold);">
+            MOST POPULAR
+          </div>
+          <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+            Professional
+          </h3>
+          <div style="font-size: var(--text-4xl); font-weight: var(--font-bold); color: var(--color-employer-primary); margin-bottom: 16px;">
+            Custom
+          </div>
+          <p style="color: var(--color-gray-700); margin-bottom: 24px;">
+            Full analytics platform access
+          </p>
+          <ul style="list-style: none; padding: 0; margin: 0 0 24px 0; text-align: left;">
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Everything in Free, plus:</li>
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Unlimited benchmarking</li>
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Full claims upload & analysis</li>
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Network optimization tools</li>
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> CAA compliance documentation</li>
+            <li style="padding: 8px 0;"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Quarterly strategy reviews</li>
+          </ul>
+          <a href="#" class="btn btn-primary" style="width: 100%; background-color: var(--color-employer-primary);">Contact Sales</a>
+        </div>
+
+        <!-- Enterprise Tier -->
+        <div class="card" style="text-align: center;">
+          <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+            Enterprise
+          </h3>
+          <div style="font-size: var(--text-4xl); font-weight: var(--font-bold); color: var(--color-employer-primary); margin-bottom: 16px;">
+            Custom
+          </div>
+          <p style="color: var(--color-gray-700); margin-bottom: 24px;">
+            For large employers & consultants
+          </p>
+          <ul style="list-style: none; padding: 0; margin: 0 0 24px 0; text-align: left;">
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Everything in Professional, plus:</li>
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Multi-entity management</li>
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> API access</li>
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> White-label options</li>
+            <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Dedicated success manager</li>
+            <li style="padding: 8px 0;"><i class="fa-solid fa-check" style="color: var(--color-success); margin-right: 8px;"></i> Custom integrations</li>
+          </ul>
+          <a href="#" class="btn btn-outline" style="width: 100%;">Contact Sales</a>
+        </div>
+      </div>
+
+      <p style="text-align: center; margin-top: 32px; color: var(--color-gray-600);">
+        <strong>ROI Guarantee:</strong> Most clients save 10-30x our fee in the first year.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container text-center">
+      <h2 class="section-title">Ready to Stop Overpaying?</h2>
+      <p style="font-size: var(--text-xl); color: var(--color-gray-700); max-width: 600px; margin: 0 auto 32px;">
+        Start with a free audit. No signup required. Instant results.
+        <br>
+        <strong>Find out if you're overpaying in the next 5 minutes.</strong>
+      </p>
+      <a href="benchmark.html" class="btn btn-primary btn-xl" style="background-color: var(--color-employer-primary);">
+        Get Free Healthcare Audit →
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background-color: var(--color-gray-900); color: var(--color-gray-300); padding: 48px 0;">
+    <div class="container">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Employer Tools
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="benchmark.html" style="color: var(--color-gray-300);">Benchmark Dashboard</a></li>
+            <li style="margin-bottom: 8px;"><a href="spread-calculator.html" style="color: var(--color-gray-300);">Detect Spread Pricing</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Network Optimizer</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">CAA Compliance</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Learn
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="../learn/stakeholder-map.html" style="color: var(--color-gray-300);">Healthcare System Map</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Self-Insurance 101</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Spread Pricing Explained</a></li>
+            <li style="margin-bottom: 8px;"><a href="../../glossary.html" style="color: var(--color-gray-300);">Glossary of Terms</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Case Studies</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Other Roles
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="../patients/index.html" style="color: var(--color-gray-300);">For Patients</a></li>
+            <li style="margin-bottom: 8px;"><a href="../providers/index.html" style="color: var(--color-gray-300);">For Providers</a></li>
+            <li style="margin-bottom: 8px;"><a href="../index.html" style="color: var(--color-gray-300);">Back to Home</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--color-gray-700); margin-top: 32px; padding-top: 32px; text-align: center; font-size: var(--text-sm);">
+        <p>&copy; 2025 Healthcare Transparency Platform. Powered by real transparency data.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../shared/components.js"></script>
+  <script>
+    // Animate on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = 'fadeIn 0.6s ease-out forwards';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.card').forEach(card => {
+      observer.observe(card);
+    });
+  </script>
+</body>
+</html>

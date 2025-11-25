@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search & Compare Providers - Healthcare Transparency</title>
+  <meta name="description" content="Compare healthcare prices from providers in your area. See costs, quality grades, and find the best value.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../shared/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="../index.html" class="logo">Healthcare Transparency</a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">For Patients</a>
+        <a href="search.html" class="nav-link active">Search</a>
+        <a href="learn.html" class="nav-link">Learn</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Search Section -->
+  <section style="background: linear-gradient(135deg, var(--color-patient-light) 0%, var(--color-white) 100%); padding: 48px 0;">
+    <div class="container">
+      <h1 style="font-size: var(--text-4xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 16px; color: var(--color-patient-primary);">
+        Compare Provider Prices
+      </h1>
+      <p style="text-align: center; color: var(--color-gray-700); margin-bottom: 32px; font-size: var(--text-lg);">
+        Find out what procedures actually cost in your area
+      </p>
+
+      <!-- Search Form -->
+      <div style="max-width: 800px; margin: 0 auto; background: white; padding: 32px; border-radius: var(--radius-2xl); box-shadow: var(--shadow-lg);">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="form-group">
+            <label class="form-label">What procedure do you need?</label>
+            <select id="procedureSelect" class="form-select">
+              <option value="">Select a procedure...</option>
+              <option value="mri">MRI Scan</option>
+              <option value="ct-scan">CT Scan</option>
+              <option value="hip-replacement">Hip Replacement</option>
+              <option value="knee-replacement">Knee Replacement</option>
+              <option value="colonoscopy">Colonoscopy</option>
+              <option value="er-visit">ER Visit</option>
+              <option value="ultrasound">Ultrasound</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Your ZIP Code</label>
+            <input
+              type="text"
+              id="zipCodeInput"
+              class="form-input"
+              placeholder="78701"
+              value="78701"
+              maxlength="5"
+            >
+          </div>
+        </div>
+
+        <button id="searchButton" class="btn btn-primary btn-lg" style="width: 100%; margin-top: 16px;">
+          Search Providers
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Results Section -->
+  <section class="section" id="resultsSection" style="display: none;">
+    <div class="container">
+      <!-- Results Header -->
+      <div id="resultsHeader" style="margin-bottom: 32px;">
+        <!-- Populated by JavaScript -->
+      </div>
+
+      <!-- Results Grid -->
+      <div id="resultsGrid" class="grid grid-cols-1 gap-6">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Education Callout -->
+  <section class="section bg-gray-50">
+    <div class="container">
+      <div class="card" style="background: linear-gradient(135deg, var(--color-patient-primary), var(--color-patient-secondary)); color: white; text-align: center; padding: 48px;">
+        <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 16px; color: white;">
+          <i class="fa-solid fa-lightbulb" style="margin-right: 8px;"></i> Why do prices vary so much?
+        </h2>
+        <p style="font-size: var(--text-lg); margin-bottom: 24px; max-width: 700px; margin-left: auto; margin-right: auto; color: white;">
+          Healthcare prices can vary 5-10x for the same procedure in the same city.
+          It's not about quality - it's about negotiating power and transparency.
+        </p>
+        <a href="learn.html" class="btn btn-lg" style="background: white; color: var(--color-patient-primary);">
+          Learn How Healthcare Pricing Works
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+
+      <div style="max-width: 800px; margin: 0 auto;">
+        <div class="card" style="margin-bottom: 16px;">
+          <h3 style="font-size: var(--text-lg); font-weight: var(--font-bold); margin-bottom: 12px;">
+            How accurate are these prices?
+          </h3>
+          <p style="color: var(--color-gray-700); margin: 0;">
+            These are <strong>actual negotiated rates</strong> from commercial payers, required to be
+            disclosed under federal transparency laws. They represent what insurers actually pay providers.
+            Your out-of-pocket cost depends on your specific plan (deductible, coinsurance, etc.).
+          </p>
+        </div>
+
+        <div class="card" style="margin-bottom: 16px;">
+          <h3 style="font-size: var(--text-lg); font-weight: var(--font-bold); margin-bottom: 12px;">
+            Should I always choose the cheapest option?
+          </h3>
+          <p style="color: var(--color-gray-700); margin: 0;">
+            No! Look for <strong>best value</strong> - high quality AND fair price. That's why we show
+            quality grades (when available). A Grade A facility at 2x the cost of a Grade C facility
+            might be worth it. But a Grade A facility at half the cost of a Grade C? That's a no-brainer.
+          </p>
+        </div>
+
+        <div class="card" style="margin-bottom: 16px;">
+          <h3 style="font-size: var(--text-lg); font-weight: var(--font-bold); margin-bottom: 12px;">
+            Can I pay cash and save money?
+          </h3>
+          <p style="color: var(--color-gray-700); margin: 0;">
+            Often yes! If you have a high deductible, paying the cash price directly can be cheaper
+            than using insurance. We show both negotiated insurance rates and cash prices. If the
+            cash price is lower than your deductible, pay cash and save money.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size: var(--text-lg); font-weight: var(--font-bold); margin-bottom: 12px;">
+            What if my doctor refers me to a specific facility?
+          </h3>
+          <p style="color: var(--color-gray-700); margin: 0;">
+            You have the right to choose where you get care! If your doctor refers you to an expensive
+            facility, ask why. Is there a medical reason, or is it just convenience/habit? You can
+            often get the same quality care for half the price elsewhere. Show your doctor our data.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background-color: var(--color-gray-900); color: var(--color-gray-300); padding: 48px 0;">
+    <div class="container">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Patient Tools
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="search.html" style="color: var(--color-gray-300);">Search Procedures</a></li>
+            <li style="margin-bottom: 8px;"><a href="learn.html" style="color: var(--color-gray-300);">Healthcare 101</a></li>
+            <li style="margin-bottom: 8px;"><a href="index.html" style="color: var(--color-gray-300);">Back to Patient Home</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Data Sources
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;">• Payer Transparency (TiC)</li>
+            <li style="margin-bottom: 8px;">• Hospital Price Transparency</li>
+            <li style="margin-bottom: 8px;">• Medicare Benchmarks</li>
+            <li style="margin-bottom: 8px;">• Quality: Leapfrog (coming soon)</li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Other Roles
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="../employers/index.html" style="color: var(--color-gray-300);">For Employers</a></li>
+            <li style="margin-bottom: 8px;"><a href="../providers/index.html" style="color: var(--color-gray-300);">For Providers</a></li>
+            <li style="margin-bottom: 8px;"><a href="../index.html" style="color: var(--color-gray-300);">Back to Home</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--color-gray-700); margin-top: 32px; padding-top: 32px; text-align: center; font-size: var(--text-sm);">
+        <p>&copy; 2025 Healthcare Transparency Platform. Data updated monthly.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../shared/components.js"></script>
+  <script src="../shared/data-mock.js"></script>
+  <script>
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlProcedure = urlParams.get('procedure');
+
+    // Pre-select procedure from URL if present
+    if (urlProcedure) {
+      const select = document.getElementById('procedureSelect');
+      // Convert friendly name to key
+      const procedureKey = Object.keys(HealthcareData.procedures).find(key => {
+        const proc = HealthcareData.procedures[key];
+        return proc.friendlyName.toLowerCase().replace(/\s+/g, '-') === urlProcedure.toLowerCase() ||
+               key === urlProcedure.toLowerCase();
+      });
+      if (procedureKey) {
+        select.value = procedureKey;
+        // Auto-search
+        setTimeout(() => performSearch(), 500);
+      }
+    }
+
+    // Search button click handler
+    document.getElementById('searchButton').addEventListener('click', performSearch);
+
+    // Also search on Enter in ZIP code field
+    document.getElementById('zipCodeInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') performSearch();
+    });
+
+    function performSearch() {
+      const procedureKey = document.getElementById('procedureSelect').value;
+      const zipCode = document.getElementById('zipCodeInput').value;
+
+      if (!procedureKey) {
+        HealthcareUI.showToast('Please select a procedure', 'warning');
+        return;
+      }
+
+      if (!zipCode || zipCode.length !== 5) {
+        HealthcareUI.showToast('Please enter a valid ZIP code', 'warning');
+        return;
+      }
+
+      // Show loading state
+      const resultsSection = document.getElementById('resultsSection');
+      const resultsGrid = document.getElementById('resultsGrid');
+      resultsSection.style.display = 'block';
+      resultsGrid.innerHTML = '<div style="text-align: center; padding: 48px;">' +
+        HealthcareUI.createLoadingSpinner('Searching providers...').outerHTML +
+        '</div>';
+
+      // Scroll to results
+      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+      // Simulate API delay
+      setTimeout(() => {
+        displayResults(procedureKey, zipCode);
+      }, 800);
+    }
+
+    function displayResults(procedureKey, zipCode) {
+      const procedure = HealthcareData.procedures[procedureKey];
+      const results = HealthcareData.searchProviders(procedureKey, zipCode);
+
+      // Update header
+      const resultsHeader = document.getElementById('resultsHeader');
+      resultsHeader.innerHTML = `
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+          <div>
+            <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+              ${procedure.friendlyName} in ${zipCode}
+            </h2>
+            <p style="color: var(--color-gray-600); margin: 0;">
+              Found ${results.length} providers • Medicare rate: ${HealthcareUI.formatCurrency(procedure.medicareRate)} •
+              Fair rate: ${HealthcareUI.formatCurrency(procedure.fairRate)} (Medicare + 140%)
+            </p>
+          </div>
+          <button onclick="document.getElementById('procedureSelect').focus(); window.scrollTo({ top: 0, behavior: 'smooth' });" class="btn btn-secondary">
+            New Search
+          </button>
+        </div>
+
+        <div class="alert alert-info" style="margin-top: 24px;">
+          <div>
+            <strong><i class="fa-solid fa-lightbulb" style="margin-right: 4px;"></i> Reading these results:</strong> We show actual negotiated rates from commercial insurers.
+            Your out-of-pocket cost depends on your plan's deductible and coinsurance. The "Estimated Cost"
+            assumes 20% coinsurance after you've met your deductible.
+          </div>
+        </div>
+      `;
+
+      // Display provider cards
+      const resultsGrid = document.getElementById('resultsGrid');
+      resultsGrid.innerHTML = '';
+
+      if (results.length === 0) {
+        resultsGrid.innerHTML = `
+          <div class="card" style="text-align: center; padding: 48px;">
+            <h3 style="font-size: var(--text-2xl); margin-bottom: 16px;">No results found</h3>
+            <p style="color: var(--color-gray-600); margin-bottom: 24px;">
+              Try a different procedure or ZIP code.
+            </p>
+            <button onclick="window.scrollTo({ top: 0, behavior: 'smooth' });" class="btn btn-primary">
+              Try Another Search
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      results.forEach((provider, index) => {
+        const card = createProviderComparisonCard(provider, procedure, index);
+        resultsGrid.appendChild(card);
+      });
+    }
+
+    function createProviderComparisonCard(provider, procedure, index) {
+      const card = document.createElement('div');
+      card.className = `card comparison-card ${provider.recommended ? 'recommended' : ''}`;
+      card.style.animation = `fadeIn 0.5s ease-out ${index * 0.1}s backwards`;
+
+      const vsMediare = provider.percentOfMedicare;
+      const vsMedicareBadge = vsMediare <= 150 ?
+        `<span class="badge badge-success">${vsMediare}% of Medicare</span>` :
+        vsMediare <= 200 ?
+        `<span class="badge badge-warning">${vsMediare}% of Medicare</span>` :
+        `<span class="badge badge-error">${vsMediare}% of Medicare</span>`;
+
+      card.innerHTML = `
+        <div class="card-header">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+            <div style="flex: 1; min-width: 200px;">
+              <h3 class="card-title" style="margin-bottom: 8px;">${provider.name}</h3>
+              <p class="card-subtitle">${provider.specialty} • ${provider.setting}</p>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              ${provider.qualityGrade ? `<span class="grade-badge grade-${provider.qualityGrade.toLowerCase()}">${provider.qualityGrade}</span>` : ''}
+              ${vsMedicareBadge}
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Price Grid -->
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            <div>
+              <div class="text-muted text-sm">Insurance Rate</div>
+              <div class="text-2xl font-bold text-primary">${HealthcareUI.formatCurrency(provider.negotiatedRate)}</div>
+            </div>
+            <div>
+              <div class="text-muted text-sm">Cash Price</div>
+              <div class="text-2xl font-bold">${HealthcareUI.formatCurrency(provider.cashPrice)}</div>
+            </div>
+            <div>
+              <div class="text-muted text-sm">Your Est. Cost</div>
+              <div class="text-2xl font-bold" style="color: var(--color-success);">${HealthcareUI.formatCurrency(provider.estimatedCost)}</div>
+              <div class="text-xs text-muted">(20% coinsurance)</div>
+            </div>
+            <div>
+              <div class="text-muted text-sm">Distance</div>
+              <div class="text-2xl font-bold">${provider.distance} mi</div>
+            </div>
+          </div>
+
+          <!-- Quick Info -->
+          <div style="display: flex; flex-wrap: wrap; gap: 16px; padding: 16px; background: var(--color-gray-50); border-radius: var(--radius-md); margin-bottom: 16px;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-location-dot" style="color: var(--color-patient-primary);"></i>
+              <span class="text-sm">${provider.city}, ${provider.state}</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-phone" style="color: var(--color-patient-primary);"></i>
+              <span class="text-sm">${provider.phone}</span>
+            </div>
+            ${provider.nextAvailable ? `
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <i class="fa-solid fa-clock" style="color: var(--color-patient-primary);"></i>
+                <span class="text-sm">Next: ${provider.nextAvailable}</span>
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- Value Proposition -->
+          ${provider.employerSavings && provider.employerSavings > 0 ? `
+            <div class="alert alert-success" style="margin-bottom: 16px;">
+              <span><strong>Great Value:</strong> Choosing this provider saves your employer ${HealthcareUI.formatCurrency(provider.employerSavings)} vs. the most expensive option</span>
+            </div>
+          ` : ''}
+
+          ${provider.recommended ? `
+            <div class="alert alert-info" style="margin-bottom: 16px;">
+              <span><strong><i class="fa-solid fa-star" style="margin-right: 4px;"></i> Recommended:</strong> Best combination of price and quality for this procedure</span>
+            </div>
+          ` : ''}
+
+          ${provider.percentOfMedicare > 200 ? `
+            <div class="alert alert-warning" style="margin-bottom: 16px;">
+              <span><strong><i class="fa-solid fa-triangle-exclamation" style="margin-right: 4px;"></i> High Price Alert:</strong> This rate is ${provider.percentOfMedicare}% of Medicare (above the typical 140% fair rate)</span>
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="card-footer">
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button class="btn btn-primary" style="flex: 1; min-width: 150px;" onclick="bookAppointment('${provider.npi}', '${provider.name}')">
+              Book Appointment
+            </button>
+            <button class="btn btn-outline" onclick="viewProviderDetails('${provider.npi}')">
+              View Details
+            </button>
+            <button class="btn btn-secondary" onclick="getDirections(${provider.latitude}, ${provider.longitude})">
+              Directions
+            </button>
+          </div>
+        </div>
+      `;
+
+      return card;
+    }
+
+    // Action functions (placeholders)
+    function bookAppointment(npi, providerName) {
+      HealthcareUI.showModal(
+        'Book Appointment',
+        `
+          <p style="margin-bottom: 24px;">Ready to book with <strong>${providerName}</strong>?</p>
+          <p style="margin-bottom: 24px; color: var(--color-gray-700);">
+            In the full version, you'll be able to:
+          </p>
+          <ul style="margin-bottom: 24px; padding-left: 24px;">
+            <li>Check real-time availability</li>
+            <li>Schedule directly online</li>
+            <li>Get cost estimate for your specific plan</li>
+            <li>Receive confirmation and reminders</li>
+          </ul>
+          <div class="alert alert-info">
+            <strong>For now:</strong> Call the provider directly using the phone number shown above.
+            Mention you found them through Healthcare Transparency and want to confirm the price.
+          </div>
+        `,
+        { size: 'small' }
+      );
+    }
+
+    function viewProviderDetails(npi) {
+      const provider = HealthcareData.providers.find(p => p.npi === npi);
+      if (!provider) return;
+
+      HealthcareUI.showModal(
+        provider.name,
+        `
+          <div style="margin-bottom: 24px;">
+            <h3 style="font-size: var(--text-lg); font-weight: var(--font-semibold); margin-bottom: 12px;">Contact Information</h3>
+            <p><strong>Address:</strong> ${provider.address}, ${provider.city}, ${provider.state} ${provider.zipCode}</p>
+            <p><strong>Phone:</strong> ${provider.phone}</p>
+            <p><strong>NPI:</strong> ${provider.npi}</p>
+          </div>
+
+          <div style="margin-bottom: 24px;">
+            <h3 style="font-size: var(--text-lg); font-weight: var(--font-semibold); margin-bottom: 12px;">Specialty</h3>
+            <p>${provider.specialty}</p>
+            <p class="text-sm text-muted">Taxonomy: ${provider.taxonomyGrouping}</p>
+          </div>
+
+          ${provider.qualityGrade ? `
+            <div>
+              <h3 style="font-size: var(--text-lg); font-weight: var(--font-semibold); margin-bottom: 12px;">Quality Grade</h3>
+              <div style="display: flex; align-items: center; gap: 16px;">
+                <span class="grade-badge grade-${provider.qualityGrade.toLowerCase()}" style="width: 48px; height: 48px; font-size: var(--text-2xl);">${provider.qualityGrade}</span>
+                <div>
+                  <p><strong>Leapfrog Hospital Safety Grade</strong></p>
+                  <p class="text-sm text-muted">Based on errors, infections, and safety protocols</p>
+                </div>
+              </div>
+            </div>
+          ` : ''}
+        `
+      );
+    }
+
+    function getDirections(lat, lon) {
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${lat},${lon}`;
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>

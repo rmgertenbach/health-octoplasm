@@ -1,0 +1,56 @@
+{
+  "description": "Sample employer data from Employer Reporting Plans dataset",
+  "source": "Employer Reporting Plans - Monthly Updates",
+  "fields": ["ein", "reporting_plan_name", "payer", "covered_lives_estimate", "annual_spend_estimate"],
+  "sample_records": [
+    {
+      "ein": "12-3456789",
+      "reporting_plan_name": "Acme Corporation Health Plan",
+      "payer": "Blue Cross Blue Shield of Texas",
+      "covered_lives_estimate": 25000,
+      "annual_spend_estimate": "$75M",
+      "plan_type": "Self-Insured",
+      "tpa": "Blue Cross Blue Shield (ASO)",
+      "fiduciary_status": "ERISA Compliant",
+      "industry": "Manufacturing",
+      "state": "TX"
+    },
+    {
+      "ein": "98-7654321",
+      "reporting_plan_name": "TechCorp Employee Benefits Plan",
+      "payer": "UnitedHealthcare",
+      "covered_lives_estimate": 15000,
+      "annual_spend_estimate": "$52M",
+      "plan_type": "Self-Insured",
+      "tpa": "UnitedHealthcare (ASO)",
+      "fiduciary_status": "ERISA Compliant",
+      "industry": "Technology",
+      "state": "CA"
+    },
+    {
+      "ein": "45-6789123",
+      "reporting_plan_name": "Regional Medical Group Health Trust",
+      "payer": "Cigna",
+      "covered_lives_estimate": 8500,
+      "annual_spend_estimate": "$28M",
+      "plan_type": "Self-Insured",
+      "tpa": "Cigna (ASO)",
+      "fiduciary_status": "ERISA Compliant",
+      "industry": "Healthcare",
+      "state": "NY"
+    }
+  ],
+  "aggregated_metrics": {
+    "total_employers_in_dataset": 12500,
+    "total_covered_lives": "~160M Americans",
+    "total_annual_spend": "$350B+",
+    "average_cost_per_member_per_month": "$583",
+    "self_insured_percentage": "68%"
+  },
+  "query_examples": [
+    "Find all employers in Texas with >10K covered lives",
+    "Compare average spend by industry vertical",
+    "Show TPA market share by covered lives",
+    "Identify employers with multiple TPAs"
+  ]
+}

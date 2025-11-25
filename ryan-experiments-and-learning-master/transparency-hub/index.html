@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Transparency Hub | Payerset</title>
+    <meta name="description" content="TurboTax-style healthcare transparency tools for patients, employers, and providers. Check bills, find fair prices, and save money.">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="shared/css/core.css">
+    <link rel="stylesheet" href="shared/css/components.css">
+    <link rel="stylesheet" href="shared/css/animations.css">
+
+    <style>
+        /* Page-specific styles */
+        body {
+            background: linear-gradient(135deg, #F9FAFB 0%, #E5E7EB 100%);
+        }
+
+        .hero {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-3xl) var(--space-lg);
+            text-align: center;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1.25rem;
+            background: var(--payerset-blue-soft);
+            color: var(--payerset-blue);
+            border-radius: var(--radius-pill);
+            font-weight: var(--font-semibold);
+            font-size: 0.875rem;
+            margin-bottom: var(--space-lg);
+        }
+
+        .hero-title {
+            max-width: 800px;
+            margin-bottom: var(--space-md);
+            line-height: 1.1;
+        }
+
+        .hero-subtitle {
+            max-width: 600px;
+            font-size: clamp(1.125rem, 2vw, 1.375rem);
+            color: var(--gray-600);
+            margin: 0 auto var(--space-xl);
+            line-height: 1.6;
+        }
+
+        .personas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg) var(--space-3xl);
+        }
+
+        .persona-card {
+            background: var(--white);
+            padding: var(--space-xl);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            border: 2px solid transparent;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .persona-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--payerset-blue);
+        }
+
+        .persona-icon {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto var(--space-lg);
+            border-radius: var(--radius-circle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--white);
+            position: relative;
+        }
+
+        .persona-icon::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: inherit;
+            padding: 4px;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.3));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .persona-card-patient .persona-icon {
+            background: linear-gradient(135deg, var(--info-blue), #2563EB);
+        }
+
+        .persona-card-employer .persona-icon {
+            background: linear-gradient(135deg, var(--success-green), #059669);
+        }
+
+        .persona-card-provider .persona-icon {
+            background: linear-gradient(135deg, var(--warning-orange), #D97706);
+        }
+
+        .persona-title {
+            font-size: 1.75rem;
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-sm);
+            color: var(--gray-900);
+        }
+
+        .persona-description {
+            color: var(--gray-600);
+            margin-bottom: var(--space-lg);
+            line-height: 1.6;
+        }
+
+        .persona-features {
+            text-align: left;
+            margin-bottom: var(--space-lg);
+        }
+
+        .persona-feature {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-size: 0.9375rem;
+            color: var(--gray-700);
+        }
+
+        .persona-feature i {
+            color: var(--payerset-blue);
+            margin-top: 0.25rem;
+            flex-shrink: 0;
+        }
+
+        .persona-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.875rem 1.75rem;
+            background: var(--payerset-blue);
+            color: var(--white);
+            border-radius: var(--radius-md);
+            font-weight: var(--font-semibold);
+            transition: all var(--transition-fast);
+        }
+
+        .persona-card:hover .persona-cta {
+            gap: 0.75rem;
+            background: var(--payerset-blue-dark);
+        }
+
+        .stats-section {
+            background: var(--white);
+            padding: var(--space-3xl) var(--space-lg);
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-xl);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            padding: var(--space-lg);
+        }
+
+        .stat-number {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: var(--font-extrabold);
+            color: var(--payerset-blue);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--gray-600);
+            font-weight: var(--font-medium);
+        }
+
+        .footer {
+            text-align: center;
+            padding: var(--space-xl) var(--space-lg);
+            color: var(--gray-600);
+            font-size: 0.875rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: var(--space-lg);
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: var(--space-md);
+        }
+
+        .footer-link {
+            color: var(--payerset-blue);
+            text-decoration: none;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-link:hover {
+            color: var(--payerset-blue-dark);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .personas-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .persona-icon {
+                width: 80px;
+                height: 80px;
+                font-size: 2.5rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-lg);
+            }
+        }
+    </style>
+</head>
+<body data-glossary="false">
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-badge fade-in">
+            <i class="fas fa-sparkles"></i>
+            TurboTax for Healthcare Costs
+        </div>
+
+        <h1 class="hero-title fade-in delay-100">
+            Healthcare Costs Confusing?<br>
+            <span style="background: linear-gradient(135deg, var(--payerset-blue), var(--info-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Let's Fix That Together</span>
+        </h1>
+
+        <p class="hero-subtitle fade-in delay-200">
+            Simple, guided tools to check bills, find fair prices, and take control of your healthcare spending. No jargon, just answers.
+        </p>
+    </section>
+
+    <!-- Personas Grid -->
+    <section class="personas-grid">
+        <!-- Patient Card -->
+        <a href="patients/bill-checker.html" class="persona-card persona-card-patient stagger-item">
+            <div class="persona-icon">
+                <i class="fas fa-user"></i>
+            </div>
+            <h2 class="persona-title">I'm a Patient</h2>
+            <p class="persona-description">
+                Check if you're overpaying on medical bills and learn how to negotiate fair prices.
+            </p>
+            <div class="persona-features">
+                <div class="persona-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Upload bill photo → Get instant analysis</span>
+                </div>
+                <div class="persona-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Compare your price to Medicare rates</span>
+                </div>
+                <div class="persona-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Download negotiation scripts & action plan</span>
+                </div>
+            </div>
+            <div class="persona-cta">
+                Check My Bill
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
+
+        <!-- Employer Card -->
+        <a href="employers/spread-detector.html" class="persona-card persona-card-employer stagger-item">
+            <div class="persona-icon">
+                <i class="fas fa-briefcase"></i>
+            </div>
+            <h2 class="persona-title">I'm an Employer</h2>
+            <p class="persona-description">
+                Detect hidden fees, benchmark rates, and save millions on employee healthcare costs.
+            </p>
+            <div class="persona-features">
+                <div class="persona-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Find $2.5M+ in hidden TPA/PBM fees</span>
+                </div>
+                <div class="persona-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Benchmark rates against Medicare & market</span>
+                </div>
+                <div class="persona-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Generate CAA compliance documentation</span>
+                </div>
+            </div>
+            <div class="persona-cta">
+                Start Saving
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
+
+        <!-- Provider Card -->
+        <a href="providers/index.html" class="persona-card persona-card-provider stagger-item">
+            <div class="persona-icon">
+                <i class="fas fa-user-doctor"></i>
+            </div>
+            <h2 class="persona-title">I'm a Provider</h2>
+            <p class="persona-description">
+                Showcase your competitive pricing and quality metrics to attract direct contracts.
+            </p>
+            <div class="persona-features">
+                <div class="persona-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Display transparent cash & negotiated rates</span>
+                </div>
+                <div class="persona-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Highlight quality scores & outcomes data</span>
+                </div>
+                <div class="persona-feature">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Connect with employers seeking fair pricing</span>
+                </div>
+            </div>
+            <div class="persona-cta">
+                Showcase Value
+                <i class="fas fa-arrow-right"></i>
+            </div>
+        </a>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <h2 class="mb-lg">The Healthcare Transparency Impact</h2>
+            <div class="stats-grid">
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number" data-counter="30" data-suffix="%">0%</div>
+                    <div class="stat-label">Average Overpayment Found by PBGH</div>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number" data-counter="18000" data-prefix="">0</div>
+                    <div class="stat-label">Real Negotiated Rates in Database</div>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number" data-counter="160" data-suffix="M">0M</div>
+                    <div class="stat-label">Americans in Self-Insured Plans</div>
+                </div>
+                <div class="stat-item animate-on-scroll">
+                    <div class="stat-number" data-counter="5000" data-prefix="$">$0</div>
+                    <div class="stat-label">Average Family Savings Potential</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="../index.html" class="footer-link">Main Site</a>
+            <a href="../diagrams/diagram1.html" class="footer-link">Healthcare Ecosystem Map</a>
+            <a href="../use-cases.html" class="footer-link">Use Cases</a>
+            <a href="../timeline.html" class="footer-link">Transparency Timeline</a>
+            <a href="https://payerset.com" class="footer-link" target="_blank" rel="noopener noreferrer">
+                Visit Payerset
+                <i class="fas fa-external-link-alt" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+            </a>
+        </div>
+        <div>
+            &copy; 2024 Payerset. Healthcare transparency for everyone.
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="shared/js/animations.js"></script>
+
+    <script>
+        // Initialize stagger animations for persona cards
+        document.addEventListener('DOMContentLoaded', () => {
+            const personaCards = document.querySelectorAll('.stagger-item');
+
+            personaCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('visible');
+                }, index * 150);
+            });
+
+            // Animate counters when they come into view
+            const counters = document.querySelectorAll('[data-counter]');
+            counters.forEach(counter => {
+                const target = parseFloat(counter.dataset.counter);
+                const prefix = counter.dataset.prefix || '';
+                const suffix = counter.dataset.suffix || '';
+                const duration = 2000;
+
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            animateCounter(counter, target, duration, prefix, suffix);
+                            observer.unobserve(counter);
+                        }
+                    });
+                }, { threshold: 0.5 });
+
+                observer.observe(counter);
+            });
+        });
+
+        function animateCounter(element, target, duration, prefix, suffix) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+
+                const formatted = Math.floor(current).toLocaleString();
+                element.textContent = `${prefix}${formatted}${suffix}`;
+            }, 16);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Market Intelligence - Provider Dashboard</title>
+  <meta name="description" content="See how your rates compare to competitors and market benchmarks.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../shared/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="../index.html" class="logo">Healthcare Transparency</a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">For Providers</a>
+        <a href="market-intel.html" class="nav-link active">Market Intel</a>
+        <a href="#" class="nav-link">Direct Contracts</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section style="background: linear-gradient(135deg, var(--color-provider-light) 0%, var(--color-white) 100%); padding: 48px 0;">
+    <div class="container">
+      <h1 style="font-size: var(--text-4xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 16px; color: var(--color-provider-primary);">
+        Market Intelligence Dashboard
+      </h1>
+      <p style="text-align: center; color: var(--color-gray-700); margin-bottom: 32px; font-size: var(--text-lg);">
+        See how your rates compare to competitors and market benchmarks
+      </p>
+
+      <!-- Provider Selection -->
+      <div style="max-width: 700px; margin: 0 auto; background: white; padding: 32px; border-radius: var(--radius-2xl); box-shadow: var(--shadow-lg);">
+        <div class="form-group">
+          <label class="form-label">Select Your Practice</label>
+          <select id="providerSelect" class="form-select">
+            <option value="">Choose a provider...</option>
+            <option value="3456789012">Austin Orthopedics Group</option>
+            <option value="1234567890">HighQuality Imaging Center</option>
+            <option value="5678901234">Premium Surgical Institute</option>
+          </select>
+        </div>
+
+        <button id="loadDashboard" class="btn btn-primary btn-lg" style="width: 100%; background-color: var(--color-provider-primary);">
+          Load Market Analysis
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard Section -->
+  <section class="section" id="dashboardSection" style="display: none;">
+    <div class="container">
+      <!-- Provider Info Card -->
+      <div id="providerCard" class="card" style="margin-bottom: 32px;">
+        <!-- Populated by JavaScript -->
+      </div>
+
+      <!-- Market Position -->
+      <div id="marketPosition">
+        <!-- Populated by JavaScript -->
+      </div>
+
+      <!-- Procedure Comparison -->
+      <div id="procedureComparison" style="margin-top: 48px;">
+        <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 24px;">
+          Your Rates vs. Market
+        </h2>
+        <div id="procedureGrid" class="grid grid-cols-1 gap-6">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Direct Contract Opportunities -->
+      <div id="opportunities" style="margin-top: 48px; display: none;">
+        <!-- Populated by JavaScript -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Education Section -->
+  <section class="section bg-gray-50">
+    <div class="container">
+      <h2 class="section-title">How To Use This Data</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="card">
+          <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: var(--color-provider-primary); color: white; border-radius: var(--radius-xl); font-size: 32px; font-weight: var(--font-bold); margin: 0 auto 16px; display: flex;">1</div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 12px;">
+            Understand Your Position
+          </h3>
+          <p style="text-align: center; color: var(--color-gray-700);">
+            See if you're priced above or below market. Compare to Medicare benchmarks.
+            Identify if you're competing on price or quality.
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: var(--color-provider-primary); color: white; border-radius: var(--radius-xl); font-size: 32px; font-weight: var(--font-bold); margin: 0 auto 16px; display: flex;">2</div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 12px;">
+            Build Your Pitch
+          </h3>
+          <p style="text-align: center; color: var(--color-gray-700);">
+            If you're high-quality AND fair-priced, you're a goldmine for employers.
+            Use this data to show your value proposition.
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: var(--color-provider-primary); color: white; border-radius: var(--radius-xl); font-size: 32px; font-weight: var(--font-bold); margin: 0 auto 16px; display: flex;">3</div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 12px;">
+            Reach Out to Employers
+          </h3>
+          <p style="text-align: center; color: var(--color-gray-700);">
+            Contact local self-insured employers. Show them the savings. Build direct contracts
+            at fair rates that work for everyone.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background-color: var(--color-gray-900); color: var(--color-gray-300); padding: 48px 0;">
+    <div class="container">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Provider Tools
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="market-intel.html" style="color: var(--color-gray-300);">Market Intelligence</a></li>
+            <li style="margin-bottom: 8px;"><a href="index.html" style="color: var(--color-gray-300);">Back to Provider Home</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Resources
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Direct Contracting Guide</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Pricing Strategies</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Other Roles
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="../patients/index.html" style="color: var(--color-gray-300);">For Patients</a></li>
+            <li style="margin-bottom: 8px;"><a href="../employers/index.html" style="color: var(--color-gray-300);">For Employers</a></li>
+            <li style="margin-bottom: 8px;"><a href="../index.html" style="color: var(--color-gray-300);">Back to Home</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--color-gray-700); margin-top: 32px; padding-top: 32px; text-align: center; font-size: var(--text-sm);">
+        <p>&copy; 2025 Healthcare Transparency Platform.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../shared/components.js"></script>
+  <script src="../shared/data-mock.js"></script>
+  <script>
+    document.getElementById('loadDashboard').addEventListener('click', loadDashboard);
+
+    function loadDashboard() {
+      const providerNPI = document.getElementById('providerSelect').value;
+
+      if (!providerNPI) {
+        HealthcareUI.showToast('Please select a provider', 'warning');
+        return;
+      }
+
+      const btn = document.getElementById('loadDashboard');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Loading Market Data...';
+
+      setTimeout(() => {
+        displayDashboard(providerNPI);
+        btn.style.display = 'none';
+        document.getElementById('dashboardSection').scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 1500);
+    }
+
+    function displayDashboard(npi) {
+      const provider = HealthcareData.providers.find(p => p.npi === npi);
+      if (!provider) return;
+
+      // Provider Info Card
+      const providerCard = document.getElementById('providerCard');
+      providerCard.style.cssText = 'background: linear-gradient(135deg, var(--color-provider-primary), var(--color-provider-secondary)); color: white; padding: 32px;';
+      providerCard.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div>
+            <div style="opacity: 0.9; margin-bottom: 4px;">Provider</div>
+            <div style="font-size: var(--text-2xl); font-weight: var(--font-bold);">${provider.name}</div>
+          </div>
+          <div>
+            <div style="opacity: 0.9; margin-bottom: 4px;">Specialty</div>
+            <div style="font-size: var(--text-lg); font-weight: var(--font-semibold);">${provider.specialty}</div>
+          </div>
+          <div>
+            <div style="opacity: 0.9; margin-bottom: 4px;">Location</div>
+            <div style="font-size: var(--text-lg); font-weight: var(--font-semibold);">${provider.city}, ${provider.state}</div>
+          </div>
+          <div>
+            <div style="opacity: 0.9; margin-bottom: 4px;">Quality Grade</div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span class="grade-badge grade-${provider.qualityGrade ? provider.qualityGrade.toLowerCase() : 'a'}" style="width: 40px; height: 40px; font-size: var(--text-xl);">
+                ${provider.qualityGrade || 'A'}
+              </span>
+              <span style="font-weight: var(--font-semibold);">Leapfrog</span>
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Get provider's rates
+      const providerRates = HealthcareData.negotiatedRates.filter(r => r.npi === npi);
+
+      // Market Position Summary
+      displayMarketPosition(provider, providerRates);
+
+      // Procedure Comparison
+      displayProcedureComparison(provider, providerRates);
+
+      // Show dashboard
+      document.getElementById('dashboardSection').style.display = 'block';
+      document.getElementById('dashboardSection').style.animation = 'fadeIn 0.6s ease-out';
+    }
+
+    function displayMarketPosition(provider, providerRates) {
+      const positionDiv = document.getElementById('marketPosition');
+
+      // Calculate average position vs Medicare
+      const avgVsMedicare = providerRates.reduce((sum, rate) => {
+        const procedure = Object.values(HealthcareData.procedures).find(p =>
+          HealthcareData.negotiatedRates.some(r => r.procedureKey && r.npi === provider.npi)
+        );
+        if (procedure) {
+          return sum + (rate.negotiatedRate / procedure.medicareRate);
+        }
+        return sum;
+      }, 0) / providerRates.length;
+
+      const isCompetitive = avgVsMedicare < 1.5;
+      const isHighQuality = provider.qualityGrade === 'A' || provider.qualityGrade === 'B';
+
+      positionDiv.innerHTML = `
+        <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 24px;">
+          Your Market Position
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6" style="margin-bottom: 32px;">
+          <div class="card" style="text-align: center;">
+            <div style="font-size: var(--text-sm); color: var(--color-gray-600); margin-bottom: 8px;">
+              Avg % of Medicare
+            </div>
+            <div style="font-size: var(--text-4xl); font-weight: var(--font-bold); color: ${isCompetitive ? 'var(--color-success)' : 'var(--color-warning)'}; margin-bottom: 8px;">
+              ${Math.round(avgVsMedicare * 100)}%
+            </div>
+            <div style="font-size: var(--text-sm); color: var(--color-gray-600);">
+              ${isCompetitive ? '<i class="fa-solid fa-circle-check" style="color: var(--color-success);"></i> Competitive pricing' : '<i class="fa-solid fa-triangle-exclamation" style="color: var(--color-warning);"></i> Above typical range'}
+            </div>
+          </div>
+
+          <div class="card" style="text-align: center;">
+            <div style="font-size: var(--text-sm); color: var(--color-gray-600); margin-bottom: 8px;">
+              Quality Grade
+            </div>
+            <div style="font-size: var(--text-4xl); font-weight: var(--font-bold); color: ${isHighQuality ? 'var(--color-success)' : 'var(--color-warning)'}; margin-bottom: 8px;">
+              ${provider.qualityGrade || 'N/A'}
+            </div>
+            <div style="font-size: var(--text-sm); color: var(--color-gray-600);">
+              ${isHighQuality ? '<i class="fa-solid fa-circle-check" style="color: var(--color-success);"></i> High quality' : '<i class="fa-solid fa-triangle-exclamation" style="color: var(--color-warning);"></i> Below top tier'}
+            </div>
+          </div>
+
+          <div class="card" style="text-align: center;">
+            <div style="font-size: var(--text-sm); color: var(--color-gray-600); margin-bottom: 8px;">
+              Competitive Position
+            </div>
+            <div style="font-size: var(--text-4xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+              ${isCompetitive && isHighQuality ? '<i class="fa-solid fa-star" style="color: var(--color-success);"></i>' : isCompetitive ? '<i class="fa-solid fa-dollar-sign" style="color: var(--color-provider-primary);"></i>' : isHighQuality ? '<i class="fa-solid fa-trophy" style="color: var(--color-warning);"></i>' : '<i class="fa-solid fa-circle-question" style="color: var(--color-gray-600);"></i>'}
+            </div>
+            <div style="font-size: var(--text-sm); color: var(--color-gray-600);">
+              ${isCompetitive && isHighQuality ? 'High Value Provider' :
+                isCompetitive ? 'Competitive Price' :
+                isHighQuality ? 'Quality Leader' : 'Review Strategy'}
+            </div>
+          </div>
+        </div>
+
+        ${isCompetitive && isHighQuality ? `
+          <div class="alert alert-success">
+            <div>
+              <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); margin-bottom: 12px;">
+                <i class="fa-solid fa-bullseye" style="margin-right: 8px;"></i> You're a High-Value Provider!
+              </h3>
+              <p style="margin-bottom: 12px;">
+                You combine <strong>high quality (Grade ${provider.qualityGrade})</strong> with <strong>competitive pricing (${Math.round(avgVsMedicare * 100)}% of Medicare)</strong>.
+                This is exactly what self-insured employers are looking for.
+              </p>
+              <p style="margin: 0;">
+                <strong>Next step:</strong> Use this data to build direct contract proposals. Show employers they can save 30-50%
+                vs. TPA rates while getting Grade ${provider.qualityGrade} care from you.
+              </p>
+            </div>
+          </div>
+        ` : ''}
+      `;
+    }
+
+    function displayProcedureComparison(provider, providerRates) {
+      const procedureGrid = document.getElementById('procedureGrid');
+      procedureGrid.innerHTML = '';
+
+      providerRates.forEach((rate, index) => {
+        const procedure = HealthcareData.procedures[rate.procedureKey];
+        if (!procedure) return;
+
+        // Get all rates for this procedure to find min/max
+        const allRates = HealthcareData.negotiatedRates
+          .filter(r => r.procedureKey === rate.procedureKey)
+          .map(r => r.negotiatedRate);
+
+        const minRate = Math.min(...allRates);
+        const maxRate = Math.max(...allRates);
+        const yourRate = rate.negotiatedRate;
+        const vsMediare = Math.round((yourRate / procedure.medicareRate) * 100);
+
+        const isLowest = yourRate === minRate;
+        const isHighest = yourRate === maxRate;
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.animation = `fadeIn 0.5s ease-out ${index * 0.1}s backwards`;
+
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+            <div>
+              <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); margin-bottom: 4px;">
+                ${procedure.friendlyName}
+              </h3>
+              <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+                ${procedure.code} • ${procedure.category}
+              </p>
+            </div>
+            ${isLowest ? '<span class="badge badge-success">Lowest in Market</span>' :
+              isHighest ? '<span class="badge badge-error">Highest in Market</span>' :
+              '<span class="badge badge-neutral">Mid-Range</span>'}
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4" style="margin-bottom: 16px;">
+            <div>
+              <div class="text-muted text-sm">Your Rate</div>
+              <div class="text-2xl font-bold text-primary">${HealthcareUI.formatCurrency(yourRate)}</div>
+            </div>
+            <div>
+              <div class="text-muted text-sm">Medicare Rate</div>
+              <div class="text-lg font-semibold">${HealthcareUI.formatCurrency(procedure.medicareRate)}</div>
+            </div>
+            <div>
+              <div class="text-muted text-sm">Market Range</div>
+              <div class="text-sm font-medium">${HealthcareUI.formatCurrency(minRate)} - ${HealthcareUI.formatCurrency(maxRate)}</div>
+            </div>
+            <div>
+              <div class="text-muted text-sm">% of Medicare</div>
+              <div class="text-lg font-bold" style="color: ${vsMediare <= 150 ? 'var(--color-success)' : vsMediare <= 200 ? 'var(--color-warning)' : 'var(--color-error)'}">
+                ${vsMediare}%
+              </div>
+            </div>
+          </div>
+
+          <div style="background: var(--color-gray-50); padding: 12px; border-radius: var(--radius-md);">
+            <div style="font-size: var(--text-sm); font-weight: var(--font-semibold); margin-bottom: 8px;">
+              Competitive Analysis:
+            </div>
+            <div style="font-size: var(--text-sm); color: var(--color-gray-700);">
+              ${isLowest ?
+                `<i class="fa-solid fa-circle-check" style="color: var(--color-success);"></i> You're the most affordable option in the market. Combined with your Grade ${provider.qualityGrade} rating, you're an exceptional value.` :
+                isHighest ?
+                `<i class="fa-solid fa-triangle-exclamation" style="color: var(--color-warning);"></i> You're the most expensive option. Unless you have unique capabilities, consider if this pricing is sustainable.` :
+                `You're priced in the middle of the market range. ${vsMediare <= 150 ? 'This is a competitive position.' : 'Consider if there's room to be more competitive.'}`
+              }
+            </div>
+          </div>
+
+          ${isLowest && (provider.qualityGrade === 'A' || provider.qualityGrade === 'B') ? `
+            <div style="margin-top: 12px; padding: 12px; background: var(--color-success); color: white; border-radius: var(--radius-md); font-size: var(--text-sm);">
+              <strong><i class="fa-solid fa-lightbulb" style="margin-right: 4px;"></i> Direct Contract Opportunity:</strong> Show local employers they can get Grade ${provider.qualityGrade} care from you
+              at ${HealthcareUI.formatCurrency(yourRate)} vs. paying ${HealthcareUI.formatCurrency(maxRate)} elsewhere. That's ${HealthcareUI.formatCurrency(maxRate - yourRate)} savings per procedure!
+            </div>
+          ` : ''}
+        `;
+
+        procedureGrid.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,794 @@
+/* ===================================================================
+   PERSONA EXPLORATION PAGES - SHARED STYLES
+   Design System: Extends transparency-hub core.css
+   Last Updated: November 2024
+   =================================================================== */
+
+/* Import transparency-hub core styles */
+@import url('../../transparency-hub/shared/css/core.css');
+
+/* ===================================================================
+   PAGE LAYOUT
+   =================================================================== */
+
+body {
+    background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+    font-family: var(--font-system);
+    color: var(--gray-800);
+    line-height: var(--leading-normal);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+}
+
+/* ===================================================================
+   HERO SECTION - Audience-Specific
+   =================================================================== */
+
+.persona-hero {
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-3xl) var(--space-lg);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.persona-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.05;
+    background: radial-gradient(circle at 30% 50%, currentColor 0%, transparent 50%),
+                radial-gradient(circle at 70% 50%, currentColor 0%, transparent 50%);
+    z-index: 0;
+}
+
+.persona-hero > * {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-pill);
+    font-weight: var(--font-semibold);
+    font-size: 0.875rem;
+    margin-bottom: var(--space-lg);
+}
+
+.hero-icon {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto var(--space-lg);
+    border-radius: var(--radius-circle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3.5rem;
+    color: var(--white);
+    box-shadow: var(--shadow-xl);
+}
+
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: var(--font-extrabold);
+    line-height: var(--leading-tight);
+    margin-bottom: var(--space-md);
+    max-width: 900px;
+}
+
+.hero-subtitle {
+    font-size: clamp(1.125rem, 2vw, 1.375rem);
+    color: var(--gray-600);
+    max-width: 700px;
+    margin: 0 auto var(--space-xl);
+    line-height: 1.6;
+}
+
+/* Audience-Specific Colors */
+.persona-hero.patients {
+    color: var(--info-blue);
+}
+
+.persona-hero.patients .hero-badge {
+    background: var(--info-blue-light);
+    color: var(--info-blue);
+}
+
+.persona-hero.patients .hero-icon {
+    background: linear-gradient(135deg, var(--info-blue), #2563EB);
+}
+
+.persona-hero.employers {
+    color: var(--success-green);
+}
+
+.persona-hero.employers .hero-badge {
+    background: var(--success-green-light);
+    color: var(--success-green);
+}
+
+.persona-hero.employers .hero-icon {
+    background: linear-gradient(135deg, var(--success-green), #059669);
+}
+
+.persona-hero.providers {
+    color: var(--warning-orange);
+}
+
+.persona-hero.providers .hero-badge {
+    background: var(--warning-orange-light);
+    color: var(--warning-orange);
+}
+
+.persona-hero.providers .hero-icon {
+    background: linear-gradient(135deg, var(--warning-orange), #D97706);
+}
+
+/* ===================================================================
+   BREADCRUMB NAVIGATION
+   =================================================================== */
+
+.breadcrumb {
+    padding: var(--space-lg) 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--gray-500);
+}
+
+.breadcrumb a {
+    color: var(--payerset-blue);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.breadcrumb a:hover {
+    color: var(--payerset-blue-dark);
+}
+
+.breadcrumb-separator {
+    color: var(--gray-400);
+}
+
+/* ===================================================================
+   PRIMARY PERSONA SECTION
+   =================================================================== */
+
+.primary-persona {
+    background: var(--white);
+    border-radius: var(--radius-xl);
+    padding: var(--space-2xl);
+    margin: var(--space-2xl) 0;
+    box-shadow: var(--shadow-lg);
+}
+
+.persona-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 2px solid var(--gray-200);
+}
+
+.persona-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radius-circle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--white);
+    flex-shrink: 0;
+}
+
+.persona-intro {
+    flex: 1;
+}
+
+.persona-name {
+    font-size: 2rem;
+    font-weight: var(--font-bold);
+    margin-bottom: 0.5rem;
+    color: var(--gray-900);
+}
+
+.persona-tagline {
+    font-size: 1.125rem;
+    color: var(--gray-600);
+    margin-bottom: var(--space-sm);
+}
+
+.persona-demographics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    font-size: 0.875rem;
+    color: var(--gray-500);
+}
+
+.demographic-tag {
+    padding: 0.25rem 0.75rem;
+    background: var(--gray-100);
+    border-radius: var(--radius-sm);
+}
+
+/* ===================================================================
+   PAIN POINTS SECTION
+   =================================================================== */
+
+.section-heading {
+    font-size: 1.75rem;
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-lg);
+    color: var(--gray-900);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.pain-points-grid {
+    display: grid;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+}
+
+.pain-point-card {
+    background: var(--gray-50);
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--danger-red);
+    transition: all var(--transition-normal);
+}
+
+.pain-point-card:hover {
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+    transform: translateX(4px);
+}
+
+.pain-point-title {
+    font-weight: var(--font-semibold);
+    color: var(--gray-900);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pain-point-title i {
+    color: var(--danger-red);
+}
+
+.pain-point-description {
+    color: var(--gray-700);
+    line-height: 1.6;
+}
+
+/* ===================================================================
+   AWARENESS GAP SECTION
+   =================================================================== */
+
+.awareness-gap {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FEE2E2 100%);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    margin: var(--space-xl) 0;
+}
+
+.awareness-gap .section-heading {
+    color: var(--gray-900);
+}
+
+.awareness-gap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-md);
+    margin-top: var(--space-lg);
+}
+
+.awareness-item {
+    background: var(--white);
+    padding: var(--space-md);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    transition: transform var(--transition-fast);
+}
+
+.awareness-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.awareness-icon {
+    font-size: 1.25rem;
+    color: var(--danger-red);
+    flex-shrink: 0;
+}
+
+.awareness-text {
+    color: var(--gray-700);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+}
+
+/* ===================================================================
+   CORE INSIGHT CALLOUT
+   =================================================================== */
+
+.core-insight {
+    background: linear-gradient(135deg, var(--payerset-blue-soft), var(--info-blue-light));
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--payerset-blue);
+    margin: var(--space-xl) 0;
+    text-align: center;
+}
+
+.core-insight-label {
+    display: inline-block;
+    background: var(--payerset-blue);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.875rem;
+    font-weight: var(--font-semibold);
+    margin-bottom: var(--space-md);
+}
+
+.core-insight-text {
+    font-size: 1.25rem;
+    line-height: 1.7;
+    color: var(--gray-800);
+    font-style: italic;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.core-insight-text strong {
+    color: var(--payerset-blue);
+    font-weight: var(--font-bold);
+}
+
+/* ===================================================================
+   EDUCATIONAL JOURNEY TIMELINE
+   =================================================================== */
+
+.journey-section {
+    margin: var(--space-2xl) 0;
+}
+
+.journey-timeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+}
+
+.journey-stage {
+    background: var(--white);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--gray-200);
+    position: relative;
+    transition: all var(--transition-normal);
+}
+
+.journey-stage.current {
+    border-color: var(--payerset-blue);
+    box-shadow: var(--shadow-blue);
+}
+
+.journey-stage.upcoming {
+    opacity: 0.7;
+}
+
+.journey-stage:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+.stage-number {
+    position: absolute;
+    top: -12px;
+    left: var(--space-lg);
+    background: var(--payerset-blue);
+    color: var(--white);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-circle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: var(--font-bold);
+    font-size: 1.125rem;
+}
+
+.journey-stage.upcoming .stage-number {
+    background: var(--gray-400);
+}
+
+.stage-title {
+    font-size: 1.25rem;
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-sm);
+    margin-top: var(--space-sm);
+    color: var(--gray-900);
+}
+
+.stage-description {
+    color: var(--gray-600);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    margin-bottom: var(--space-md);
+}
+
+.stage-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--payerset-blue);
+    font-size: 0.875rem;
+    font-weight: var(--font-medium);
+}
+
+.journey-stage.upcoming .stage-hint {
+    color: var(--gray-500);
+}
+
+/* ===================================================================
+   SELF-ASSESSMENT CHECKLIST
+   =================================================================== */
+
+.self-assessment {
+    background: linear-gradient(135deg, var(--gray-50), var(--white));
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    border: 2px dashed var(--gray-300);
+    margin: var(--space-xl) 0;
+}
+
+.assessment-intro {
+    text-align: center;
+    margin-bottom: var(--space-lg);
+}
+
+.assessment-title {
+    font-size: 1.5rem;
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-sm);
+    color: var(--gray-900);
+}
+
+.assessment-subtitle {
+    color: var(--gray-600);
+}
+
+.checklist {
+    display: grid;
+    gap: var(--space-sm);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    background: var(--white);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--gray-200);
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.checklist-item:hover {
+    border-color: var(--payerset-blue);
+    box-shadow: var(--shadow-sm);
+}
+
+.checklist-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: var(--payerset-blue);
+}
+
+.checklist-label {
+    flex: 1;
+    color: var(--gray-700);
+    line-height: 1.5;
+    cursor: pointer;
+}
+
+/* ===================================================================
+   SECONDARY PERSONAS SECTION
+   =================================================================== */
+
+.secondary-personas {
+    margin: var(--space-2xl) 0;
+}
+
+.secondary-personas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+}
+
+.secondary-persona-card {
+    background: var(--white);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal);
+    border: 2px solid transparent;
+}
+
+.secondary-persona-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-xl);
+    border-color: var(--payerset-blue);
+}
+
+.secondary-avatar {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--space-md);
+    border-radius: var(--radius-circle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--white);
+}
+
+.secondary-name {
+    font-size: 1.5rem;
+    font-weight: var(--font-bold);
+    margin-bottom: 0.5rem;
+    text-align: center;
+    color: var(--gray-900);
+}
+
+.secondary-tagline {
+    text-align: center;
+    color: var(--gray-600);
+    margin-bottom: var(--space-lg);
+    font-size: 0.9375rem;
+}
+
+.secondary-pain-points {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.secondary-pain-points li {
+    padding: var(--space-sm) 0;
+    color: var(--gray-700);
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+}
+
+.secondary-pain-points li::before {
+    content: "•";
+    color: var(--danger-red);
+    font-weight: var(--font-bold);
+    font-size: 1.25rem;
+}
+
+/* ===================================================================
+   CROSS-LINKS SECTION
+   =================================================================== */
+
+.cross-links {
+    background: var(--white);
+    padding: var(--space-2xl);
+    border-radius: var(--radius-xl);
+    margin: var(--space-2xl) 0;
+}
+
+.cross-links-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--space-lg);
+    margin-top: var(--space-lg);
+}
+
+.cross-link-card {
+    background: var(--gray-50);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    transition: all var(--transition-normal);
+    border: 2px solid transparent;
+}
+
+.cross-link-card:hover {
+    transform: scale(1.05);
+    box-shadow: var(--shadow-lg);
+}
+
+.cross-link-card.patients:hover {
+    border-color: var(--info-blue);
+    background: var(--info-blue-light);
+}
+
+.cross-link-card.employers:hover {
+    border-color: var(--success-green);
+    background: var(--success-green-light);
+}
+
+.cross-link-card.providers:hover {
+    border-color: var(--warning-orange);
+    background: var(--warning-orange-light);
+}
+
+.cross-link-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--space-md);
+    border-radius: var(--radius-circle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--white);
+}
+
+.cross-link-card.patients .cross-link-icon {
+    background: linear-gradient(135deg, var(--info-blue), #2563EB);
+}
+
+.cross-link-card.employers .cross-link-icon {
+    background: linear-gradient(135deg, var(--success-green), #059669);
+}
+
+.cross-link-card.providers .cross-link-icon {
+    background: linear-gradient(135deg, var(--warning-orange), #D97706);
+}
+
+.cross-link-title {
+    font-size: 1.25rem;
+    font-weight: var(--font-bold);
+    margin-bottom: 0.5rem;
+    color: var(--gray-900);
+}
+
+.cross-link-description {
+    color: var(--gray-600);
+    font-size: 0.9375rem;
+}
+
+/* ===================================================================
+   FOOTER
+   =================================================================== */
+
+.page-footer {
+    text-align: center;
+    padding: var(--space-2xl) var(--space-lg);
+    color: var(--gray-600);
+    font-size: 0.875rem;
+}
+
+.footer-links {
+    display: flex;
+    gap: var(--space-lg);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: var(--space-md);
+}
+
+.footer-link {
+    color: var(--payerset-blue);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+}
+
+.footer-link:hover {
+    color: var(--payerset-blue-dark);
+    text-decoration: underline;
+}
+
+/* ===================================================================
+   RESPONSIVE DESIGN
+   =================================================================== */
+
+@media (max-width: 768px) {
+    .persona-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .persona-demographics {
+        justify-content: center;
+    }
+
+    .journey-timeline {
+        grid-template-columns: 1fr;
+    }
+
+    .awareness-gap-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .secondary-personas-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cross-links-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hero-icon {
+        width: 100px;
+        height: 100px;
+        font-size: 3rem;
+    }
+}
+
+/* ===================================================================
+   ANIMATIONS
+   =================================================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.delay-100 {
+    animation-delay: 0.1s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.delay-200 {
+    animation-delay: 0.2s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.delay-300 {
+    animation-delay: 0.3s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}

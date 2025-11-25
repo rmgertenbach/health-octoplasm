@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Power Map - Interactive | Payerset</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="shared/diagram-common.css">
+    <style>
+        /* Diagram 3 Specific Styles */
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .toggle-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--payerset-blue);
+            background: white;
+            color: var(--payerset-blue);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .toggle-btn:hover {
+            background: #f5f0ff;
+        }
+
+        .toggle-btn.active {
+            background: #764ba2;
+            color: white;
+        }
+
+        .legend-symbol {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 3px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .power-panel {
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #fff5f5 0%, #f0f0ff 100%);
+            border-bottom: 2px solid #e0e0ff;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .power-card {
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .power-card h4 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #667eea;
+        }
+
+        .power-card ul {
+            list-style: none;
+            padding: 0;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .power-card li {
+            margin: 4px 0;
+            padding-left: 12px;
+            position: relative;
+        }
+
+        .power-card li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+        }
+
+        .power-shift {
+            border-left-color: #228B22;
+        }
+
+        .power-shift h4 {
+            color: #228B22;
+        }
+
+        .power-shift li:before {
+            color: #228B22;
+        }
+
+        .tooltip .power-level {
+            display: inline-block;
+            padding: 4px 8px;
+            background: var(--payerset-blue);
+            border-radius: 4px;
+            font-weight: bold;
+            margin: 8px 0;
+        }
+
+        .tooltip .power-level.high {
+            background: var(--color-problem);
+        }
+
+        .tooltip .power-level.medium {
+            background: #DAA520;
+        }
+
+        .tooltip .power-level.low {
+            background: var(--payerset-green);
+        }
+
+        .tactic-badge {
+            display: inline-block;
+            background: rgba(220, 20, 60, 0.2);
+            color: #DC143C;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: bold;
+            margin: 2px;
+        }
+
+        .transparency-impact {
+            margin-top: 10px;
+            padding: 12px;
+            background: rgba(34, 139, 34, 0.1);
+            border-left: 4px solid #228B22;
+            border-radius: 4px;
+        }
+
+        .transparency-impact strong {
+            color: #228B22;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="diagram-nav">
+        <div class="nav-left">
+            <a href="../index.html" class="nav-logo">Payerset</a>
+            <span class="nav-divider">|</span>
+            <span class="diagram-title">Power Map</span>
+        </div>
+        <div class="nav-right">
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-toggle">Diagrams <i class="fas fa-chevron-down"></i></button>
+                <div class="nav-dropdown-menu">
+                    <a href="diagram1.html" class="nav-dropdown-item"><i class="fas fa-network-wired"></i> Ecosystem Map</a>
+                    <a href="diagram2.html" class="nav-dropdown-item"><i class="fas fa-dollar-sign"></i> Money Flows</a>
+                    <a href="diagram3.html" class="nav-dropdown-item active"><i class="fas fa-bolt"></i> Power Map</a>
+                    <a href="diagram4.html" class="nav-dropdown-item"><i class="fas fa-shield-alt"></i> Conflicts Map</a>
+                    <a href="diagram5.html" class="nav-dropdown-item"><i class="fas fa-sync-alt"></i> Transformation</a>
+                    <a href="diagram-test.html" class="nav-dropdown-item"><i class="fas fa-flask"></i> Data Explorer <span class="alpha-badge">Alpha</span></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="diagram-header">
+            <h1>Healthcare Power Map</h1>
+            <p>Who controls what, how they maintain power, and how transparency shifts everything</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <div class="control-label">Select View:</div>
+                <div class="layer-buttons">
+                    <button class="layer-btn active" data-layer="0">
+                        Power Centers
+                    </button>
+                    <button class="layer-btn" data-layer="1">
+                        Control & Tactics
+                    </button>
+                    <button class="layer-btn" data-layer="2">
+                        Complete Power Map
+                    </button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">Layout:</div>
+                <div class="save-load-buttons">
+                    <button class="action-btn" id="saveLayout">
+                        <i class="fas fa-save"></i>
+                        Save Layout
+                    </button>
+                    <button class="action-btn secondary" id="resetLayout">
+                        <i class="fas fa-rotate-right"></i>
+                        Reset Layout
+                    </button>
+                    <button class="action-btn secondary" id="exportLayout">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                    <button class="action-btn secondary" id="importLayout">
+                        <i class="fas fa-upload"></i>
+                        Import
+                    </button>
+                </div>
+            </div>
+
+            <div class="view-toggle">
+                <span style="font-size: 13px; font-weight: 600;">Show:</span>
+                <button class="toggle-btn active" data-view="current">
+                    Current State
+                </button>
+                <button class="toggle-btn" data-view="transparency">
+                    With Transparency
+                </button>
+            </div>
+
+            <div class="legend">
+                <div style="font-weight: 600; margin-right: 10px;">Power Level:</div>
+                <div class="legend-item">
+                    <div class="legend-symbol" style="background: #DC143C; color: white;">H</div>
+                    <span>High</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol" style="background: #DAA520; color: white;">M</div>
+                    <span>Medium</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-symbol" style="background: #228B22; color: white;">L</div>
+                    <span>Low</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="power-panel" id="power-panel">
+            <!-- Power analysis will be dynamically inserted here -->
+        </div>
+
+        <div id="cy"></div>
+        <div class="tooltip" id="tooltip"></div>
+
+        <div class="footer">
+            <strong>Key Insight:</strong> Power concentrated in middlemen who control data and payment flows. 
+            Employers have market power but rarely use it due to information asymmetry.
+            <div class="transparency-impact" id="transparency-message">
+                <strong>Transparency Shifts Power:</strong> When employers can see costs, quality, and alternatives, 
+                they gain negotiating leverage and can bypass intermediaries through direct contracting.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Power map data for all layers
+        const powerMapData = {
+            // Layer 0: Power Centers
+            0: {
+                current: {
+                    powerAnalysis: [
+                        {
+                            title: "MOST POWER (Incumbents)",
+                            items: [
+                                "TPAs/Carriers: Control networks & data",
+                                "PBMs: Control drug pricing & formularies",
+                                "Consolidated Systems: Market dominance"
+                            ]
+                        },
+                        {
+                            title: "MEDIUM POWER (Potential)",
+                            items: [
+                                "Large Employers: Have leverage, don't use it",
+                                "Regulators: Rules exist, enforcement weak"
+                            ]
+                        },
+                        {
+                            title: "LITTLE POWER (Disadvantaged)",
+                            items: [
+                                "Patients: No information, high costs",
+                                "Small Employers: Can't negotiate",
+                                "Independent Providers: Consolidation pressure"
+                            ]
+                        }
+                    ],
+                    nodes: [
+                        // High Power Players
+                        {
+                            id: 'tpa-power',
+                            label: 'TPAs/CARRIERS',
+                            power: 'HIGH',
+                            size: 80,
+                            type: 'player',
+                            description: 'Control networks, data, and payment flows',
+                            details: [
+                                'Control: Network access, claims data, payment timing',
+                                'Leverage: "You need our network"',
+                                'Tactic: Withhold data, complexity, lock-in contracts',
+                                'Vulnerability: Direct contracting bypasses them'
+                            ],
+                            tactics: ['Data withholding', 'Complexity', 'Network lock-in']
+                        },
+                        {
+                            id: 'pbm-power',
+                            label: 'PBMs',
+                            power: 'HIGH',
+                            size: 80,
+                            type: 'player',
+                            description: 'Control drug pricing and formularies',
+                            details: [
+                                'Control: Formularies, pharmacy networks, drug prices',
+                                'Leverage: "We negotiate best rebates"',
+                                'Tactic: Spread pricing, rebate retention, complexity',
+                                'Vulnerability: NADAC benchmarking exposes spread'
+                            ],
+                            tactics: ['Spread pricing', 'Rebate retention', 'Opaque MAC lists']
+                        },
+                        {
+                            id: 'consolidated-sys',
+                            label: 'CONSOLIDATED\nHEALTH SYSTEMS',
+                            power: 'HIGH',
+                            size: 75,
+                            type: 'player',
+                            description: 'Market dominance in local regions',
+                            details: [
+                                'Control: Market access (only option in region)',
+                                'Leverage: "We\'re the only hospital"',
+                                'Tactic: All-or-nothing contracts, anti-steering clauses',
+                                'Vulnerability: Quality data shows poor value'
+                            ],
+                            tactics: ['All-or-nothing', 'Anti-steering', 'Brand marketing']
+                        },
+                        
+                        // Medium Power
+                        {
+                            id: 'employers',
+                            label: 'EMPLOYERS\n(Large)',
+                            power: 'MEDIUM',
+                            size: 60,
+                            type: 'player',
+                            description: 'Have market power but often don\'t use it',
+                            details: [
+                                'Potential: $100M+ buying power, fiduciary duty',
+                                'Problem: Lack expertise, trust advisors',
+                                'Opportunity: Direct contracting, vendor accountability',
+                                'With transparency: Power increases dramatically'
+                            ],
+                            tactics: ['RFP process', 'Vendor switching', 'Network design']
+                        },
+                        {
+                            id: 'regulators',
+                            label: 'REGULATORS',
+                            power: 'MEDIUM',
+                            size: 50,
+                            type: 'player',
+                            description: 'Rules exist but enforcement weak',
+                            details: [
+                                'Control: Set transparency rules, fiduciary standards',
+                                'Leverage: Fines, penalties, lawsuits',
+                                'Problem: Limited resources, industry lobbying',
+                                'Improving: CAA enforcement increasing post-2021'
+                            ],
+                            tactics: ['Rule-making', 'Enforcement', 'Investigations']
+                        },
+                        
+                        // Low Power
+                        {
+                            id: 'patients',
+                            label: 'PATIENTS',
+                            power: 'LOW',
+                            size: 40,
+                            type: 'player',
+                            description: 'No information, no alternatives, high costs',
+                            details: [
+                                'Problem: Can\'t see costs, can\'t shop, can\'t afford care',
+                                'Limited options: Accept what employer offers',
+                                'Financial risk: High deductibles, surprise bills',
+                                'With transparency: Can make informed choices'
+                            ],
+                            tactics: ['Delay care', 'Negotiate bills', 'Medical debt']
+                        },
+                        {
+                            id: 'small-employers',
+                            label: 'EMPLOYERS\n(Small)',
+                            power: 'LOW',
+                            size: 35,
+                            type: 'player',
+                            description: 'Can\'t negotiate, limited options',
+                            details: [
+                                'Problem: Too small to self-insure, no leverage',
+                                'Dependent: On brokers and small group market',
+                                'Options: Limited to what carriers offer',
+                                'Solution: Join employer coalitions for leverage'
+                            ],
+                            tactics: ['Accept rates', 'Shop brokers', 'Join coalitions']
+                        },
+                        {
+                            id: 'independent-providers',
+                            label: 'INDEPENDENT\nPROVIDERS',
+                            power: 'LOW',
+                            size: 35,
+                            type: 'player',
+                            description: 'Consolidation pressure, declining leverage',
+                            details: [
+                                'Problem: Competing with hospital systems',
+                                'Disadvantage: Can\'t negotiate network rates as well',
+                                'Quality: Often better but can\'t prove it',
+                                'Opportunity: Direct contracts with employers'
+                            ],
+                            tactics: ['Direct contracts', 'Quality focus', 'DPC model']
+                        },
+                        
+                        // Control Points (what's being controlled)
+                        {
+                            id: 'network-access',
+                            label: 'NETWORK\nACCESS',
+                            power: 'CONTROL',
+                            size: 50,
+                            type: 'control-point',
+                            description: 'Who can deliver care to employees',
+                            details: [
+                                'Critical resource for employers',
+                                'Currently controlled by TPAs',
+                                'Can be unbundled via direct contracts',
+                                'Wraparound networks available for $18 PMPM'
+                            ]
+                        },
+                        {
+                            id: 'claims-data',
+                            label: 'CLAIMS\nDATA',
+                            power: 'CONTROL',
+                            size: 50,
+                            type: 'control-point',
+                            description: 'Information about what was paid',
+                            details: [
+                                'Employers legally own this data (CAA)',
+                                'TPAs often withhold for 10+ months',
+                                'Essential for transparency and accountability',
+                                'Transparency tools help employers access'
+                            ]
+                        },
+                        {
+                            id: 'drug-formulary',
+                            label: 'DRUG\nFORMULARY',
+                            power: 'CONTROL',
+                            size: 50,
+                            type: 'control-point',
+                            description: 'Which drugs are covered',
+                            details: [
+                                'PBMs control which drugs covered at what tier',
+                                'Often prioritize high-rebate drugs',
+                                'Employers can demand formulary control',
+                                'Clinical decisions should drive, not financial'
+                            ]
+                        },
+                        {
+                            id: 'pricing-info',
+                            label: 'PRICING\nINFORMATION',
+                            power: 'CONTROL',
+                            size: 50,
+                            type: 'control-point',
+                            description: 'Knowledge of true costs',
+                            details: [
+                                'Currently hidden by complexity and NDAs',
+                                'CAA requires machine-readable files',
+                                'PBGH proves data is usable',
+                                'Transparency tools make it accessible'
+                            ]
+                        }
+                    ],
+                    edges: [
+                        // Who controls what
+                        { source: 'tpa-power', target: 'network-access', label: 'Controls', type: 'control', strength: 'strong' },
+                        { source: 'tpa-power', target: 'claims-data', label: 'Withholds', type: 'control', strength: 'strong' },
+                        { source: 'pbm-power', target: 'drug-formulary', label: 'Controls', type: 'control', strength: 'strong' },
+                        { source: 'pbm-power', target: 'pricing-info', label: 'Obscures', type: 'control', strength: 'strong' },
+                        { source: 'consolidated-sys', target: 'network-access', label: 'Monopoly', type: 'control', strength: 'medium' },
+                        
+                        // Who wants control
+                        { source: 'employers', target: 'network-access', label: 'Needs', type: 'desire', strength: 'medium' },
+                        { source: 'employers', target: 'claims-data', label: 'Owns legally', type: 'desire', strength: 'strong' },
+                        { source: 'employers', target: 'pricing-info', label: 'Needs', type: 'desire', strength: 'strong' },
+                        { source: 'patients', target: 'pricing-info', label: 'Desperately needs', type: 'desire', strength: 'medium' },
+                        
+                        // Oversight
+                        { source: 'regulators', target: 'tpa-power', label: 'Oversees', type: 'oversight', strength: 'weak' },
+                        { source: 'regulators', target: 'pbm-power', label: 'Oversees', type: 'oversight', strength: 'weak' },
+                        { source: 'regulators', target: 'employers', label: 'Mandates transparency', type: 'oversight', strength: 'medium' }
+                    ]
+                },
+                transparency: {
+                    powerAnalysis: [
+                        {
+                            title: "GAINING POWER ↗",
+                            items: [
+                                "Employers: Data enables leverage (Med → High)",
+                                "Patients: Can see costs & quality (Low → Med)",
+                                "Independent Providers: Quality visible (Low → Med)",
+                                "Good Consultants: Can prove value (Med → Med)"
+                            ],
+                            shift: true
+                        },
+                        {
+                            title: "LOSING POWER ↘",
+                            items: [
+                                "TPAs: Spread exposed (High → Med)",
+                                "PBMs: Same (High → Med)",
+                                "Bad Consultants: Conflicts revealed (Med → Low)",
+                                "Monopoly Systems: Poor value visible (High → Med)"
+                            ],
+                            shift: true
+                        },
+                        {
+                            title: "NEW POWER CENTERS",
+                            items: [
+                                "Transparency Tools: Enable market function",
+                                "Employer Coalitions: Collective leverage",
+                                "Direct Contracting: Bypass intermediaries"
+                            ],
+                            shift: true
+                        }
+                    ],
+                    nodes: [
+                        // Power shifted - TPAs and PBMs reduced
+                        {
+                            id: 'tpa-power',
+                            label: 'TPAs/CARRIERS',
+                            power: 'MEDIUM',
+                            size: 60,
+                            type: 'player',
+                            description: 'Power reduced - spread pricing exposed',
+                            details: [
+                                'Can no longer hide spread pricing',
+                                'Employers demand accountability',
+                                'Must compete on transparent value',
+                                'Some adapt, others lose business'
+                            ]
+                        },
+                        {
+                            id: 'pbm-power',
+                            label: 'PBMs',
+                            power: 'MEDIUM',
+                            size: 60,
+                            type: 'player',
+                            description: 'Power reduced - NADAC exposes markup',
+                            details: [
+                                'Spread pricing visible via NADAC',
+                                'Employers migrate to pass-through',
+                                'Rebate retention no longer viable',
+                                'Must offer transparent pricing'
+                            ]
+                        },
+                        {
+                            id: 'consolidated-sys',
+                            label: 'CONSOLIDATED\nHEALTH SYSTEMS',
+                            power: 'MEDIUM',
+                            size: 65,
+                            type: 'player',
+                            description: 'Power reduced - quality data shows poor value',
+                            details: [
+                                'Leapfrog scores reveal quality issues',
+                                'Price-quality comparison unfavorable',
+                                'Employers willing to narrow networks',
+                                'Must compete on value, not brand'
+                            ]
+                        },
+                        
+                        // Power increased - Employers and Patients
+                        {
+                            id: 'employers',
+                            label: 'EMPLOYERS\n(Large)',
+                            power: 'HIGH',
+                            size: 85,
+                            type: 'player',
+                            description: 'Power increased dramatically - data enables action',
+                            details: [
+                                'Can see overpayment vs. peers',
+                                'Direct contract with confidence',
+                                'Hold TPAs accountable',
+                                '30% overspending now visible and fixable'
+                            ]
+                        },
+                        {
+                            id: 'patients',
+                            label: 'PATIENTS',
+                            power: 'MEDIUM',
+                            size: 55,
+                            type: 'player',
+                            description: 'Power increased - can see and choose',
+                            details: [
+                                'Know costs before care',
+                                'See quality and safety ratings',
+                                'Can shop for value',
+                                'Employers design benefits around transparency'
+                            ]
+                        },
+                        
+                        // New power centers
+                        {
+                            id: 'transparency-tools',
+                            label: 'TRANSPARENCY\nTOOLS',
+                            power: 'HIGH',
+                            size: 70,
+                            type: 'player',
+                            description: 'New power center - enables market function',
+                            details: [
+                                'Combine cost + quality + safety data',
+                                'Expose overpayment and spread pricing',
+                                'Enable direct contracting',
+                                'Shift power to employers and patients'
+                            ]
+                        },
+                        {
+                            id: 'employer-coalitions',
+                            label: 'EMPLOYER\nCOALITIONS',
+                            power: 'HIGH',
+                            size: 65,
+                            type: 'player',
+                            description: 'Collective buying power',
+                            details: [
+                                'PBGH: $350B+ in spend',
+                                'Share data and best practices',
+                                'Negotiate collectively',
+                                'Move markets through coordination'
+                            ]
+                        },
+                        {
+                            id: 'good-consultants',
+                            label: 'UNCONFLICTED\nCONSULTANTS',
+                            power: 'MEDIUM',
+                            size: 55,
+                            type: 'player',
+                            description: 'Can finally prove value',
+                            details: [
+                                'Transparency reveals who helps vs. harms',
+                                'Win business from conflicted peers',
+                                'Use data to demonstrate results',
+                                'Aligned incentives clear'
+                            ]
+                        },
+                        {
+                            id: 'independent-providers',
+                            label: 'INDEPENDENT\nPROVIDERS',
+                            power: 'MEDIUM',
+                            size: 50,
+                            type: 'player',
+                            description: 'Quality becomes competitive advantage',
+                            details: [
+                                'Leapfrog A grades visible',
+                                'Direct contracts more accessible',
+                                'Win volume through merit',
+                                'Don\'t need system affiliation'
+                            ]
+                        },
+                        
+                        // Reduced power
+                        {
+                            id: 'bad-consultants',
+                            label: 'CONFLICTED\nCONSULTANTS',
+                            power: 'LOW',
+                            size: 35,
+                            type: 'player',
+                            description: 'Conflicts exposed, lose business',
+                            details: [
+                                'Commission relationships visible',
+                                'Can\'t explain why employer overpaying',
+                                'Lose accounts to unconflicted peers',
+                                'Must reform or exit market'
+                            ]
+                        },
+                        
+                        // Same as before
+                        { id: 'regulators', label: 'REGULATORS', power: 'MEDIUM', size: 50, type: 'player' },
+                        { id: 'small-employers', label: 'EMPLOYERS\n(Small)', power: 'LOW', size: 35, type: 'player' },
+                        
+                        // Control points
+                        { id: 'network-access', label: 'NETWORK\nACCESS', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'claims-data', label: 'CLAIMS\nDATA', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'drug-formulary', label: 'DRUG\nFORMULARY', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'pricing-info', label: 'PRICING\nINFORMATION', power: 'CONTROL', size: 50, type: 'control-point' }
+                    ],
+                    edges: [
+                        // New control relationships
+                        { source: 'employers', target: 'network-access', label: 'Direct contracts', type: 'control', strength: 'strong' },
+                        { source: 'employers', target: 'claims-data', label: 'Access via tools', type: 'control', strength: 'strong' },
+                        { source: 'employers', target: 'pricing-info', label: 'Transparency tools', type: 'control', strength: 'strong' },
+                        { source: 'transparency-tools', target: 'pricing-info', label: 'Makes accessible', type: 'control', strength: 'strong' },
+                        { source: 'transparency-tools', target: 'claims-data', label: 'Enables access', type: 'control', strength: 'strong' },
+                        { source: 'employer-coalitions', target: 'network-access', label: 'Collective power', type: 'control', strength: 'medium' },
+                        
+                        // Weakened control
+                        { source: 'tpa-power', target: 'network-access', label: 'Weakened', type: 'control', strength: 'weak' },
+                        { source: 'tpa-power', target: 'claims-data', label: 'Must release', type: 'control', strength: 'weak' },
+                        { source: 'pbm-power', target: 'drug-formulary', label: 'Employer control', type: 'control', strength: 'weak' },
+                        
+                        // Oversight
+                        { source: 'regulators', target: 'tpa-power', label: 'Enforcing', type: 'oversight', strength: 'strong' },
+                        { source: 'regulators', target: 'pbm-power', label: 'Enforcing', type: 'oversight', strength: 'strong' }
+                    ]
+                }
+            },
+
+            // Layer 1: Control & Tactics (more detail on mechanisms)
+            1: {
+                // Similar structure but with more nodes showing specific tactics and leverage points
+                current: {
+                    powerAnalysis: [
+                        {
+                            title: "TPA/CARRIER TACTICS",
+                            items: [
+                                "Data withholding (10+ months)",
+                                "Spread pricing (20-40% markup)",
+                                "Float income (invest employer $)",
+                                "Lock-in contracts (multi-year)",
+                                "Complexity as weapon"
+                            ]
+                        },
+                        {
+                            title: "PBM TACTICS",
+                            items: [
+                                "Spread pricing (100-600% markups)",
+                                "Rebate retention (keep manufacturer $)",
+                                "DIR fees (retroactive clawbacks)",
+                                "Specialty pharmacy mandates",
+                                "Opaque MAC pricing"
+                            ]
+                        },
+                        {
+                            title: "HOSPITAL SYSTEM TACTICS",
+                            items: [
+                                "All-or-nothing contracts",
+                                "Anti-steering clauses",
+                                "Anti-tiering clauses",
+                                "Facility fee exploitation",
+                                "Brand marketing vs. quality"
+                            ]
+                        }
+                    ],
+                    nodes: [
+                        // Players (same as Layer 0)
+                        { id: 'tpa-power', label: 'TPAs/CARRIERS', power: 'HIGH', size: 80, type: 'player' },
+                        { id: 'pbm-power', label: 'PBMs', power: 'HIGH', size: 80, type: 'player' },
+                        { id: 'consolidated-sys', label: 'CONSOLIDATED\nSYSTEMS', power: 'HIGH', size: 75, type: 'player' },
+                        { id: 'employers', label: 'EMPLOYERS', power: 'MEDIUM', size: 60, type: 'player' },
+                        { id: 'patients', label: 'PATIENTS', power: 'LOW', size: 40, type: 'player' },
+                        
+                        // Tactics as nodes
+                        { id: 'data-withhold', label: 'DATA\nWITHHOLDING', power: 'TACTIC', size: 40, type: 'tactic',
+                          description: 'TPA delays data release for 10+ months',
+                          details: ['Claim it\'s "proprietary"', 'Requires legal action', 'Prevents employer analysis', 'CAA makes this illegal']
+                        },
+                        { id: 'spread-pricing', label: 'SPREAD\nPRICING', power: 'TACTIC', size: 40, type: 'tactic',
+                          description: 'Charge employer more than paid to provider',
+                          details: ['Hidden in aggregate reporting', '20-40% markup typical', 'Employer never sees', 'Transparency exposes this']
+                        },
+                        { id: 'float', label: 'FLOAT\nINCOME', power: 'TACTIC', size: 35, type: 'tactic',
+                          description: 'Invest employer money before paying claims',
+                          details: ['Hold funds 45-90 days', 'Invest at scale = millions', 'Keep all returns', 'Time value of money']
+                        },
+                        { id: 'lock-in', label: 'LOCK-IN\nCONTRACTS', power: 'TACTIC', size: 35, type: 'tactic',
+                          description: 'Multi-year contracts with huge exit costs',
+                          details: ['Prevent competition', 'Make switching painful', 'Hide bad economics', 'Employers negotiate annual instead']
+                        },
+                        { id: 'pbm-spread', label: 'PBM SPREAD\n(MASSIVE)', power: 'TACTIC', size: 45, type: 'tactic',
+                          description: 'Drug markups of 100-600%',
+                          details: ['$20 drug → charge $150', 'Pay pharmacy $25', 'Keep $125', 'NADAC exposes this']
+                        },
+                        { id: 'rebate-retention', label: 'REBATE\nRETENTION', power: 'TACTIC', size: 35, type: 'tactic',
+                          description: 'Keep manufacturer rebates meant for employer',
+                          details: ['Manufacturer pays PBM', 'Should pass to employer', 'Often retained', 'Contract must specify 100% pass-through']
+                        },
+                        { id: 'all-or-nothing', label: 'ALL-OR-\nNOTHING', power: 'TACTIC', size: 35, type: 'tactic',
+                          description: 'Must take entire system or none',
+                          details: ['Want community hospital?', 'Must also take expensive academic center', 'Prevents selective contracting', 'Employers refuse and build own network']
+                        },
+                        { id: 'anti-steering', label: 'ANTI-\nSTEERING', power: 'TACTIC', size: 35, type: 'tactic',
+                          description: 'Prohibits steering patients elsewhere',
+                          details: ['Can\'t offer incentives for alternatives', 'Prevents value-based design', 'Anticompetitive', 'Employers negotiate removal']
+                        },
+                        
+                        // Control points
+                        { id: 'network-access', label: 'NETWORK\nACCESS', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'claims-data', label: 'CLAIMS\nDATA', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'drug-formulary', label: 'DRUG\nFORMULARY', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'pricing-info', label: 'PRICING\nINFO', power: 'CONTROL', size: 50, type: 'control-point' },
+                        
+                        // Employer levers
+                        { id: 'market-power', label: 'MARKET\nPOWER', power: 'LEVER', size: 45, type: 'lever',
+                          description: 'Large employers have massive buying power',
+                          details: ['$100M+ in spend', 'Can negotiate directly', 'Can build own networks', 'Often don\'t realize power']
+                        },
+                        { id: 'fiduciary-duty', label: 'FIDUCIARY\nDUTY', power: 'LEVER', size: 40, type: 'lever',
+                          description: 'Legal obligation to manage prudently',
+                          details: ['CAA 2021 clarified this', 'Personal liability for executives', 'Must use transparency data', 'Can sue for breach']
+                        },
+                        { id: 'direct-contracting', label: 'DIRECT\nCONTRACTING', power: 'LEVER', size: 45, type: 'lever',
+                          description: 'Negotiate directly with providers',
+                          details: ['Bypass TPA margin', 'Better rates + terms', 'Cash payment upfront', 'PBGH data proves superiority']
+                        }
+                    ],
+                    edges: [
+                        // TPAs use tactics
+                        { source: 'tpa-power', target: 'data-withhold', label: 'Uses', type: 'uses-tactic', strength: 'strong' },
+                        { source: 'tpa-power', target: 'spread-pricing', label: 'Uses', type: 'uses-tactic', strength: 'strong' },
+                        { source: 'tpa-power', target: 'float', label: 'Uses', type: 'uses-tactic', strength: 'strong' },
+                        { source: 'tpa-power', target: 'lock-in', label: 'Uses', type: 'uses-tactic', strength: 'strong' },
+                        
+                        // PBMs use tactics
+                        { source: 'pbm-power', target: 'pbm-spread', label: 'Uses', type: 'uses-tactic', strength: 'strong' },
+                        { source: 'pbm-power', target: 'rebate-retention', label: 'Uses', type: 'uses-tactic', strength: 'strong' },
+                        
+                        // Systems use tactics
+                        { source: 'consolidated-sys', target: 'all-or-nothing', label: 'Uses', type: 'uses-tactic', strength: 'strong' },
+                        { source: 'consolidated-sys', target: 'anti-steering', label: 'Uses', type: 'uses-tactic', strength: 'strong' },
+                        
+                        // Tactics enable control
+                        { source: 'data-withhold', target: 'claims-data', label: 'Maintains control', type: 'enables', strength: 'strong' },
+                        { source: 'spread-pricing', target: 'pricing-info', label: 'Obscures', type: 'enables', strength: 'strong' },
+                        { source: 'lock-in', target: 'network-access', label: 'Locks in', type: 'enables', strength: 'medium' },
+                        { source: 'all-or-nothing', target: 'network-access', label: 'Forces inclusion', type: 'enables', strength: 'strong' },
+                        
+                        // Employers have levers
+                        { source: 'employers', target: 'market-power', label: 'Has but underuses', type: 'has-lever', strength: 'medium' },
+                        { source: 'employers', target: 'fiduciary-duty', label: 'Has (post-CAA)', type: 'has-lever', strength: 'strong' },
+                        { source: 'employers', target: 'direct-contracting', label: 'Can use', type: 'has-lever', strength: 'medium' },
+                        
+                        // Levers counter tactics
+                        { source: 'market-power', target: 'lock-in', label: 'Refuses', type: 'counters', strength: 'strong' },
+                        { source: 'fiduciary-duty', target: 'data-withhold', label: 'Demands data', type: 'counters', strength: 'strong' },
+                        { source: 'direct-contracting', target: 'spread-pricing', label: 'Bypasses', type: 'counters', strength: 'strong' },
+                        
+                        // Control relationships
+                        { source: 'tpa-power', target: 'network-access', label: 'Controls', type: 'control', strength: 'strong' },
+                        { source: 'tpa-power', target: 'claims-data', label: 'Withholds', type: 'control', strength: 'strong' },
+                        { source: 'pbm-power', target: 'drug-formulary', label: 'Controls', type: 'control', strength: 'strong' },
+                        { source: 'pbm-power', target: 'pricing-info', label: 'Obscures', type: 'control', strength: 'strong' }
+                    ]
+                },
+                transparency: {
+                    powerAnalysis: [
+                        {
+                            title: "TACTICS NEUTRALIZED",
+                            items: [
+                                "Data withholding → CAA enforcement",
+                                "Spread pricing → Transparency exposes",
+                                "Rebate retention → Contract requires pass-through",
+                                "All-or-nothing → Employers refuse",
+                                "Anti-steering → Negotiated away"
+                            ],
+                            shift: true
+                        },
+                        {
+                            title: "NEW EMPLOYER WEAPONS",
+                            items: [
+                                "Peer benchmarking (see overpayment)",
+                                "Quality + cost data (value-based networks)",
+                                "Direct contracting (bypass intermediaries)",
+                                "Transparency tools (accountability)",
+                                "Collective action (employer coalitions)"
+                            ],
+                            shift: true
+                        }
+                    ],
+                    // Similar node structure but with shifted power and neutralized tactics
+                    nodes: [
+                        // Same nodes but different power levels and descriptions
+                        { id: 'tpa-power', label: 'TPAs/CARRIERS', power: 'MEDIUM', size: 60, type: 'player' },
+                        { id: 'pbm-power', label: 'PBMs', power: 'MEDIUM', size: 60, type: 'player' },
+                        { id: 'consolidated-sys', label: 'CONSOLIDATED\nSYSTEMS', power: 'MEDIUM', size: 65, type: 'player' },
+                        { id: 'employers', label: 'EMPLOYERS', power: 'HIGH', size: 85, type: 'player' },
+                        { id: 'patients', label: 'PATIENTS', power: 'MEDIUM', size: 55, type: 'player' },
+                        
+                        // Tactics - now countered
+                        { id: 'data-withhold', label: 'DATA\nWITHHOLDING', power: 'TACTIC', size: 30, type: 'tactic-neutralized',
+                          description: 'NEUTRALIZED by CAA enforcement'
+                        },
+                        { id: 'spread-pricing', label: 'SPREAD\nPRICING', power: 'TACTIC', size: 30, type: 'tactic-neutralized',
+                          description: 'EXPOSED by transparency tools'
+                        },
+                        { id: 'pbm-spread', label: 'PBM SPREAD', power: 'TACTIC', size: 30, type: 'tactic-neutralized',
+                          description: 'EXPOSED by NADAC benchmarking'
+                        },
+                        { id: 'rebate-retention', label: 'REBATE\nRETENTION', power: 'TACTIC', size: 30, type: 'tactic-neutralized',
+                          description: 'ELIMINATED by pass-through contracts'
+                        },
+                        { id: 'all-or-nothing', label: 'ALL-OR-\nNOTHING', power: 'TACTIC', size: 30, type: 'tactic-neutralized',
+                          description: 'REFUSED by employers with alternatives'
+                        },
+                        
+                        // Control points - now shared or employer-controlled
+                        { id: 'network-access', label: 'NETWORK\nACCESS', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'claims-data', label: 'CLAIMS\nDATA', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'drug-formulary', label: 'DRUG\nFORMULARY', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'pricing-info', label: 'PRICING\nINFO', power: 'CONTROL', size: 50, type: 'control-point' },
+                        
+                        // Employer levers - now being used
+                        { id: 'market-power', label: 'MARKET\nPOWER', power: 'LEVER', size: 55, type: 'lever-active',
+                          description: 'NOW BEING USED effectively'
+                        },
+                        { id: 'fiduciary-duty', label: 'FIDUCIARY\nDUTY', power: 'LEVER', size: 50, type: 'lever-active',
+                          description: 'ENFORCED - must use data'
+                        },
+                        { id: 'direct-contracting', label: 'DIRECT\nCONTRACTING', power: 'LEVER', size: 55, type: 'lever-active',
+                          description: 'WIDELY ADOPTED - 25% better rates'
+                        },
+                        { id: 'transparency-tools', label: 'TRANSPARENCY\nTOOLS', power: 'LEVER', size: 55, type: 'lever-active',
+                          description: 'NEW WEAPON - exposes everything'
+                        },
+                        { id: 'peer-benchmark', label: 'PEER\nBENCHMARK', power: 'LEVER', size: 50, type: 'lever-active',
+                          description: 'NEW WEAPON - shows overpayment'
+                        }
+                    ],
+                    edges: [
+                        // Employers now control
+                        { source: 'employers', target: 'network-access', label: 'Direct contracts', type: 'control', strength: 'strong' },
+                        { source: 'employers', target: 'claims-data', label: 'Access enforced', type: 'control', strength: 'strong' },
+                        { source: 'employers', target: 'pricing-info', label: 'Via tools', type: 'control', strength: 'strong' },
+                        { source: 'employers', target: 'drug-formulary', label: 'Contract control', type: 'control', strength: 'strong' },
+                        
+                        // Employers use active levers
+                        { source: 'employers', target: 'market-power', label: 'Using', type: 'uses-lever', strength: 'strong' },
+                        { source: 'employers', target: 'fiduciary-duty', label: 'Enforcing', type: 'uses-lever', strength: 'strong' },
+                        { source: 'employers', target: 'direct-contracting', label: 'Adopting', type: 'uses-lever', strength: 'strong' },
+                        { source: 'employers', target: 'transparency-tools', label: 'Using', type: 'uses-lever', strength: 'strong' },
+                        { source: 'employers', target: 'peer-benchmark', label: 'Using', type: 'uses-lever', strength: 'strong' },
+                        
+                        // Levers neutralize tactics
+                        { source: 'fiduciary-duty', target: 'data-withhold', label: 'NEUTRALIZES', type: 'neutralizes', strength: 'strong' },
+                        { source: 'transparency-tools', target: 'spread-pricing', label: 'EXPOSES', type: 'neutralizes', strength: 'strong' },
+                        { source: 'transparency-tools', target: 'pbm-spread', label: 'EXPOSES', type: 'neutralizes', strength: 'strong' },
+                        { source: 'direct-contracting', target: 'all-or-nothing', label: 'BYPASSES', type: 'neutralizes', strength: 'strong' },
+                        { source: 'peer-benchmark', target: 'spread-pricing', label: 'REVEALS', type: 'neutralizes', strength: 'strong' },
+                        
+                        // Weakened control by incumbents
+                        { source: 'tpa-power', target: 'network-access', label: 'Weakened', type: 'control', strength: 'weak' },
+                        { source: 'tpa-power', target: 'claims-data', label: 'Must release', type: 'control', strength: 'weak' },
+                        { source: 'pbm-power', target: 'drug-formulary', label: 'Losing control', type: 'control', strength: 'weak' }
+                    ]
+                }
+            },
+
+            // Layer 2: Complete Power Map (everything)
+            2: {
+                current: {
+                    powerAnalysis: [
+                        {
+                            title: "POWER CONCENTRATION",
+                            items: [
+                                "Top 3 PBMs: 80% market share",
+                                "Top 5 carriers: 70% of commercial",
+                                "Vertical integration: Carriers own PBMs, medical groups, pharmacies",
+                                "Data silos prevent competition",
+                                "Switching costs keep employers locked in"
+                            ]
+                        },
+                        {
+                            title: "INFORMATION ASYMMETRY",
+                            items: [
+                                "TPAs know costs, employers don't",
+                                "PBMs know spread, employers don't",
+                                "Hospitals know quality, patients don't",
+                                "Consultants know conflicts, employers don't",
+                                "Asymmetry = Power"
+                            ]
+                        },
+                        {
+                            title: "BARRIERS TO CHANGE",
+                            items: [
+                                "Employers lack expertise",
+                                "Consultants have conflicts",
+                                "Contracts prevent flexibility",
+                                "Data withholding prevents analysis",
+                                "Complexity overwhelms"
+                            ]
+                        }
+                    ],
+                    nodes: [
+                        // All players from Layer 1 plus:
+                        { id: 'tpa-power', label: 'TPAs/CARRIERS', power: 'HIGH', size: 80, type: 'player' },
+                        { id: 'pbm-power', label: 'PBMs', power: 'HIGH', size: 80, type: 'player' },
+                        { id: 'consolidated-sys', label: 'CONSOLIDATED\nSYSTEMS', power: 'HIGH', size: 75, type: 'player' },
+                        { id: 'employers', label: 'LARGE\nEMPLOYERS', power: 'MEDIUM', size: 60, type: 'player' },
+                        { id: 'small-employers', label: 'SMALL\nEMPLOYERS', power: 'LOW', size: 35, type: 'player' },
+                        { id: 'patients', label: 'PATIENTS', power: 'LOW', size: 40, type: 'player' },
+                        { id: 'bad-consultants', label: 'CONFLICTED\nCONSULTANTS', power: 'MEDIUM', size: 50, type: 'player' },
+                        { id: 'good-consultants', label: 'UNCONFLICTED\nCONSULTANTS', power: 'LOW', size: 40, type: 'player' },
+                        { id: 'independent-providers', label: 'INDEPENDENT\nPROVIDERS', power: 'LOW', size: 35, type: 'player' },
+                        { id: 'regulators', label: 'REGULATORS', power: 'MEDIUM', size: 50, type: 'player' },
+                        
+                        // All tactics
+                        { id: 'data-withhold', label: 'DATA\nWITHHOLDING', power: 'TACTIC', size: 40, type: 'tactic' },
+                        { id: 'spread-pricing', label: 'SPREAD\nPRICING', power: 'TACTIC', size: 40, type: 'tactic' },
+                        { id: 'float', label: 'FLOAT', power: 'TACTIC', size: 35, type: 'tactic' },
+                        { id: 'lock-in', label: 'LOCK-IN', power: 'TACTIC', size: 35, type: 'tactic' },
+                        { id: 'complexity', label: 'COMPLEXITY', power: 'TACTIC', size: 35, type: 'tactic' },
+                        { id: 'pbm-spread', label: 'PBM SPREAD', power: 'TACTIC', size: 45, type: 'tactic' },
+                        { id: 'rebate-retention', label: 'REBATES', power: 'TACTIC', size: 35, type: 'tactic' },
+                        { id: 'dir-fees', label: 'DIR FEES', power: 'TACTIC', size: 30, type: 'tactic' },
+                        { id: 'all-or-nothing', label: 'ALL-OR-\nNOTHING', power: 'TACTIC', size: 35, type: 'tactic' },
+                        { id: 'anti-steering', label: 'ANTI-\nSTEERING', power: 'TACTIC', size: 35, type: 'tactic' },
+                        { id: 'brand-marketing', label: 'BRAND\nMARKETING', power: 'TACTIC', size: 30, type: 'tactic' },
+                        { id: 'consultant-commission', label: 'CONSULTANT\nCOMMISSIONS', power: 'TACTIC', size: 35, type: 'tactic' },
+                        
+                        // Control points
+                        { id: 'network-access', label: 'NETWORK\nACCESS', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'claims-data', label: 'CLAIMS\nDATA', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'drug-formulary', label: 'DRUG\nFORMULARY', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'pricing-info', label: 'PRICING\nINFO', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'quality-data', label: 'QUALITY\nDATA', power: 'CONTROL', size: 45, type: 'control-point' },
+                        { id: 'payment-timing', label: 'PAYMENT\nTIMING', power: 'CONTROL', size: 40, type: 'control-point' },
+                        
+                        // Employer levers (potential)
+                        { id: 'market-power', label: 'MARKET\nPOWER', power: 'LEVER', size: 45, type: 'lever' },
+                        { id: 'fiduciary-duty', label: 'FIDUCIARY\nDUTY', power: 'LEVER', size: 40, type: 'lever' },
+                        { id: 'direct-contracting', label: 'DIRECT\nCONTRACTS', power: 'LEVER', size: 45, type: 'lever' },
+                        { id: 'vendor-switching', label: 'VENDOR\nSWITCHING', power: 'LEVER', size: 40, type: 'lever' },
+                        { id: 'network-design', label: 'NETWORK\nDESIGN', power: 'LEVER', size: 40, type: 'lever' }
+                    ],
+                    edges: [
+                        // TPAs use all tactics
+                        { source: 'tpa-power', target: 'data-withhold', label: 'Uses', type: 'uses-tactic' },
+                        { source: 'tpa-power', target: 'spread-pricing', label: 'Uses', type: 'uses-tactic' },
+                        { source: 'tpa-power', target: 'float', label: 'Uses', type: 'uses-tactic' },
+                        { source: 'tpa-power', target: 'lock-in', label: 'Uses', type: 'uses-tactic' },
+                        { source: 'tpa-power', target: 'complexity', label: 'Uses', type: 'uses-tactic' },
+                        
+                        // PBMs use tactics
+                        { source: 'pbm-power', target: 'pbm-spread', label: 'Uses', type: 'uses-tactic' },
+                        { source: 'pbm-power', target: 'rebate-retention', label: 'Uses', type: 'uses-tactic' },
+                        { source: 'pbm-power', target: 'dir-fees', label: 'Uses', type: 'uses-tactic' },
+                        { source: 'pbm-power', target: 'complexity', label: 'Uses', type: 'uses-tactic' },
+                        
+                        // Systems use tactics
+                        { source: 'consolidated-sys', target: 'all-or-nothing', label: 'Uses', type: 'uses-tactic' },
+                        { source: 'consolidated-sys', target: 'anti-steering', label: 'Uses', type: 'uses-tactic' },
+                        { source: 'consolidated-sys', target: 'brand-marketing', label: 'Uses', type: 'uses-tactic' },
+                        
+                        // Bad consultants
+                        { source: 'bad-consultants', target: 'consultant-commission', label: 'Receives', type: 'uses-tactic' },
+                        { source: 'tpa-power', target: 'consultant-commission', label: 'Pays', type: 'uses-tactic' },
+                        
+                        // Tactics enable control
+                        { source: 'data-withhold', target: 'claims-data', label: 'Controls via', type: 'enables' },
+                        { source: 'spread-pricing', target: 'pricing-info', label: 'Obscures via', type: 'enables' },
+                        { source: 'complexity', target: 'pricing-info', label: 'Obscures via', type: 'enables' },
+                        { source: 'lock-in', target: 'network-access', label: 'Controls via', type: 'enables' },
+                        { source: 'all-or-nothing', target: 'network-access', label: 'Controls via', type: 'enables' },
+                        { source: 'brand-marketing', target: 'quality-data', label: 'Obscures via', type: 'enables' },
+                        { source: 'float', target: 'payment-timing', label: 'Controls via', type: 'enables' },
+                        
+                        // Control relationships
+                        { source: 'tpa-power', target: 'network-access', label: 'Controls', type: 'control' },
+                        { source: 'tpa-power', target: 'claims-data', label: 'Controls', type: 'control' },
+                        { source: 'tpa-power', target: 'payment-timing', label: 'Controls', type: 'control' },
+                        { source: 'pbm-power', target: 'drug-formulary', label: 'Controls', type: 'control' },
+                        { source: 'pbm-power', target: 'pricing-info', label: 'Obscures', type: 'control' },
+                        { source: 'consolidated-sys', target: 'network-access', label: 'Monopoly', type: 'control' },
+                        { source: 'consolidated-sys', target: 'quality-data', label: 'Obscures', type: 'control' },
+                        
+                        // Employers have levers but don't use
+                        { source: 'employers', target: 'market-power', label: 'Has but underuses', type: 'has-lever' },
+                        { source: 'employers', target: 'fiduciary-duty', label: 'Has (legal)', type: 'has-lever' },
+                        { source: 'employers', target: 'direct-contracting', label: 'Could use', type: 'has-lever' },
+                        { source: 'employers', target: 'vendor-switching', label: 'Could use', type: 'has-lever' },
+                        { source: 'employers', target: 'network-design', label: 'Could use', type: 'has-lever' },
+                        
+                        // Barriers to using levers
+                        { source: 'complexity', target: 'employers', label: 'Overwhelms', type: 'barrier' },
+                        { source: 'data-withhold', target: 'employers', label: 'Blinds', type: 'barrier' },
+                        { source: 'bad-consultants', target: 'employers', label: 'Misleads', type: 'barrier' },
+                        { source: 'lock-in', target: 'employers', label: 'Traps', type: 'barrier' },
+                        
+                        // Weak positions
+                        { source: 'patients', target: 'pricing-info', label: 'Needs desperately', type: 'desire' },
+                        { source: 'patients', target: 'quality-data', label: 'Needs', type: 'desire' },
+                        { source: 'independent-providers', target: 'network-access', label: 'Struggles for', type: 'desire' },
+                        { source: 'good-consultants', target: 'employers', label: 'Can\'t prove value', type: 'barrier' },
+                        
+                        // Regulators
+                        { source: 'regulators', target: 'tpa-power', label: 'Weak oversight', type: 'oversight' },
+                        { source: 'regulators', target: 'pbm-power', label: 'Weak oversight', type: 'oversight' },
+                        { source: 'regulators', target: 'employers', label: 'Mandates transparency', type: 'oversight' }
+                    ]
+                },
+                transparency: {
+                    powerAnalysis: [
+                        {
+                            title: "POWER REBALANCED",
+                            items: [
+                                "Information asymmetry eliminated",
+                                "Employers exercise market power",
+                                "Direct contracting common (25% better rates)",
+                                "Transparent pricing standard",
+                                "Merit-based competition"
+                            ],
+                            shift: true
+                        },
+                        {
+                            title: "NEW ECOSYSTEM",
+                            items: [
+                                "Transparency tools as infrastructure",
+                                "Employer coalitions coordinate",
+                                "Pass-through PBMs replace traditional",
+                                "Independent providers thrive on merit",
+                                "Quality determines referrals"
+                            ],
+                            shift: true
+                        },
+                        {
+                            title: "TACTICS OBSOLETE",
+                            items: [
+                                "Spread pricing exposed and eliminated",
+                                "Data withholding illegal and enforced",
+                                "Lock-in contracts refused",
+                                "Complexity cut through by tools",
+                                "Commission conflicts revealed"
+                            ],
+                            shift: true
+                        }
+                    ],
+                    // Extensive transformed ecosystem - similar to Layer 1 transparency but more complete
+                    nodes: [
+                        // Transformed power levels
+                        { id: 'tpa-power', label: 'TPAs', power: 'MEDIUM', size: 60, type: 'player' },
+                        { id: 'pbm-power', label: 'PBMs', power: 'MEDIUM', size: 60, type: 'player' },
+                        { id: 'consolidated-sys', label: 'SYSTEMS', power: 'MEDIUM', size: 65, type: 'player' },
+                        { id: 'employers', label: 'LARGE\nEMPLOYERS', power: 'HIGH', size: 85, type: 'player' },
+                        { id: 'small-employers', label: 'SMALL\nEMPLOYERS', power: 'LOW', size: 40, type: 'player' },
+                        { id: 'patients', label: 'PATIENTS', power: 'MEDIUM', size: 55, type: 'player' },
+                        { id: 'bad-consultants', label: 'CONFLICTED\nCONSULTANTS', power: 'LOW', size: 30, type: 'player' },
+                        { id: 'good-consultants', label: 'UNCONFLICTED\nCONSULTANTS', power: 'MEDIUM', size: 55, type: 'player' },
+                        { id: 'independent-providers', label: 'INDEPENDENT\nPROVIDERS', power: 'MEDIUM', size: 50, type: 'player' },
+                        { id: 'regulators', label: 'REGULATORS', power: 'MEDIUM', size: 55, type: 'player' },
+                        
+                        // New power centers
+                        { id: 'transparency-tools', label: 'TRANSPARENCY\nTOOLS', power: 'HIGH', size: 70, type: 'player' },
+                        { id: 'employer-coalitions', label: 'EMPLOYER\nCOALITIONS', power: 'HIGH', size: 65, type: 'player' },
+                        { id: 'passthru-pbm', label: 'PASS-THROUGH\nPBMs', power: 'MEDIUM', size: 50, type: 'player' },
+                        
+                        // Neutralized tactics
+                        { id: 'data-withhold', label: 'DATA\nWITHHOLDING\n❌', power: 'TACTIC', size: 25, type: 'tactic-neutralized' },
+                        { id: 'spread-pricing', label: 'SPREAD\nPRICING\n❌', power: 'TACTIC', size: 25, type: 'tactic-neutralized' },
+                        { id: 'pbm-spread', label: 'PBM SPREAD\n❌', power: 'TACTIC', size: 25, type: 'tactic-neutralized' },
+                        { id: 'rebate-retention', label: 'REBATES\n❌', power: 'TACTIC', size: 25, type: 'tactic-neutralized' },
+                        { id: 'all-or-nothing', label: 'ALL-OR-\nNOTHING\n❌', power: 'TACTIC', size: 25, type: 'tactic-neutralized' },
+                        { id: 'complexity', label: 'COMPLEXITY\n❌', power: 'TACTIC', size: 25, type: 'tactic-neutralized' },
+                        
+                        // Control points - now shared/employer-controlled
+                        { id: 'network-access', label: 'NETWORK\nACCESS', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'claims-data', label: 'CLAIMS\nDATA', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'drug-formulary', label: 'DRUG\nFORMULARY', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'pricing-info', label: 'PRICING\nINFO', power: 'CONTROL', size: 50, type: 'control-point' },
+                        { id: 'quality-data', label: 'QUALITY\nDATA', power: 'CONTROL', size: 45, type: 'control-point' },
+                        { id: 'payment-timing', label: 'PAYMENT\nTIMING', power: 'CONTROL', size: 40, type: 'control-point' },
+                        
+                        // Active levers
+                        { id: 'market-power', label: 'MARKET\nPOWER\n✓', power: 'LEVER', size: 55, type: 'lever-active' },
+                        { id: 'fiduciary-duty', label: 'FIDUCIARY\nDUTY\n✓', power: 'LEVER', size: 50, type: 'lever-active' },
+                        { id: 'direct-contracting', label: 'DIRECT\nCONTRACTS\n✓', power: 'LEVER', size: 55, type: 'lever-active' },
+                        { id: 'vendor-switching', label: 'VENDOR\nSWITCHING\n✓', power: 'LEVER', size: 45, type: 'lever-active' },
+                        { id: 'network-design', label: 'NETWORK\nDESIGN\n✓', power: 'LEVER', size: 45, type: 'lever-active' },
+                        { id: 'peer-benchmark', label: 'PEER\nBENCHMARK\n✓', power: 'LEVER', size: 50, type: 'lever-active' },
+                        { id: 'quality-transparency', label: 'QUALITY\nTRANSPARENCY\n✓', power: 'LEVER', size: 45, type: 'lever-active' }
+                    ],
+                    edges: [
+                        // Employers now control everything
+                        { source: 'employers', target: 'network-access', label: 'Controls', type: 'control' },
+                        { source: 'employers', target: 'claims-data', label: 'Accesses', type: 'control' },
+                        { source: 'employers', target: 'pricing-info', label: 'Has full access', type: 'control' },
+                        { source: 'employers', target: 'drug-formulary', label: 'Controls', type: 'control' },
+                        { source: 'employers', target: 'quality-data', label: 'Integrates', type: 'control' },
+                        
+                        // Employers use all levers
+                        { source: 'employers', target: 'market-power', label: 'USING', type: 'uses-lever' },
+                        { source: 'employers', target: 'fiduciary-duty', label: 'ENFORCING', type: 'uses-lever' },
+                        { source: 'employers', target: 'direct-contracting', label: 'DOING', type: 'uses-lever' },
+                        { source: 'employers', target: 'vendor-switching', label: 'DOING', type: 'uses-lever' },
+                        { source: 'employers', target: 'network-design', label: 'OPTIMIZING', type: 'uses-lever' },
+                        { source: 'employers', target: 'peer-benchmark', label: 'USING', type: 'uses-lever' },
+                        { source: 'employers', target: 'quality-transparency', label: 'USING', type: 'uses-lever' },
+                        
+                        // New power centers enable employer control
+                        { source: 'transparency-tools', target: 'pricing-info', label: 'Makes accessible', type: 'enables' },
+                        { source: 'transparency-tools', target: 'claims-data', label: 'Analyzes', type: 'enables' },
+                        { source: 'transparency-tools', target: 'quality-data', label: 'Integrates', type: 'enables' },
+                        { source: 'transparency-tools', target: 'employers', label: 'Empowers', type: 'enables' },
+                        { source: 'employer-coalitions', target: 'employers', label: 'Amplifies', type: 'enables' },
+                        { source: 'employer-coalitions', target: 'market-power', label: 'Coordinates', type: 'enables' },
+                        { source: 'passthru-pbm', target: 'drug-formulary', label: 'Transparent control', type: 'enables' },
+                        
+                        // Levers neutralize tactics
+                        { source: 'fiduciary-duty', target: 'data-withhold', label: 'ELIMINATES', type: 'neutralizes' },
+                        { source: 'transparency-tools', target: 'spread-pricing', label: 'EXPOSES', type: 'neutralizes' },
+                        { source: 'transparency-tools', target: 'pbm-spread', label: 'EXPOSES', type: 'neutralizes' },
+                        { source: 'transparency-tools', target: 'complexity', label: 'CUTS THROUGH', type: 'neutralizes' },
+                        { source: 'peer-benchmark', target: 'spread-pricing', label: 'REVEALS', type: 'neutralizes' },
+                        { source: 'direct-contracting', target: 'all-or-nothing', label: 'BYPASSES', type: 'neutralizes' },
+                        { source: 'quality-transparency', target: 'brand-marketing', label: 'EXPOSES', type: 'neutralizes' },
+                        { source: 'market-power', target: 'lock-in', label: 'REFUSES', type: 'neutralizes' },
+                        
+                        // Good actors gain power
+                        { source: 'good-consultants', target: 'transparency-tools', label: 'Uses to prove value', type: 'benefits' },
+                        { source: 'good-consultants', target: 'employers', label: 'Wins business', type: 'benefits' },
+                        { source: 'independent-providers', target: 'quality-data', label: 'Proves merit', type: 'benefits' },
+                        { source: 'independent-providers', target: 'direct-contracting', label: 'Wins contracts', type: 'benefits' },
+                        { source: 'patients', target: 'pricing-info', label: 'Can shop', type: 'benefits' },
+                        { source: 'patients', target: 'quality-data', label: 'Can choose', type: 'benefits' },
+                        
+                        // Weakened control by incumbents
+                        { source: 'tpa-power', target: 'network-access', label: 'Weakened', type: 'control-weak' },
+                        { source: 'tpa-power', target: 'claims-data', label: 'Must release', type: 'control-weak' },
+                        { source: 'pbm-power', target: 'drug-formulary', label: 'Lost control', type: 'control-weak' },
+                        { source: 'consolidated-sys', target: 'quality-data', label: 'Can\'t hide', type: 'control-weak' },
+                        
+                        // Regulators more effective
+                        { source: 'regulators', target: 'tpa-power', label: 'Enforcing', type: 'oversight-strong' },
+                        { source: 'regulators', target: 'pbm-power', label: 'Enforcing', type: 'oversight-strong' },
+                        { source: 'regulators', target: 'employers', label: 'Supporting', type: 'oversight-strong' }
+                    ]
+                }
+            }
+        };
+
+        // Cytoscape initialization
+        let cy;
+        let currentLayer = 0;
+        let currentView = 'current'; // 'current' or 'transparency'
+
+        // Save layout to localStorage
+        function saveLayout() {
+            const positions = {};
+            cy.nodes().forEach(node => {
+                positions[node.id()] = node.position();
+            });
+
+            const layoutData = {
+                layer: currentLayer,
+                view: currentView,
+                positions: positions,
+                zoom: cy.zoom(),
+                pan: cy.pan()
+            };
+
+            localStorage.setItem(`diagram3_layout_${currentLayer}_${currentView}`, JSON.stringify(layoutData));
+
+            // Show feedback
+            const btn = document.getElementById('saveLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+            btn.style.borderColor = 'var(--payerset-green)';
+            btn.style.color = 'var(--payerset-green)';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 2000);
+        }
+
+        // Load saved layout from localStorage or default file
+        async function loadSavedLayout(layerNum, view) {
+            // First, check localStorage (user's saved layout)
+            const savedData = localStorage.getItem(`diagram3_layout_${layerNum}_${view}`);
+            if (savedData) {
+                try {
+                    const layoutData = JSON.parse(savedData);
+                    console.log('Loaded layout from localStorage');
+                    return layoutData;
+                } catch (e) {
+                    console.error('Error loading saved layout from localStorage:', e);
+                }
+            }
+
+            // If no localStorage data, try to load default layout
+            try {
+                const response = await fetch(`layouts/diagram3-layer${layerNum}-${view}.json`);
+                if (response.ok) {
+                    const layoutData = await response.json();
+                    console.log('Loaded default layout from file');
+                    return layoutData;
+                }
+            } catch (e) {
+                console.log('No default layout file found, will use algorithmic layout');
+            }
+
+            return null;
+        }
+
+        // Export layout to file
+        function exportLayout() {
+            const positions = {};
+            cy.nodes().forEach(node => {
+                positions[node.id()] = node.position();
+            });
+
+            const layoutData = {
+                diagram: 'diagram3',
+                layer: currentLayer,
+                view: currentView,
+                positions: positions,
+                zoom: cy.zoom(),
+                pan: cy.pan(),
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(layoutData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `diagram3-layer${currentLayer}-${currentView}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            // Show feedback
+            const btn = document.getElementById('exportLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Exported!';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 1500);
+        }
+
+        // Import layout from file
+        function importLayout() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const layoutData = JSON.parse(event.target.result);
+
+                        // Validate it's the right diagram
+                        if (layoutData.diagram !== 'diagram3') {
+                            alert('This layout file is not for Diagram 3');
+                            return;
+                        }
+
+                        // Save to localStorage and reload
+                        localStorage.setItem(`diagram3_layout_${layoutData.layer}_${layoutData.view}`, JSON.stringify(layoutData));
+
+                        // If it's for current layer and view, apply immediately
+                        if (layoutData.layer === currentLayer && layoutData.view === currentView) {
+                            initCytoscape(currentLayer, currentView);
+                        }
+
+                        // Show feedback
+                        const btn = document.getElementById('importLayout');
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="fas fa-check"></i> Imported!';
+
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                        }, 1500);
+
+                    } catch (error) {
+                        alert('Error importing layout file: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // Reset layout to default
+        function resetLayout() {
+            localStorage.removeItem(`diagram3_layout_${currentLayer}_${currentView}`);
+            initCytoscape(currentLayer, currentView);
+
+            // Show feedback
+            const btn = document.getElementById('resetLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Reset!';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 1500);
+        }
+
+        function updatePowerAnalysis(layerNum, view) {
+            const data = powerMapData[layerNum][view];
+            const panel = document.getElementById('power-panel');
+            
+            let html = '';
+            data.powerAnalysis.forEach(section => {
+                const shiftClass = section.shift ? 'power-shift' : '';
+                html += `
+                    <div class="power-card ${shiftClass}">
+                        <h4>${section.title}</h4>
+                        <ul>
+                            ${section.items.map(item => `<li>${item}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            });
+            
+            panel.innerHTML = html;
+        }
+
+        function updateFooterMessage(view) {
+            const msg = document.getElementById('transparency-message');
+            if (view === 'transparency') {
+                msg.innerHTML = `
+                    <strong>THIS IS HAPPENING NOW:</strong> PBGH demonstration project proved this works. 
+                    Employers finding 30% overpayment and redesigning programs. TPAs being called to HQ to explain themselves.
+                `;
+            } else {
+                msg.innerHTML = `
+                    <strong>Transparency Shifts Power:</strong> When employers can see costs, quality, and alternatives, 
+                    they gain negotiating leverage and can bypass intermediaries through direct contracting.
+                `;
+            }
+        }
+
+        async function initCytoscape(layerNum, view) {
+            const data = powerMapData[layerNum][view];
+
+            // Update power analysis panel
+            updatePowerAnalysis(layerNum, view);
+            updateFooterMessage(view);
+
+            // Transform data into Cytoscape format
+            const elements = [
+                ...data.nodes.map(n => ({
+                    data: {
+                        id: n.id,
+                        label: n.label,
+                        power: n.power,
+                        size: n.size,
+                        type: n.type,
+                        description: n.description || '',
+                        details: n.details || [],
+                        tactics: n.tactics || []
+                    }
+                })),
+                ...data.edges.map(e => ({
+                    data: {
+                        id: `${e.source}-${e.target}-${Math.random()}`,
+                        source: e.source,
+                        target: e.target,
+                        label: e.label || '',
+                        type: e.type || 'visible',
+                        strength: e.strength || 'medium'
+                    }
+                }))
+            ];
+
+            // Destroy existing instance if it exists
+            if (cy) {
+                cy.destroy();
+            }
+
+            // Check for saved layout (localStorage or default file)
+            const savedLayout = await loadSavedLayout(layerNum, view);
+
+            // Create new instance
+            cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: elements,
+                style: [
+                    // Base node style
+                    {
+                        selector: 'node',
+                        style: {
+                            'label': 'data(label)',
+                            'text-valign': 'center',
+                            'text-halign': 'center',
+                            'font-size': '10px',
+                            'font-weight': 'bold',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '90px',
+                            'width': function(ele) { return ele.data('size'); },
+                            'height': function(ele) { return ele.data('size'); },
+                            'border-width': 3,
+                            'transition-property': 'background-color, border-color, border-width, width, height',
+                            'transition-duration': '0.3s'
+                        }
+                    },
+                    // Power levels by size and color
+                    {
+                        selector: 'node[power="HIGH"]',
+                        style: {
+                            'background-color': '#FFB6C6',
+                            'border-color': '#DC143C',
+                            'border-width': 4
+                        }
+                    },
+                    {
+                        selector: 'node[power="MEDIUM"]',
+                        style: {
+                            'background-color': '#FFFFE0',
+                            'border-color': '#DAA520',
+                            'border-width': 3
+                        }
+                    },
+                    {
+                        selector: 'node[power="LOW"]',
+                        style: {
+                            'background-color': '#E8F5E8',
+                            'border-color': '#228B22',
+                            'border-width': 2
+                        }
+                    },
+                    // Node types
+                    {
+                        selector: 'node[type="player"]',
+                        style: {
+                            'shape': 'ellipse'
+                        }
+                    },
+                    {
+                        selector: 'node[type="control-point"]',
+                        style: {
+                            'shape': 'diamond',
+                            'background-color': '#E6F3FF',
+                            'border-color': '#4A90E2',
+                            'font-size': '9px'
+                        }
+                    },
+                    {
+                        selector: 'node[type="tactic"]',
+                        style: {
+                            'shape': 'rectangle',
+                            'background-color': '#FFE0E0',
+                            'border-color': '#DC143C',
+                            'font-size': '8px'
+                        }
+                    },
+                    {
+                        selector: 'node[type="tactic-neutralized"]',
+                        style: {
+                            'shape': 'rectangle',
+                            'background-color': '#F0F0F0',
+                            'border-color': '#999',
+                            'border-style': 'dashed',
+                            'opacity': 0.6,
+                            'font-size': '8px'
+                        }
+                    },
+                    {
+                        selector: 'node[type="lever"]',
+                        style: {
+                            'shape': 'hexagon',
+                            'background-color': '#E8F5E8',
+                            'border-color': '#228B22',
+                            'font-size': '8px'
+                        }
+                    },
+                    {
+                        selector: 'node[type="lever-active"]',
+                        style: {
+                            'shape': 'hexagon',
+                            'background-color': '#90EE90',
+                            'border-color': '#228B22',
+                            'border-width': 4,
+                            'font-size': '8px'
+                        }
+                    },
+                    {
+                        selector: 'node:hover',
+                        style: {
+                            'border-width': 6,
+                            'border-color': '#667eea'
+                        }
+                    },
+                    // Edge types
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 2,
+                            'line-color': '#666',
+                            'target-arrow-color': '#666',
+                            'target-arrow-shape': 'triangle',
+                            'curve-style': 'bezier',
+                            'label': 'data(label)',
+                            'font-size': '8px',
+                            'text-background-color': '#fff',
+                            'text-background-opacity': 0.8,
+                            'text-background-padding': '2px',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '60px'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="control"]',
+                        style: {
+                            'line-color': '#DC143C',
+                            'target-arrow-color': '#DC143C',
+                            'width': function(ele) {
+                                const strength = ele.data('strength');
+                                return strength === 'strong' ? 4 : strength === 'weak' ? 1 : 2;
+                            }
+                        }
+                    },
+                    {
+                        selector: 'edge[type="control-weak"]',
+                        style: {
+                            'line-color': '#DC143C',
+                            'target-arrow-color': '#DC143C',
+                            'width': 1,
+                            'line-style': 'dashed',
+                            'opacity': 0.5
+                        }
+                    },
+                    {
+                        selector: 'edge[type="uses-tactic"]',
+                        style: {
+                            'line-color': '#DC143C',
+                            'target-arrow-color': '#DC143C',
+                            'width': 2,
+                            'line-style': 'dashed'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="uses-lever"]',
+                        style: {
+                            'line-color': '#228B22',
+                            'target-arrow-color': '#228B22',
+                            'width': 3
+                        }
+                    },
+                    {
+                        selector: 'edge[type="has-lever"]',
+                        style: {
+                            'line-color': '#228B22',
+                            'target-arrow-color': '#228B22',
+                            'width': 1,
+                            'line-style': 'dotted'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="enables"]',
+                        style: {
+                            'line-color': '#4A90E2',
+                            'target-arrow-color': '#4A90E2',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="neutralizes"]',
+                        style: {
+                            'line-color': '#228B22',
+                            'target-arrow-color': '#228B22',
+                            'width': 4,
+                            'line-style': 'solid'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="counters"]',
+                        style: {
+                            'line-color': '#228B22',
+                            'target-arrow-color': '#228B22',
+                            'width': 3
+                        }
+                    },
+                    {
+                        selector: 'edge[type="barrier"]',
+                        style: {
+                            'line-color': '#DC143C',
+                            'target-arrow-color': '#DC143C',
+                            'width': 2,
+                            'line-style': 'dashed'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="desire"]',
+                        style: {
+                            'line-color': '#DAA520',
+                            'target-arrow-color': '#DAA520',
+                            'width': 1,
+                            'line-style': 'dotted'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="oversight"]',
+                        style: {
+                            'line-color': '#4A90E2',
+                            'target-arrow-color': '#4A90E2',
+                            'width': 1,
+                            'line-style': 'dotted'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="oversight-strong"]',
+                        style: {
+                            'line-color': '#4A90E2',
+                            'target-arrow-color': '#4A90E2',
+                            'width': 3,
+                            'line-style': 'solid'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="benefits"]',
+                        style: {
+                            'line-color': '#228B22',
+                            'target-arrow-color': '#228B22',
+                            'width': 2
+                        }
+                    }
+                ],
+                layout: {
+                    name: savedLayout ? 'preset' : 'cose',
+                    positions: savedLayout ? (node => savedLayout.positions[node.id()]) : undefined,
+                    animate: !savedLayout,
+                    animationDuration: savedLayout ? 0 : 1000,
+                    nodeRepulsion: 10000,
+                    idealEdgeLength: 120,
+                    edgeElasticity: 100,
+                    nestingFactor: 1.2,
+                    gravity: 1,
+                    numIter: 1000,
+                    randomize: false
+                },
+                wheelSensitivity: 0.2,
+                minZoom: 0.3,
+                maxZoom: 3
+            });
+
+            // Apply saved zoom/pan if available
+            if (savedLayout) {
+                cy.zoom(savedLayout.zoom);
+                cy.pan(savedLayout.pan);
+            }
+
+            // Add interactivity
+            setupInteractivity();
+        }
+
+        function setupInteractivity() {
+            const tooltip = document.getElementById('tooltip');
+
+            // Hover tooltips for nodes
+            cy.on('mouseover', 'node', function(evt) {
+                const node = evt.target;
+                const data = node.data();
+                
+                let powerBadge = '';
+                if (data.power === 'HIGH') {
+                    powerBadge = '<div class="power-level high">HIGH POWER</div>';
+                } else if (data.power === 'MEDIUM') {
+                    powerBadge = '<div class="power-level medium">MEDIUM POWER</div>';
+                } else if (data.power === 'LOW') {
+                    powerBadge = '<div class="power-level low">LOW POWER</div>';
+                }
+                
+                let content = `<h4>${data.label}</h4>`;
+                if (powerBadge) content += powerBadge;
+                
+                if (data.description) {
+                    content += `<p style="margin: 8px 0;">${data.description}</p>`;
+                }
+                if (data.details && data.details.length > 0) {
+                    content += '<ul>';
+                    data.details.forEach(detail => {
+                        content += `<li>${detail}</li>`;
+                    });
+                    content += '</ul>';
+                }
+                if (data.tactics && data.tactics.length > 0) {
+                    content += '<div style="margin-top: 8px;">';
+                    data.tactics.forEach(tactic => {
+                        content += `<span class="tactic-badge">${tactic}</span>`;
+                    });
+                    content += '</div>';
+                }
+                
+                tooltip.innerHTML = content;
+                tooltip.style.display = 'block';
+            });
+
+            cy.on('mousemove', 'node', function(evt) {
+                tooltip.style.left = evt.originalEvent.pageX + 15 + 'px';
+                tooltip.style.top = evt.originalEvent.pageY + 15 + 'px';
+            });
+
+            cy.on('mouseout', 'node', function() {
+                tooltip.style.display = 'none';
+            });
+
+            // Edge tooltips
+            cy.on('mouseover', 'edge', function(evt) {
+                const edge = evt.target;
+                const data = edge.data();
+                
+                if (data.label) {
+                    let content = `<h4>Relationship</h4><p>${data.label}</p>`;
+                    tooltip.innerHTML = content;
+                    tooltip.style.display = 'block';
+                }
+            });
+
+            cy.on('mouseout', 'edge', function() {
+                tooltip.style.display = 'none';
+            });
+
+            // Click events
+            cy.on('tap', 'node', function(evt) {
+                const node = evt.target;
+                const data = node.data();
+                console.log('Clicked node:', data);
+            });
+        }
+
+        // Layer switching
+        document.querySelectorAll('.layer-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const layer = parseInt(this.dataset.layer);
+                
+                // Update active button
+                document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Reinitialize with new layer
+                currentLayer = layer;
+                initCytoscape(layer, currentView);
+            });
+        });
+
+        // View toggle (current vs transparency)
+        document.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const view = this.dataset.view;
+
+                // Update active button
+                document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Reinitialize with new view
+                currentView = view;
+                initCytoscape(currentLayer, view);
+            });
+        });
+
+        // Layout control buttons
+        document.getElementById('saveLayout').addEventListener('click', saveLayout);
+        document.getElementById('resetLayout').addEventListener('click', resetLayout);
+        document.getElementById('exportLayout').addEventListener('click', exportLayout);
+        document.getElementById('importLayout').addEventListener('click', importLayout);
+
+        // Dropdown navigation toggle
+        const dropdown = document.querySelector('.nav-dropdown');
+        const dropdownToggle = document.querySelector('.nav-dropdown-toggle');
+        dropdownToggle.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('open'); });
+        document.addEventListener('click', (e) => { if (!dropdown.contains(e.target)) dropdown.classList.remove('open'); });
+
+        // Initialize with Layer 0, Current State
+        initCytoscape(0, 'current');
+    </script>
+</body>
+</html>

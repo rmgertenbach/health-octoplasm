@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Healthcare pricing transparency tools and resources from Payerset">
+    <title>Page Title | Payerset</title>
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="/shared/css/core.css">
+    <link rel="stylesheet" href="/shared/css/components.css">
+
+    <!-- Page-specific styles (optional) -->
+    <style>
+        /* Add custom page styles here if needed */
+        .hero-section {
+            text-align: center;
+            padding: var(--space-2xl) var(--space-lg);
+            background: linear-gradient(135deg, var(--payerset-blue-soft) 0%, var(--white) 100%);
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            margin-bottom: var(--space-md);
+            color: var(--gray-900);
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray-600);
+            margin-bottom: var(--space-xl);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
+        }
+
+        .feature-card {
+            text-align: center;
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: var(--payerset-blue-soft);
+            color: var(--payerset-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-md);
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Placeholder (will be loaded by component-loader.js) -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h1 class="hero-title">Page Title Here</h1>
+            <p class="hero-subtitle">
+                A brief description of what this page is about. Keep it concise and user-friendly.
+            </p>
+            <div class="button-row">
+                <a href="#" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i>
+                    Get Started
+                </a>
+                <a href="#" class="btn btn-secondary">
+                    <i class="fas fa-info-circle"></i>
+                    Learn More
+                </a>
+            </div>
+        </section>
+
+        <!-- Content Section -->
+        <section class="container">
+            <div class="feature-grid">
+                <!-- Feature Card 1 -->
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Feature One</h3>
+                    <p>Description of this feature. Explain how it helps users and what value it provides.</p>
+                </div>
+
+                <!-- Feature Card 2 -->
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Feature Two</h3>
+                    <p>Description of this feature. Explain how it helps users and what value it provides.</p>
+                </div>
+
+                <!-- Feature Card 3 -->
+                <div class="card feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Feature Three</h3>
+                    <p>Description of this feature. Explain how it helps users and what value it provides.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alert Example -->
+        <section class="container" style="margin-top: var(--space-2xl);">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle" style="font-size: 1.5rem;"></i>
+                <div>
+                    <strong>Helpful Tip:</strong> This is an example of an info alert. Use these to highlight important information or tips for users.
+                </div>
+            </div>
+        </section>
+
+        <!-- Badge Example -->
+        <section class="container" style="margin-top: var(--space-lg);">
+            <h2>Component Examples</h2>
+            <div style="display: flex; gap: var(--space-sm); flex-wrap: wrap; margin-top: var(--space-md);">
+                <span class="badge badge-success"><i class="fas fa-check"></i> Success</span>
+                <span class="badge badge-warning"><i class="fas fa-exclamation-triangle"></i> Warning</span>
+                <span class="badge badge-danger"><i class="fas fa-times"></i> Danger</span>
+                <span class="badge badge-info"><i class="fas fa-info"></i> Info</span>
+                <span class="badge badge-gray"><i class="fas fa-tag"></i> Gray</span>
+            </div>
+        </section>
+
+        <!-- Form Example -->
+        <section class="container" style="margin-top: var(--space-2xl);">
+            <div class="card-static" style="max-width: 600px; margin: 0 auto;">
+                <h2>Form Example</h2>
+                <form>
+                    <div class="form-group">
+                        <label class="form-label" for="exampleInput">Name</label>
+                        <input type="text" id="exampleInput" class="form-input" placeholder="Enter your name">
+                        <span class="form-hint">We'll never share your information.</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="exampleSelect">Select an Option</label>
+                        <select id="exampleSelect" class="form-select">
+                            <option>Option 1</option>
+                            <option>Option 2</option>
+                            <option>Option 3</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="exampleTextarea">Message</label>
+                        <textarea id="exampleTextarea" class="form-textarea" placeholder="Enter your message"></textarea>
+                    </div>
+
+                    <div class="button-row">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-paper-plane"></i>
+                            Submit
+                        </button>
+                        <button type="reset" class="btn btn-secondary">
+                            <i class="fas fa-undo"></i>
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Placeholder (will be loaded by component-loader.js) -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Component Loader (automatically loads header and footer) -->
+    <script src="/shared/js/component-loader.js"></script>
+
+    <!-- Page-specific scripts (optional) -->
+    <script>
+        // Add custom page JavaScript here if needed
+        console.log('Page template loaded successfully!');
+
+        // Example: Form submission handler
+        document.querySelector('form')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form submitted! (This is just a demo)');
+        });
+    </script>
+</body>
+</html>

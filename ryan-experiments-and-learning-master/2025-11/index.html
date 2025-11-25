@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Doesn't Have to Be Expensive | Payerset</title>
+    <meta name="description" content="Your family is paying too much for healthcare. We make it simple to find fair prices.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        /* Modern CSS Reset & Base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Payerset Brand Colors */
+            --payerset-blue: #0092CA;
+            --payerset-blue-light: #33A9D6;
+            --payerset-blue-dark: #006B96;
+            --payerset-blue-soft: rgba(0, 146, 202, 0.1);
+            --green: #10B981;
+            --green-soft: rgba(16, 185, 129, 0.1);
+            --red: #EF4444;
+            --red-soft: rgba(239, 68, 68, 0.1);
+
+            /* Neutral Palette */
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-600: #4B5563;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --white: #FFFFFF;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-900);
+            background: var(--white);
+            margin: 0;
+            overflow: hidden;
+        }
+
+        /* Scroll Container - Same as timeline.html */
+        .presentation-app {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+            scroll-behavior: smooth;
+        }
+
+        /* Sections - Same as timeline slides */
+        .presentation-slide {
+            min-height: 100vh;
+            scroll-snap-align: start;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            position: relative;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: -0.02em;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        p {
+            font-size: clamp(1.125rem, 2vw, 1.25rem);
+            line-height: 1.7;
+            color: var(--gray-600);
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--payerset-blue) 0%, var(--payerset-blue-dark) 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            margin-bottom: 1.5rem;
+        }
+
+        .hero p {
+            color: rgba(255, 255, 255, 0.95);
+            margin-bottom: 2rem;
+            font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+        }
+
+        .price-tag {
+            display: inline-block;
+            background: var(--white);
+            color: var(--red);
+            padding: 1rem 2.5rem;
+            border-radius: 100px;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin: 2rem 0;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); }
+            50% { transform: scale(1.05); box-shadow: 0 15px 50px rgba(0, 0, 0, 0.25); }
+        }
+
+        /* Problem Section */
+        .problem {
+            background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 100%);
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 3rem 2.5rem;
+            border-radius: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--gray-100);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 146, 202, 0.12);
+            border-color: var(--payerset-blue-light);
+        }
+
+        .stat-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--red);
+            line-height: 1;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-label {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 0.75rem;
+        }
+
+        .stat-description {
+            font-size: 1rem;
+            color: var(--gray-600);
+            line-height: 1.6;
+        }
+
+        /* Demo Section */
+        .demo {
+            background: var(--white);
+        }
+
+        .comparison-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .price-card {
+            background: var(--gray-50);
+            border-radius: 32px;
+            padding: 3rem;
+            text-align: center;
+            border: 3px solid transparent;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .price-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, transparent, currentColor, transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .price-card:hover::before {
+            opacity: 1;
+        }
+
+        .price-card.expensive {
+            border-color: var(--red);
+            background: linear-gradient(135deg, var(--red-soft) 0%, var(--gray-50) 100%);
+        }
+
+        .price-card.expensive::before {
+            color: var(--red);
+        }
+
+        .price-card.fair {
+            border-color: var(--green);
+            background: linear-gradient(135deg, var(--green-soft) 0%, rgba(16, 185, 129, 0.05) 100%);
+        }
+
+        .price-card.fair::before {
+            color: var(--green);
+        }
+
+        .price-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 24px 48px rgba(0, 0, 0, 0.12);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.625rem 1.5rem;
+            border-radius: 100px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .badge.bad {
+            background: var(--red);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+        }
+
+        .badge.good {
+            background: var(--green);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .price-amount {
+            font-size: 4rem;
+            font-weight: 900;
+            margin: 1.5rem 0;
+            line-height: 1;
+        }
+
+        .price-card.expensive .price-amount {
+            color: var(--red);
+        }
+
+        .price-card.fair .price-amount {
+            color: var(--green);
+        }
+
+        .price-detail {
+            font-size: 1rem;
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .savings-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--green) 0%, #059669 100%);
+            color: var(--white);
+            padding: 1rem 2rem;
+            border-radius: 100px;
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-top: 1rem;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Solution Section */
+        .solution {
+            background: linear-gradient(135deg, var(--payerset-blue) 0%, var(--payerset-blue-dark) 100%);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .solution::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 80%;
+            height: 120%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .solution .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .solution h2, .solution p {
+            color: var(--white);
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.18);
+            transform: translateY(-4px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.2);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.4s ease;
+            color: var(--white);
+            font-weight: 700;
+        }
+
+        .feature-card:hover .feature-icon {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .feature-description {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+
+        /* CTA Section */
+        .cta {
+            background: linear-gradient(135deg, var(--gray-900) 0%, var(--gray-800) 100%);
+            color: var(--white);
+        }
+
+        .cta h2, .cta p {
+            color: var(--white);
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1.25rem 3rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 100px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--payerset-blue) 0%, var(--payerset-blue-dark) 100%);
+            color: var(--white);
+            box-shadow: 0 8px 24px rgba(0, 146, 202, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(0, 146, 202, 0.4);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid var(--white);
+        }
+
+        .btn-secondary:hover {
+            background: var(--white);
+            color: var(--gray-900);
+            transform: translateY(-2px);
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            z-index: 10;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+
+        .scroll-icon {
+            width: 32px;
+            height: 52px;
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            border-radius: 30px;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .scroll-icon::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: scroll 2s infinite;
+        }
+
+        @keyframes scroll {
+            0% { top: 10px; opacity: 1; }
+            100% { top: 32px; opacity: 0; }
+        }
+
+        .scroll-text {
+            margin-top: 0.75rem;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        /* Fade-in Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .presentation-app {
+                scroll-snap-type: none;
+            }
+
+            .presentation-slide {
+                padding: 3rem 1.5rem;
+                min-height: auto;
+            }
+
+            .comparison-container,
+            .stat-grid,
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .price-amount {
+                font-size: 3rem;
+            }
+
+            .price-tag {
+                font-size: 2rem;
+                padding: 0.75rem 2rem;
+            }
+
+            .scroll-indicator {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-app">
+        <!-- Hero Section -->
+        <section class="presentation-slide hero">
+            <div class="container text-center">
+                <div class="hero-content">
+                    <h1>Your Family is Paying<br>Too Much for Healthcare</h1>
+                    <p>The average American family overpays by</p>
+                    <div class="price-tag">$5,000/year</div>
+                    <p>Not because of poor insurance.<br>Because healthcare prices are hidden.</p>
+                </div>
+                <div class="scroll-indicator">
+                    <div class="scroll-icon"></div>
+                    <div class="scroll-text">Scroll to explore</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- The Problem -->
+        <section class="presentation-slide problem">
+            <div class="container text-center">
+                <h2>The Same Procedure. Wildly Different Prices.</h2>
+                <p style="max-width: 800px; margin: 1.5rem auto;">Healthcare is the only industry where you don't know the price until after you get the service. This isn't by accident—it's by design.</p>
+
+                <div class="stat-grid">
+                    <div class="stat-card fade-in">
+                        <div class="stat-number">5x</div>
+                        <div class="stat-label">Price Variation</div>
+                        <div class="stat-description">Same MRI can cost $400 or $2,800 depending on where you go</div>
+                    </div>
+                    <div class="stat-card fade-in">
+                        <div class="stat-number">30%</div>
+                        <div class="stat-label">Overpayment</div>
+                        <div class="stat-description">Average employers pay 30% more than fair rates for healthcare</div>
+                    </div>
+                    <div class="stat-card fade-in">
+                        <div class="stat-number">$2.3M</div>
+                        <div class="stat-label">Hidden Fees</div>
+                        <div class="stat-description">Middlemen keep this much from typical 500-employee company</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Demo -->
+        <section class="presentation-slide demo">
+            <div class="container text-center">
+                <h2>Here's What We Mean</h2>
+                <p style="max-width: 800px; margin: 1.5rem auto;">Let's say you need an MRI. Same quality. Same outcome. Different prices.</p>
+
+                <div class="comparison-container">
+                    <div class="price-card expensive fade-in">
+                        <span class="badge bad">Hidden Price</span>
+                        <h3>Hospital System</h3>
+                        <div class="price-amount">$2,800</div>
+                        <div class="price-detail">
+                            Grade C Safety<br>
+                            30 min drive<br>
+                            Your insurance pays this
+                        </div>
+                    </div>
+
+                    <div class="price-card fair fade-in">
+                        <span class="badge good">Transparent Price</span>
+                        <h3>Imaging Center</h3>
+                        <div class="price-amount">$425</div>
+                        <div class="price-detail">
+                            Grade A Safety<br>
+                            15 min drive<br>
+                            Better quality, closer, cheaper
+                        </div>
+                        <div class="savings-badge">Save $2,375</div>
+                    </div>
+                </div>
+
+                <p style="max-width: 700px; margin: 3rem auto; font-size: 1.125rem; color: var(--gray-800);">
+                    <strong>This is real data.</strong> Until 2022, these prices were secret. Now they're public—but buried in complex files. We make them simple.
+                </p>
+            </div>
+        </section>
+
+        <!-- The Solution -->
+        <section class="presentation-slide solution">
+            <div class="container text-center">
+                <h2>Healthcare Transparency Made Simple</h2>
+                <p style="max-width: 800px; margin: 1.5rem auto;">We translate millions of pricing records into answers you can actually use.</p>
+
+                <div class="feature-grid">
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">Search</div>
+                        <div class="feature-title">Know Before You Go</div>
+                        <div class="feature-description">
+                            Search any procedure. See real prices. Compare quality. Book the best deal.
+                        </div>
+                    </div>
+
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">Save</div>
+                        <div class="feature-title">Stop Overpaying</div>
+                        <div class="feature-description">
+                            Employers: Find out if you're overpaying. We analyze your claims and show exactly where to save.
+                        </div>
+                    </div>
+
+                    <div class="feature-card fade-in">
+                        <div class="feature-icon">Protect</div>
+                        <div class="feature-title">Catch Hidden Fees</div>
+                        <div class="feature-description">
+                            Detect spread pricing and middleman markups. Know if your broker is taking a cut.
+                        </div>
+                    </div>
+                </div>
+
+                <p style="max-width: 700px; margin: 3rem auto; font-size: 1.125rem;">
+                    <strong>Based on real government data.</strong> Mandated by federal law (CAA 2020). Finally accessible to everyone.
+                </p>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="presentation-slide cta">
+            <div class="container text-center">
+                <h2>Ready to Stop Overpaying?</h2>
+                <p style="max-width: 700px; margin: 1.5rem auto;">
+                    Whether you're a patient looking for fair prices or an employer trying to control costs, we can help.
+                </p>
+
+                <div class="cta-buttons">
+                    <a href="bill-checker.html" class="btn btn-primary">
+                        <i class="fas fa-shield-halved"></i> Check Your Bill
+                    </a>
+                    <a href="../index.html" class="btn btn-secondary">Explore the Platform</a>
+                    <a href="../timeline.html" class="btn btn-secondary">See How We Got Here</a>
+                </div>
+
+                <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.2);">
+                    <p style="font-size: 1rem; margin-bottom: 1rem; opacity: 0.9;">
+                        <strong>Already had your procedure?</strong> Help others by sharing your experience.
+                    </p>
+                    <a href="provider-reviews.html" class="btn btn-secondary" style="display: inline-block;">
+                        <i class="fas fa-star"></i> Leave a Provider Review
+                    </a>
+                </div>
+
+                <p style="margin-top: 3rem; opacity: 0.7; font-size: 1rem;">
+                    Powered by <strong>Payerset</strong> • Making Healthcare Transparent
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, index) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => {
+                        entry.target.classList.add('visible');
+                    }, index * 100);
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach((element) => {
+            observer.observe(element);
+        });
+
+        // Price card interaction
+        document.querySelectorAll('.price-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    card.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Scroll to next section on scroll indicator click
+        document.querySelector('.scroll-indicator')?.addEventListener('click', () => {
+            const slides = document.querySelectorAll('.presentation-slide');
+            if (slides.length > 1) {
+                slides[1].scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>

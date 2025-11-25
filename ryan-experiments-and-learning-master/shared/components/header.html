@@ -1,0 +1,423 @@
+<!-- Unified Site Header -->
+<header class="site-header">
+    <div class="header-container">
+        <!-- Logo -->
+        <a href="/index.html" class="header-logo">
+            <span class="logo-mark">PS</span>
+            <span class="logo-text">Payerset</span>
+        </a>
+
+        <!-- Navigation -->
+        <nav class="header-nav" id="headerNav">
+            <div class="nav-item dropdown">
+                <button class="nav-link dropdown-toggle" id="toolsDropdown">
+                    <i class="fas fa-tools"></i>
+                    Tools
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="dropdown-menu" id="toolsMenu">
+                    <a href="/tools/patients/index.html" class="dropdown-item">
+                        <i class="fas fa-user"></i>
+                        For Patients
+                    </a>
+                    <a href="/tools/employers/index.html" class="dropdown-item">
+                        <i class="fas fa-briefcase"></i>
+                        For Employers
+                    </a>
+                    <a href="/tools/providers/index.html" class="dropdown-item">
+                        <i class="fas fa-user-doctor"></i>
+                        For Providers
+                    </a>
+                </div>
+            </div>
+            <a href="/story/index.html" class="nav-link">
+                <i class="fas fa-book"></i>
+                Our Story
+            </a>
+            <a href="/learn/index.html" class="nav-link">
+                <i class="fas fa-lightbulb"></i>
+                Learn
+            </a>
+        </nav>
+
+        <!-- CTA -->
+        <a href="https://payerset.com" class="header-cta" target="_blank" rel="noopener noreferrer">
+            Visit Payerset
+        </a>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle menu">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+</header>
+
+<!-- Mobile menu overlay -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+<style>
+/* ============================================================================
+   HEADER STYLES
+   ============================================================================ */
+
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--gray-200);
+    height: 64px;
+}
+
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+/* ============================================================================
+   LOGO
+   ============================================================================ */
+
+.header-logo {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--payerset-blue);
+    transition: opacity var(--transition-fast);
+}
+
+.header-logo:hover {
+    opacity: 0.8;
+}
+
+.logo-mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--payerset-blue);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.875rem;
+}
+
+.logo-text {
+    color: var(--gray-900);
+}
+
+/* ============================================================================
+   NAVIGATION
+   ============================================================================ */
+
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex: 1;
+    justify-content: center;
+}
+
+.nav-item {
+    position: relative;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    color: var(--gray-900);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color var(--transition-fast);
+    background: none;
+    border: none;
+    font-family: var(--font-system);
+    font-size: 1rem;
+    cursor: pointer;
+}
+
+.nav-link:hover {
+    color: var(--payerset-blue);
+}
+
+/* ============================================================================
+   DROPDOWN MENU
+   ============================================================================ */
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-toggle {
+    user-select: none;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 200px;
+    background: var(--white);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    z-index: var(--z-dropdown);
+}
+
+.dropdown-menu.active {
+    display: block;
+    animation: fadeInDown 0.2s ease;
+}
+
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: var(--gray-900);
+    text-decoration: none;
+    transition: background var(--transition-fast);
+}
+
+.dropdown-item:hover {
+    background: var(--gray-50);
+    color: var(--payerset-blue);
+}
+
+.dropdown-item i {
+    width: 20px;
+    text-align: center;
+    color: var(--payerset-blue);
+}
+
+/* ============================================================================
+   CTA BUTTON
+   ============================================================================ */
+
+.header-cta {
+    padding: 0.75rem 1.5rem;
+    background: var(--payerset-blue);
+    color: var(--white);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all var(--transition-fast);
+    white-space: nowrap;
+}
+
+.header-cta:hover {
+    background: var(--payerset-blue-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 146, 202, 0.3);
+}
+
+/* ============================================================================
+   MOBILE MENU
+   ============================================================================ */
+
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--gray-900);
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color var(--transition-fast);
+}
+
+.mobile-menu-toggle:hover {
+    color: var(--payerset-blue);
+}
+
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: var(--z-overlay);
+}
+
+.mobile-menu-overlay.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* ============================================================================
+   RESPONSIVE STYLES
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .header-container {
+        padding: 0 1rem;
+    }
+
+    .header-nav {
+        position: fixed;
+        top: 64px;
+        right: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: calc(100vh - 64px);
+        background: var(--white);
+        box-shadow: var(--shadow-xl);
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        padding: 2rem 0;
+        transition: right var(--transition-normal);
+        z-index: calc(var(--z-overlay) + 1);
+        overflow-y: auto;
+    }
+
+    .header-nav.active {
+        right: 0;
+    }
+
+    .nav-item {
+        width: 100%;
+    }
+
+    .nav-link,
+    .dropdown-toggle {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 1rem 1.5rem;
+    }
+
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        background: var(--gray-50);
+        margin-top: 0;
+        border-left: 3px solid var(--payerset-blue);
+        border-radius: 0;
+    }
+
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    .header-cta {
+        display: none;
+    }
+
+    .logo-text {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-nav {
+        width: 90%;
+    }
+}
+</style>
+
+<script>
+// Header interactivity
+(function() {
+    'use strict';
+
+    // Wait for DOM to be ready
+    function initHeader() {
+        // Dropdown toggle (desktop)
+        const toolsDropdown = document.getElementById('toolsDropdown');
+        const toolsMenu = document.getElementById('toolsMenu');
+
+        if (toolsDropdown && toolsMenu) {
+            toolsDropdown.addEventListener('click', function(e) {
+                e.stopPropagation();
+                toolsMenu.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function() {
+                toolsMenu.classList.remove('active');
+            });
+
+            // Prevent closing when clicking inside dropdown
+            toolsMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+        }
+
+        // Mobile menu toggle
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const headerNav = document.getElementById('headerNav');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+
+        if (mobileMenuToggle && headerNav && mobileMenuOverlay) {
+            function toggleMenu() {
+                headerNav.classList.toggle('active');
+                mobileMenuOverlay.classList.toggle('active');
+
+                // Toggle icon
+                const icon = mobileMenuToggle.querySelector('i');
+                if (icon) {
+                    icon.classList.toggle('fa-bars');
+                    icon.classList.toggle('fa-times');
+                }
+
+                // Prevent body scroll when menu is open
+                document.body.style.overflow = headerNav.classList.contains('active') ? 'hidden' : '';
+            }
+
+            mobileMenuToggle.addEventListener('click', toggleMenu);
+            mobileMenuOverlay.addEventListener('click', toggleMenu);
+
+            // Close menu on navigation
+            const navLinks = headerNav.querySelectorAll('a');
+            navLinks.forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (headerNav.classList.contains('active')) {
+                        toggleMenu();
+                    }
+                });
+            });
+        }
+    }
+
+    // Initialize immediately if DOM is ready, otherwise wait
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHeader);
+    } else {
+        initHeader();
+    }
+})();
+</script>

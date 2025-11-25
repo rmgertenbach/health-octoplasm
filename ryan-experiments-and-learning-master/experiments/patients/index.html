@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Portal - Know Before You Go</title>
+  <meta name="description" content="Find out what healthcare actually costs before you get the bill. Compare providers, see quality grades, understand your costs.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../shared/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="../index.html" class="logo">Healthcare Transparency</a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link active">For Patients</a>
+        <a href="../../use-cases.html" class="nav-link">Use Cases</a>
+        <a href="learn.html" class="nav-link">Learn</a>
+        <a href="../learn/stakeholder-map.html" class="nav-link">How It Works</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section with Search -->
+  <section class="hero" style="background: linear-gradient(135deg, var(--color-patient-light) 0%, var(--color-white) 100%);">
+    <div class="container">
+      <h1 class="hero-title" style="color: var(--color-patient-primary);">
+        Know Before You Go
+      </h1>
+      <p class="hero-subtitle">
+        Find out what healthcare actually costs <strong>before</strong> you get the bill.
+        <br>
+        No more surprise charges. No more wondering if you got a fair price.
+      </p>
+
+      <!-- Search Bar -->
+      <div class="search-input-wrapper" style="max-width: 700px; margin: 48px auto 0;">
+        <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+        <input
+          type="text"
+          class="search-input"
+          id="procedureSearch"
+          placeholder="What procedure do you need? (e.g., MRI, Hip Replacement, Colonoscopy)"
+          autocomplete="off"
+        >
+      </div>
+
+      <p style="text-align: center; margin-top: 16px; color: var(--color-gray-600); font-size: var(--text-sm);">
+        Or browse common procedures below
+      </p>
+
+      <div class="alert alert-info" style="max-width: 700px; margin: 24px auto 0;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <i class="fa-solid fa-book-open" style="font-size: 24px;"></i>
+          <div style="flex: 1;">
+            <strong>Why do prices vary so much?</strong>
+            <a href="../../index.html#problem" style="margin-left: 8px; text-decoration: underline;">Read the story →</a>
+            <span style="margin: 0 8px;">|</span>
+            <a href="../../diagrams/diagram2.html" style="text-decoration: underline;">See money flows →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Common Procedures Quick Links -->
+  <section class="section">
+    <div class="container">
+      <h2 style="font-size: var(--text-2xl); font-weight: var(--font-semibold); margin-bottom: 24px; text-align: center;">
+        Popular Procedures
+      </h2>
+
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <a href="search.html?procedure=mri" class="card" style="text-decoration: none; text-align: center; cursor: pointer;">
+          <div style="font-size: 40px; margin-bottom: 8px; color: var(--color-patient-primary);"><i class="fa-solid fa-magnet"></i></div>
+          <h3 style="font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-gray-900); margin-bottom: 4px;">
+            MRI Scan
+          </h3>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+            $400 - $3,000
+          </p>
+        </a>
+
+        <a href="search.html?procedure=hip-replacement" class="card" style="text-decoration: none; text-align: center; cursor: pointer;">
+          <div style="font-size: 40px; margin-bottom: 8px; color: var(--color-patient-primary);"><i class="fa-solid fa-bone"></i></div>
+          <h3 style="font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-gray-900); margin-bottom: 4px;">
+            Hip Replacement
+          </h3>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+            $15,000 - $45,000
+          </p>
+        </a>
+
+        <a href="search.html?procedure=colonoscopy" class="card" style="text-decoration: none; text-align: center; cursor: pointer;">
+          <div style="font-size: 40px; margin-bottom: 8px; color: var(--color-patient-primary);"><i class="fa-solid fa-microscope"></i></div>
+          <h3 style="font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-gray-900); margin-bottom: 4px;">
+            Colonoscopy
+          </h3>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+            $1,000 - $4,500
+          </p>
+        </a>
+
+        <a href="search.html?procedure=ct-scan" class="card" style="text-decoration: none; text-align: center; cursor: pointer;">
+          <div style="font-size: 40px; margin-bottom: 8px; color: var(--color-patient-primary);"><i class="fa-solid fa-camera"></i></div>
+          <h3 style="font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-gray-900); margin-bottom: 4px;">
+            CT Scan
+          </h3>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+            $300 - $2,000
+          </p>
+        </a>
+
+        <a href="search.html?procedure=knee-replacement" class="card" style="text-decoration: none; text-align: center; cursor: pointer;">
+          <div style="font-size: 40px; margin-bottom: 8px; color: var(--color-patient-primary);"><i class="fa-solid fa-person-walking"></i></div>
+          <h3 style="font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-gray-900); margin-bottom: 4px;">
+            Knee Replacement
+          </h3>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+            $16,000 - $50,000
+          </p>
+        </a>
+
+        <a href="search.html?procedure=er-visit" class="card" style="text-decoration: none; text-align: center; cursor: pointer;">
+          <div style="font-size: 40px; margin-bottom: 8px; color: var(--color-error);"><i class="fa-solid fa-truck-medical"></i></div>
+          <h3 style="font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-gray-900); margin-bottom: 4px;">
+            ER Visit
+          </h3>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+            $500 - $3,000
+          </p>
+        </a>
+
+        <a href="search.html?procedure=ultrasound" class="card" style="text-decoration: none; text-align: center; cursor: pointer;">
+          <div style="font-size: 40px; margin-bottom: 8px; color: var(--color-patient-primary);"><i class="fa-solid fa-signal"></i></div>
+          <h3 style="font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-gray-900); margin-bottom: 4px;">
+            Ultrasound
+          </h3>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+            $200 - $1,000
+          </p>
+        </a>
+
+        <a href="search.html" class="card" style="text-decoration: none; text-align: center; cursor: pointer; border: 2px dashed var(--color-gray-300);">
+          <div style="font-size: 40px; margin-bottom: 8px; color: var(--color-patient-primary);"><i class="fa-solid fa-plus"></i></div>
+          <h3 style="font-size: var(--text-base); font-weight: var(--font-semibold); color: var(--color-gray-900); margin-bottom: 4px;">
+            Search All
+          </h3>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+            Find any procedure
+          </p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why This Matters -->
+  <section class="section bg-gray-50">
+    <div class="container">
+      <h2 class="section-title">Why Price Transparency Matters</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="card">
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); color: var(--color-patient-primary); margin-bottom: 16px;">
+            <i class="fa-solid fa-bullseye" style="margin-right: 8px;"></i> Stop Surprise Bills
+          </h3>
+          <p style="color: var(--color-gray-700); margin-bottom: 16px;">
+            Know your estimated out-of-pocket cost <strong>before</strong> you schedule care.
+            No more $10,000 surprise bills after surgery.
+          </p>
+          <div class="alert alert-info" style="margin: 0; padding: 12px;">
+            <strong>Example:</strong> Sarah needed an MRI. She found one for $425 instead of $2,800.
+            Saved $2,375 and got the same quality scan.
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); color: var(--color-patient-primary); margin-bottom: 16px;">
+            <i class="fa-solid fa-star" style="margin-right: 8px;"></i> Quality Matters Too
+          </h3>
+          <p style="color: var(--color-gray-700); margin-bottom: 16px;">
+            Expensive doesn't mean better. We show you safety grades so you can find
+            <strong>high-quality AND affordable</strong> care.
+          </p>
+          <div class="alert alert-warning" style="margin: 0; padding: 12px;">
+            <strong>Fact:</strong> There's zero correlation between price and quality.
+            Grade A facilities are often cheaper than Grade C facilities.
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); color: var(--color-patient-primary); margin-bottom: 16px;">
+            <i class="fa-solid fa-dollar-sign" style="margin-right: 8px;"></i> Cash Can Be Cheaper
+          </h3>
+          <p style="color: var(--color-gray-700); margin-bottom: 16px;">
+            Sometimes paying cash directly is cheaper than using insurance!
+            We show you cash prices vs. insurance estimates.
+          </p>
+          <div class="alert alert-success" style="margin: 0; padding: 12px;">
+            <strong>Tip:</strong> If the cash price is lower than your deductible,
+            pay cash and save money.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- What You Can Do -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Your Healthcare Toolkit</h2>
+      <p class="section-subtitle">
+        Everything you need to make informed healthcare decisions
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+        <a href="search.html" class="card" style="text-decoration: none; color: inherit; border: 2px solid var(--color-patient-primary);">
+          <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="
+              width: 64px;
+              height: 64px;
+              background: var(--color-patient-light);
+              border-radius: var(--radius-xl);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 32px;
+              flex-shrink: 0;
+              color: var(--color-patient-primary);
+            "><i class="fa-solid fa-magnifying-glass"></i></div>
+            <div style="flex: 1;">
+              <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+                Compare Provider Prices
+              </h3>
+              <p style="color: var(--color-gray-700); margin-bottom: 12px;">
+                Search any procedure, compare up to 10 providers in your area.
+                See prices, quality grades, distance, and availability.
+              </p>
+              <span class="btn btn-primary">Start Searching →</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="learn.html" class="card" style="text-decoration: none; color: inherit;">
+          <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="
+              width: 64px;
+              height: 64px;
+              background: var(--color-patient-light);
+              border-radius: var(--radius-xl);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 32px;
+              flex-shrink: 0;
+              color: var(--color-patient-primary);
+            "><i class="fa-solid fa-graduation-cap"></i></div>
+            <div style="flex: 1;">
+              <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+                Healthcare 101
+              </h3>
+              <p style="color: var(--color-gray-700); margin-bottom: 12px;">
+                Learn how healthcare pricing actually works. Why do prices vary so much?
+                What's a deductible? When should you use insurance?
+              </p>
+              <span class="btn btn-secondary">Learn the Basics →</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="card" style="text-decoration: none; color: inherit;">
+          <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="
+              width: 64px;
+              height: 64px;
+              background: var(--color-patient-light);
+              border-radius: var(--radius-xl);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 32px;
+              flex-shrink: 0;
+              color: var(--color-patient-primary);
+            "><i class="fa-solid fa-file-lines"></i></div>
+            <div style="flex: 1;">
+              <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+                Check Your Bill
+              </h3>
+              <p style="color: var(--color-gray-700); margin-bottom: 12px;">
+                Got a medical bill that seems high? Upload it and we'll tell you
+                if the charges are fair compared to market rates.
+              </p>
+              <span class="btn btn-secondary">Coming Soon</span>
+            </div>
+          </div>
+        </a>
+
+        <a href="#" class="card" style="text-decoration: none; color: inherit;">
+          <div style="display: flex; align-items: flex-start; gap: 16px;">
+            <div style="
+              width: 64px;
+              height: 64px;
+              background: var(--color-patient-light);
+              border-radius: var(--radius-xl);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 32px;
+              flex-shrink: 0;
+              color: var(--color-patient-primary);
+            "><i class="fa-solid fa-scale-balanced"></i></div>
+            <div style="flex: 1;">
+              <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+                Know Your Rights
+              </h3>
+              <p style="color: var(--color-gray-700); margin-bottom: 12px;">
+                Learn about the No Surprises Act, transparency laws, and how to
+                fight unfair medical bills.
+              </p>
+              <span class="btn btn-secondary">Learn More →</span>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Real Stories -->
+  <section class="section bg-gray-50">
+    <div class="container">
+      <h2 class="section-title">Real People, Real Savings</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card">
+          <div style="background: var(--color-success); color: white; padding: 8px 16px; border-radius: var(--radius-full); display: inline-block; margin-bottom: 16px; font-weight: var(--font-semibold);">
+            Saved $2,375
+          </div>
+          <p style="color: var(--color-gray-700); font-size: var(--text-base); line-height: var(--leading-relaxed);">
+            "I needed an MRI for my knee. My doctor's hospital quoted $2,800.
+            I found the same MRI at an imaging center for $425. Same machine, same quality,
+            way less money."
+          </p>
+          <p style="margin-top: 16px; font-weight: var(--font-semibold); color: var(--color-gray-900);">
+            - Sarah, Austin TX
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="background: var(--color-success); color: white; padding: 8px 16px; border-radius: var(--radius-full); display: inline-block; margin-bottom: 16px; font-weight: var(--font-semibold);">
+            Saved $12,000
+          </div>
+          <p style="color: var(--color-gray-700); font-size: var(--text-base); line-height: var(--leading-relaxed);">
+            "Hip replacement surgery: one hospital wanted $42,000, another Grade A facility
+            charged $18,000. I got better quality for less than half the price."
+          </p>
+          <p style="margin-top: 16px; font-weight: var(--font-semibold); color: var(--color-gray-900);">
+            - Michael, Denver CO
+          </p>
+        </div>
+
+        <div class="card">
+          <div style="background: var(--color-success); color: white; padding: 8px 16px; border-radius: var(--radius-full); display: inline-block; margin-bottom: 16px; font-weight: var(--font-semibold);">
+            Saved $800
+          </div>
+          <p style="color: var(--color-gray-700); font-size: var(--text-base); line-height: var(--leading-relaxed);">
+            "My deductible is $5,000 so I pay everything out of pocket anyway.
+            Now I just pay cash directly and negotiate. It's almost always cheaper!"
+          </p>
+          <p style="margin-top: 16px; font-weight: var(--font-semibold); color: var(--color-gray-900);">
+            - Jennifer, Phoenix AZ
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container text-center">
+      <h2 class="section-title">Ready to Find Out What Healthcare Actually Costs?</h2>
+      <div class="search-input-wrapper" style="max-width: 700px; margin: 32px auto;">
+        <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+        <input
+          type="text"
+          class="search-input"
+          id="procedureSearchBottom"
+          placeholder="Search any procedure..."
+          autocomplete="off"
+        >
+      </div>
+      <p style="margin-top: 24px;">
+        <a href="learn.html" style="color: var(--color-patient-primary); font-weight: var(--font-medium);">
+          Or learn how healthcare pricing works first →
+        </a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background-color: var(--color-gray-900); color: var(--color-gray-300); padding: 48px 0;">
+    <div class="container">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Patient Tools
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="search.html" style="color: var(--color-gray-300);">Search Procedures</a></li>
+            <li style="margin-bottom: 8px;"><a href="learn.html" style="color: var(--color-gray-300);">Healthcare 101</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Check Your Bill</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Your Rights</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Learn
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="../learn/stakeholder-map.html" style="color: var(--color-gray-300);">How Healthcare Works</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Why Prices Vary</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Reading Your EOB</a></li>
+            <li style="margin-bottom: 8px;"><a href="../../glossary.html" style="color: var(--color-gray-300);">Glossary of Terms</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Deep Dives
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="../../index.html" style="color: var(--color-gray-300);">The Full Story</a></li>
+            <li style="margin-bottom: 8px;"><a href="../../diagrams/diagram1.html" style="color: var(--color-gray-300);">Ecosystem Map</a></li>
+            <li style="margin-bottom: 8px;"><a href="../../diagrams/diagram2.html" style="color: var(--color-gray-300);">Money Flows</a></li>
+            <li style="margin-bottom: 8px;"><a href="../../diagrams/diagram3.html" style="color: var(--color-gray-300);">Power Dynamics</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Other Roles
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="../employers/index.html" style="color: var(--color-gray-300);">For Employers</a></li>
+            <li style="margin-bottom: 8px;"><a href="../providers/index.html" style="color: var(--color-gray-300);">For Providers</a></li>
+            <li style="margin-bottom: 8px;"><a href="../index.html" style="color: var(--color-gray-300);">Back to Home</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--color-gray-700); margin-top: 32px; padding-top: 32px; text-align: center; font-size: var(--text-sm);">
+        <p>&copy; 2025 Healthcare Transparency Platform. Powered by real transparency data.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../shared/components.js"></script>
+  <script>
+    // Common procedures for autocomplete
+    const commonProcedures = [
+      'MRI Scan',
+      'CT Scan',
+      'X-Ray',
+      'Ultrasound',
+      'Mammogram',
+      'Hip Replacement',
+      'Knee Replacement',
+      'Colonoscopy',
+      'Upper Endoscopy',
+      'Cataract Surgery',
+      'Hernia Repair',
+      'Gallbladder Removal',
+      'Appendectomy',
+      'Tonsillectomy',
+      'ER Visit - Level 4',
+      'ER Visit - Level 5',
+      'Physical Therapy Session',
+      'Blood Test - Comprehensive',
+      'EKG / ECG',
+      'Echocardiogram',
+      'Stress Test',
+      'Sleep Study',
+      'Allergy Testing',
+    ];
+
+    // Initialize search with autocomplete
+    const searchInput = document.getElementById('procedureSearch');
+    const searchInputBottom = document.getElementById('procedureSearchBottom');
+
+    HealthcareUI.initializeSearchAutocomplete(searchInput, commonProcedures, (value) => {
+      window.location.href = `search.html?procedure=${encodeURIComponent(value)}`;
+    });
+
+    HealthcareUI.initializeSearchAutocomplete(searchInputBottom, commonProcedures, (value) => {
+      window.location.href = `search.html?procedure=${encodeURIComponent(value)}`;
+    });
+
+    // Handle search on Enter key
+    [searchInput, searchInputBottom].forEach(input => {
+      input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && input.value.trim()) {
+          window.location.href = `search.html?procedure=${encodeURIComponent(input.value)}`;
+        }
+      });
+    });
+
+    // Animate cards on scroll
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.animation = 'fadeIn 0.6s ease-out forwards';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.card').forEach(card => {
+      observer.observe(card);
+    });
+  </script>
+</body>
+</html>

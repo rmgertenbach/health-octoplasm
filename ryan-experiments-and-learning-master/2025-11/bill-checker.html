@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Shield - Check If You're Overpaying | Healthcare Price Transparency</title>
+    <meta name="description" content="Upload your medical bill and instantly see if you're being overcharged. Compare your charges to real negotiated rates.">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="/shared/css/core.css">
+    <link rel="stylesheet" href="/shared/css/components.css">
+
+    <!-- Page-specific styles -->
+    <style>
+        /* Additional patient-focused colors */
+        :root {
+            --patient-primary: #3B82F6;
+            --patient-light: #DBEAFE;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--patient-primary) 0%, var(--payerset-blue-dark) 100%);
+            color: var(--white);
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 1rem;
+            font-weight: 800;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            opacity: 0.95;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+
+        .hero-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            display: block;
+        }
+
+        .hero-stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Bill Checker Specific */
+        .checker-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: var(--shadow-xl);
+            margin-bottom: 3rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-subtitle {
+            color: var(--gray-600);
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Autocomplete Results */
+        .autocomplete-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .autocomplete-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.selected {
+            background: var(--patient-light);
+        }
+
+        .autocomplete-item-title {
+            font-weight: 600;
+            color: var(--gray-900);
+            margin-bottom: 0.25rem;
+        }
+
+        .autocomplete-item-subtitle {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .autocomplete-item-code {
+            display: inline-block;
+            background: var(--gray-100);
+            padding: 0.125rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: monospace;
+            color: var(--gray-600);
+            margin-left: 0.5rem;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 3px dashed var(--gray-200);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: var(--gray-50);
+        }
+
+        .upload-zone:hover {
+            border-color: var(--patient-primary);
+            background: rgba(59, 130, 246, 0.03);
+        }
+
+        .upload-zone.drag-over {
+            border-color: var(--patient-primary);
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--patient-primary);
+            margin-bottom: 1rem;
+        }
+
+        .upload-text {
+            font-size: 1.1rem;
+            color: var(--gray-900);
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+
+        /* Button customizations */
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+
+        /* Results Card */
+        .results-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            display: none;
+        }
+
+        .results-card.show {
+            display: block;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Verdict Banner */
+        .verdict-banner {
+            padding: 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .verdict-banner.overpaying {
+            background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+            border: 2px solid var(--danger-red);
+        }
+
+        .verdict-banner.fair {
+            background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+            border: 2px solid var(--success-green);
+        }
+
+        .verdict-icon {
+            font-size: 3rem;
+        }
+
+        .verdict-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .verdict-amount {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-top: 0.5rem;
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 2rem;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .comparison-table th {
+            background: var(--gray-50);
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .price-highlight {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+
+        .price-high {
+            color: var(--danger-red);
+        }
+
+        .price-fair {
+            color: var(--success-green);
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .info-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--gray-200);
+            text-align: center;
+        }
+
+        .info-card-icon {
+            font-size: 2.5rem;
+            color: var(--patient-primary);
+            margin-bottom: 1rem;
+        }
+
+        .info-card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card-text {
+            font-size: 0.95rem;
+            color: var(--gray-600);
+        }
+
+        /* Alert customizations */
+        .alert-warning {
+            background: #FEF3C7;
+            border: 1px solid var(--warning-orange);
+            color: var(--gray-900);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 1.5rem 2rem;
+            }
+
+            .checker-card,
+            .results-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-stats {
+                gap: 2rem;
+            }
+
+            .verdict-banner {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Placeholder (will be loaded by component-loader.js) -->
+    <div id="header-placeholder"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1><i class="fas fa-shield-halved"></i> Are You Overpaying?</h1>
+        <p class="hero-subtitle">
+            Upload your medical bill and we'll instantly compare it to <strong>real negotiated rates</strong> from insurance companies. No more wondering if you got a fair price.
+        </p>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <span class="hero-stat-number">80%</span>
+                <span class="hero-stat-label">of bills have overcharges</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-number">$1,400</span>
+                <span class="hero-stat-label">average overcharge per bill</span>
+            </div>
+            <div class="hero-stat">
+                <span class="hero-stat-number">2 min</span>
+                <span class="hero-stat-label">to check your bill</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+    <div class="container" style="max-width: 900px;">
+        <!-- Bill Checker Form -->
+        <div class="checker-card" id="checkerForm">
+            <h2 class="section-title">Check Your Bill</h2>
+            <p class="section-subtitle">
+                Enter the details from your medical bill, EOB (Explanation of Benefits), or upload a photo/PDF.
+            </p>
+
+            <!-- Upload Zone -->
+            <div class="upload-zone" id="uploadZone">
+                <div class="upload-icon"><i class="fas fa-file-medical"></i></div>
+                <div class="upload-text">Drop your bill here or click to upload</div>
+                <div class="upload-hint">Supports PDF, JPG, PNG • Max 10MB</div>
+                <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" style="display: none;">
+            </div>
+
+            <div style="text-align: center; margin: 2rem 0; color: var(--gray-600); font-weight: 600;">
+                — OR —
+            </div>
+
+            <!-- Manual Entry Form -->
+            <form id="billForm">
+                <div class="form-group">
+                    <label class="form-label">What procedure did you receive?</label>
+                    <input
+                        type="text"
+                        class="form-input"
+                        id="procedureInput"
+                        placeholder="Type to search: MRI, colonoscopy, hip replacement..."
+                        autocomplete="off"
+                        required
+                    >
+                    <div id="procedureResults" class="autocomplete-results" style="display: none;"></div>
+                    <input type="hidden" id="procedureCode" value="">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Amount You Were Charged</label>
+                        <input type="number" class="form-input" id="chargedAmount" placeholder="$2,800" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Your ZIP Code</label>
+                        <input
+                            type="text"
+                            class="form-input"
+                            id="zipCode"
+                            placeholder="Type your ZIP code: 78701..."
+                            autocomplete="off"
+                            required
+                            pattern="[0-9]{5}"
+                        >
+                        <div id="zipResults" class="autocomplete-results" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Where did you receive care?</label>
+                        <select class="form-select" id="facilityType" required>
+                            <option value="">Select...</option>
+                            <option value="hospital">Hospital</option>
+                            <option value="imaging-center">Imaging Center</option>
+                            <option value="surgery-center">Surgery Center</option>
+                            <option value="clinic">Doctor's Office / Clinic</option>
+                            <option value="er">Emergency Room</option>
+                            <option value="urgent-care">Urgent Care</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Your Insurance</label>
+                        <select class="form-select" id="insurance">
+                            <option value="">Select or skip...</option>
+                            <option value="blue-cross">Blue Cross Blue Shield</option>
+                            <option value="united">United Healthcare</option>
+                            <option value="aetna">Aetna</option>
+                            <option value="cigna">Cigna</option>
+                            <option value="humana">Humana</option>
+                            <option value="no-insurance">No Insurance / Self-Pay</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-search"></i>
+                    Check If I'm Overpaying
+                </button>
+            </form>
+        </div>
+
+        <!-- Results Card (Hidden Initially) -->
+        <div class="results-card" id="resultsCard">
+            <!-- Verdict Banner -->
+            <div class="verdict-banner overpaying" id="verdictBanner">
+                <div class="verdict-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                <div class="verdict-content">
+                    <h3>You're Likely Overpaying</h3>
+                    <p>Based on real negotiated rates in your area, you were charged significantly more than the fair price.</p>
+                    <div class="verdict-amount" id="verdictAmount">You could save $2,375</div>
+                </div>
+            </div>
+
+            <!-- Comparison Details -->
+            <h3 style="margin-bottom: 1rem;">Price Breakdown</h3>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>What You're Comparing</th>
+                        <th>Price</th>
+                        <th>Difference</th>
+                    </tr>
+                </thead>
+                <tbody id="comparisonBody">
+                    <tr>
+                        <td><strong>What You Were Charged</strong></td>
+                        <td><span class="price-highlight price-high" id="yourPrice">$2,800</span></td>
+                        <td>—</td>
+                    </tr>
+                    <tr>
+                        <td>Fair Price (Median Negotiated Rate)</td>
+                        <td><span class="price-highlight price-fair" id="fairPrice">$425</span></td>
+                        <td><span style="color: var(--success-green); font-weight: 600;" id="savings">$2,375 savings</span></td>
+                    </tr>
+                    <tr>
+                        <td>Medicare Rate (Government Benchmark)</td>
+                        <td id="medicarePrice">$380</td>
+                        <td>—</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- What This Means -->
+            <div class="alert alert-warning" style="margin-top: 2rem;">
+                <i class="fas fa-lightbulb" style="font-size: 1.5rem;"></i>
+                <div>
+                    <strong>What you can do:</strong>
+                    <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+                        <li>Call the billing department and negotiate using this fair price data</li>
+                        <li>Ask for an itemized bill and dispute specific line items</li>
+                        <li>File an appeal with your insurance if they didn't negotiate properly</li>
+                        <li>Set up a payment plan while you dispute the charges</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Provider Rating CTA -->
+            <div style="background: var(--patient-light); border-radius: 16px; padding: 2rem; margin: 2rem 0; border-left: 6px solid var(--patient-primary);">
+                <div style="display: flex; gap: 1rem; align-items: flex-start;">
+                    <i class="fas fa-star" style="font-size: 1.5rem; color: var(--patient-primary); margin-top: 0.25rem;"></i>
+                    <div>
+                        <h4 style="margin: 0 0 0.5rem 0; color: var(--gray-900); font-size: 1.1rem;">Help Others Make Better Choices</h4>
+                        <p style="margin: 0 0 1rem 0; color: var(--gray-600);">
+                            Your experience matters. Rate this provider to help thousands of patients find quality care at fair prices.
+                        </p>
+                        <a href="provider-reviews.html" style="display: inline-block; background: var(--patient-primary); color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: all 0.2s;">
+                            <i class="fas fa-star" style="margin-right: 0.5rem;"></i> Rate This Provider
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Info -->
+            <h3 style="margin: 2rem 0 1rem;">Why Prices Vary So Much</h3>
+            <p style="color: var(--gray-600); margin-bottom: 1.5rem;">
+                The same MRI can cost anywhere from $400 to $3,000+ depending on where you go. This isn't because of quality—it's because hospitals charge whatever they can get away with. Our data comes from real insurance company contracts, so you know what they actually pay.
+            </p>
+
+            <div class="info-grid">
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="fas fa-hospital"></i></div>
+                    <div class="info-card-title">Hospital Markup</div>
+                    <div class="info-card-text">Hospitals charge 2-5x what independent facilities charge for identical procedures</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="fas fa-handshake"></i></div>
+                    <div class="info-card-title">Negotiated Rates</div>
+                    <div class="info-card-text">Insurance companies negotiate discounts—but you can negotiate too using this data</div>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon"><i class="fas fa-scale-balanced"></i></div>
+                    <div class="info-card-title">Fair Pricing</div>
+                    <div class="info-card-text">Fair price = what insurance companies actually pay, not the inflated "chargemaster" price</div>
+                </div>
+            </div>
+
+            <!-- Share Results -->
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn btn-primary" onclick="window.location.href='#checkerForm'">
+                    <i class="fas fa-plus"></i>
+                    Check Another Bill
+                </button>
+            </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle" style="font-size: 1.5rem;"></i>
+            <div>
+                <strong>How we calculate fair prices:</strong><br>
+                We analyze real negotiated rates from insurance companies (from federally-mandated transparency data), Medicare rates, and thousands of actual claims. The "fair price" is the median of what insurance companies actually pay providers in your area—not the inflated prices hospitals charge uninsured patients.
+            </div>
+        </div>
+    </div>
+    </main>
+
+    <!-- Footer Placeholder (will be loaded by component-loader.js) -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Component Loader (automatically loads header and footer) -->
+    <script src="/shared/js/component-loader.js"></script>
+
+    <!-- Page functionality -->
+    <script>
+        // Sample data (would come from Payerset API in production)
+        const procedureData = {
+            'mri': {
+                name: 'MRI Scan',
+                typical_charge: 2800,
+                fair_price: 425,
+                medicare_rate: 380,
+                code: 'CPT 70553'
+            },
+            'hip-replacement': {
+                name: 'Hip Replacement',
+                typical_charge: 45000,
+                fair_price: 18000,
+                medicare_rate: 16500,
+                code: 'DRG 470'
+            },
+            'colonoscopy': {
+                name: 'Colonoscopy',
+                typical_charge: 3800,
+                fair_price: 1120,
+                medicare_rate: 980,
+                code: 'CPT 45378'
+            },
+            'ct-scan': {
+                name: 'CT Scan',
+                typical_charge: 2200,
+                fair_price: 350,
+                medicare_rate: 310,
+                code: 'CPT 70450'
+            },
+            'knee-replacement': {
+                name: 'Knee Replacement',
+                typical_charge: 42000,
+                fair_price: 17500,
+                medicare_rate: 15800,
+                code: 'DRG 470'
+            },
+            'er-visit': {
+                name: 'Emergency Room Visit (moderate)',
+                typical_charge: 3500,
+                fair_price: 800,
+                medicare_rate: 650,
+                code: 'CPT 99284'
+            },
+            'ultrasound': {
+                name: 'Ultrasound',
+                typical_charge: 850,
+                fair_price: 180,
+                medicare_rate: 145,
+                code: 'CPT 76700'
+            },
+            'blood-work': {
+                name: 'Comprehensive Metabolic Panel',
+                typical_charge: 450,
+                fair_price: 12,
+                medicare_rate: 10,
+                code: 'CPT 80053'
+            },
+            'physical-therapy': {
+                name: 'Physical Therapy Session',
+                typical_charge: 350,
+                fair_price: 85,
+                medicare_rate: 72,
+                code: 'CPT 97110'
+            }
+        };
+
+        // Mock procedure list for autocomplete (will be replaced by API)
+        const procedureList = [
+            { code: 'mri', name: 'MRI Scan', description: 'Magnetic Resonance Imaging', category: 'Imaging' },
+            { code: 'ct-scan', name: 'CT Scan', description: 'Computed Tomography', category: 'Imaging' },
+            { code: 'ultrasound', name: 'Ultrasound', description: 'Sonography imaging', category: 'Imaging' },
+            { code: 'x-ray', name: 'X-Ray', description: 'Radiographic imaging', category: 'Imaging' },
+            { code: 'hip-replacement', name: 'Hip Replacement', description: 'Total hip arthroplasty', category: 'Surgery' },
+            { code: 'knee-replacement', name: 'Knee Replacement', description: 'Total knee arthroplasty', category: 'Surgery' },
+            { code: 'colonoscopy', name: 'Colonoscopy', description: 'Colon examination', category: 'Procedure' },
+            { code: 'endoscopy', name: 'Endoscopy', description: 'Upper GI examination', category: 'Procedure' },
+            { code: 'blood-work', name: 'Blood Work / Lab Tests', description: 'Laboratory testing', category: 'Lab' },
+            { code: 'er-visit', name: 'Emergency Room Visit', description: 'Emergency department care', category: 'Visit' },
+            { code: 'physical-therapy', name: 'Physical Therapy Session', description: 'Rehabilitation therapy', category: 'Therapy' },
+            { code: 'mammogram', name: 'Mammogram', description: 'Breast imaging', category: 'Imaging' },
+            { code: 'ekg', name: 'EKG / ECG', description: 'Electrocardiogram', category: 'Diagnostic' },
+            { code: 'stress-test', name: 'Cardiac Stress Test', description: 'Heart function test', category: 'Diagnostic' }
+        ];
+
+        // Mock ZIP code list for autocomplete (will be replaced by API)
+        const zipCodeList = [
+            { zip: '78701', city: 'Austin', state: 'TX', county: 'Travis' },
+            { zip: '78702', city: 'Austin', state: 'TX', county: 'Travis' },
+            { zip: '78703', city: 'Austin', state: 'TX', county: 'Travis' },
+            { zip: '78704', city: 'Austin', state: 'TX', county: 'Travis' },
+            { zip: '78705', city: 'Austin', state: 'TX', county: 'Travis' },
+            { zip: '10001', city: 'New York', state: 'NY', county: 'New York' },
+            { zip: '90001', city: 'Los Angeles', state: 'CA', county: 'Los Angeles' },
+            { zip: '60601', city: 'Chicago', state: 'IL', county: 'Cook' },
+            { zip: '33101', city: 'Miami', state: 'FL', county: 'Miami-Dade' },
+            { zip: '77001', city: 'Houston', state: 'TX', county: 'Harris' }
+        ];
+
+        // Autocomplete for procedure input
+        const procedureInput = document.getElementById('procedureInput');
+        const procedureResults = document.getElementById('procedureResults');
+        const procedureCode = document.getElementById('procedureCode');
+        let selectedProcedureIndex = -1;
+
+        procedureInput.addEventListener('input', function() {
+            const query = this.value.toLowerCase().trim();
+
+            if (query.length < 2) {
+                procedureResults.style.display = 'none';
+                return;
+            }
+
+            // Filter procedures (in production, this would be an API call)
+            const matches = procedureList.filter(proc =>
+                proc.name.toLowerCase().includes(query) ||
+                proc.description.toLowerCase().includes(query) ||
+                proc.code.toLowerCase().includes(query)
+            ).slice(0, 8); // Limit to 8 results
+
+            if (matches.length === 0) {
+                procedureResults.style.display = 'none';
+                return;
+            }
+
+            // Render results
+            procedureResults.innerHTML = matches.map((proc, index) => `
+                <div class="autocomplete-item" data-index="${index}" data-code="${proc.code}">
+                    <div class="autocomplete-item-title">${proc.name}</div>
+                    <div class="autocomplete-item-subtitle">
+                        ${proc.description}
+                        <span class="autocomplete-item-code">${proc.code.toUpperCase()}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            procedureResults.style.display = 'block';
+            selectedProcedureIndex = -1;
+
+            // Add click handlers
+            procedureResults.querySelectorAll('.autocomplete-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const code = this.dataset.code;
+                    const selectedProc = procedureList.find(p => p.code === code);
+                    procedureInput.value = selectedProc.name;
+                    procedureCode.value = code;
+                    procedureResults.style.display = 'none';
+                });
+            });
+        });
+
+        // Keyboard navigation for procedure autocomplete
+        procedureInput.addEventListener('keydown', function(e) {
+            const items = procedureResults.querySelectorAll('.autocomplete-item');
+            if (items.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedProcedureIndex = Math.min(selectedProcedureIndex + 1, items.length - 1);
+                updateProcedureSelection(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedProcedureIndex = Math.max(selectedProcedureIndex - 1, 0);
+                updateProcedureSelection(items);
+            } else if (e.key === 'Enter' && selectedProcedureIndex >= 0) {
+                e.preventDefault();
+                items[selectedProcedureIndex].click();
+            } else if (e.key === 'Escape') {
+                procedureResults.style.display = 'none';
+            }
+        });
+
+        function updateProcedureSelection(items) {
+            items.forEach((item, index) => {
+                if (index === selectedProcedureIndex) {
+                    item.classList.add('selected');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        // Autocomplete for ZIP code input
+        const zipInput = document.getElementById('zipCode');
+        const zipResults = document.getElementById('zipResults');
+        let selectedZipIndex = -1;
+
+        zipInput.addEventListener('input', function() {
+            const query = this.value.trim();
+
+            if (query.length < 2) {
+                zipResults.style.display = 'none';
+                return;
+            }
+
+            // Filter ZIP codes (in production, this would be an API call)
+            const matches = zipCodeList.filter(zip =>
+                zip.zip.startsWith(query) ||
+                zip.city.toLowerCase().includes(query.toLowerCase())
+            ).slice(0, 8);
+
+            if (matches.length === 0) {
+                zipResults.style.display = 'none';
+                return;
+            }
+
+            // Render results
+            zipResults.innerHTML = matches.map((zip, index) => `
+                <div class="autocomplete-item" data-index="${index}" data-zip="${zip.zip}">
+                    <div class="autocomplete-item-title">${zip.zip}</div>
+                    <div class="autocomplete-item-subtitle">
+                        ${zip.city}, ${zip.state} • ${zip.county} County
+                    </div>
+                </div>
+            `).join('');
+
+            zipResults.style.display = 'block';
+            selectedZipIndex = -1;
+
+            // Add click handlers
+            zipResults.querySelectorAll('.autocomplete-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    zipInput.value = this.dataset.zip;
+                    zipResults.style.display = 'none';
+                });
+            });
+        });
+
+        // Keyboard navigation for ZIP autocomplete
+        zipInput.addEventListener('keydown', function(e) {
+            const items = zipResults.querySelectorAll('.autocomplete-item');
+            if (items.length === 0) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                selectedZipIndex = Math.min(selectedZipIndex + 1, items.length - 1);
+                updateZipSelection(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                selectedZipIndex = Math.max(selectedZipIndex - 1, 0);
+                updateZipSelection(items);
+            } else if (e.key === 'Enter' && selectedZipIndex >= 0) {
+                e.preventDefault();
+                items[selectedZipIndex].click();
+            } else if (e.key === 'Escape') {
+                zipResults.style.display = 'none';
+            }
+        });
+
+        function updateZipSelection(items) {
+            items.forEach((item, index) => {
+                if (index === selectedZipIndex) {
+                    item.classList.add('selected');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+        }
+
+        // Click outside to close dropdowns
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.form-group')) {
+                procedureResults.style.display = 'none';
+                zipResults.style.display = 'none';
+            }
+        });
+
+        // Upload zone interaction
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('drag-over');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('drag-over');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('drag-over');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileUpload(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+
+        function handleFileUpload(file) {
+            // In production, this would OCR the bill and extract data
+            alert('File upload feature coming soon! For now, please enter your bill details manually below.');
+        }
+
+        // Form submission
+        document.getElementById('billForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const procedure = document.getElementById('procedureCode').value || document.getElementById('procedureInput').value.toLowerCase().replace(/\s+/g, '-');
+            const chargedAmount = parseFloat(document.getElementById('chargedAmount').value);
+            const zipCode = document.getElementById('zipCode').value;
+            const facilityType = document.getElementById('facilityType').value;
+
+            if (!procedure || !chargedAmount) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Get procedure data
+            const data = procedureData[procedure];
+
+            if (!data) {
+                alert('Please select a valid procedure');
+                return;
+            }
+
+            // Calculate results
+            const fairPrice = data.fair_price;
+            const medicareRate = data.medicare_rate;
+            const savings = chargedAmount - fairPrice;
+            const percentageOver = ((chargedAmount - fairPrice) / fairPrice * 100).toFixed(0);
+
+            // Update results
+            document.getElementById('yourPrice').textContent = '$' + chargedAmount.toLocaleString();
+            document.getElementById('fairPrice').textContent = '$' + fairPrice.toLocaleString();
+            document.getElementById('medicarePrice').textContent = '$' + medicareRate.toLocaleString();
+            document.getElementById('savings').textContent = '$' + savings.toLocaleString() + ' potential savings';
+            document.getElementById('verdictAmount').textContent = 'You could save $' + savings.toLocaleString();
+
+            // Determine verdict
+            const verdictBanner = document.getElementById('verdictBanner');
+            const resultsCard = document.getElementById('resultsCard');
+
+            if (savings > fairPrice * 0.3) {
+                // Overpaying significantly
+                verdictBanner.className = 'verdict-banner overpaying';
+                verdictBanner.innerHTML = `
+                    <div class="verdict-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                    <div class="verdict-content">
+                        <h3>You're Overpaying Significantly</h3>
+                        <p>You were charged <strong>${percentageOver}% more</strong> than the fair price for ${data.name} in your area.</p>
+                        <div class="verdict-amount">Potential savings: $${savings.toLocaleString()}</div>
+                    </div>
+                `;
+            } else if (savings > 0) {
+                // Slightly overpaying
+                verdictBanner.className = 'verdict-banner overpaying';
+                verdictBanner.innerHTML = `
+                    <div class="verdict-icon"><i class="fas fa-triangle-exclamation"></i></div>
+                    <div class="verdict-content">
+                        <h3>You're Paying Above Fair Price</h3>
+                        <p>You were charged <strong>${percentageOver}% more</strong> than typical negotiated rates for ${data.name}.</p>
+                        <div class="verdict-amount">Potential savings: $${savings.toLocaleString()}</div>
+                    </div>
+                `;
+            } else {
+                // Fair price
+                verdictBanner.className = 'verdict-banner fair';
+                verdictBanner.innerHTML = `
+                    <div class="verdict-icon"><i class="fas fa-circle-check"></i></div>
+                    <div class="verdict-content">
+                        <h3>This is a Fair Price</h3>
+                        <p>You were charged within the normal range for ${data.name} in your area.</p>
+                        <div class="verdict-amount">You got a good deal!</div>
+                    </div>
+                `;
+            }
+
+            // Show results
+            resultsCard.classList.add('show');
+            resultsCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    </script>
+</body>
+</html>

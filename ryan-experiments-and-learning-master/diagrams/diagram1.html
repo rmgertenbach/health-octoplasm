@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Ecosystem Map - Interactive | Payerset</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="shared/diagram-common.css">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="diagram-nav">
+        <div class="nav-left">
+            <a href="../index.html" class="nav-logo">Payerset</a>
+            <span class="nav-divider">|</span>
+            <span class="diagram-title">Ecosystem Map</span>
+        </div>
+        <div class="nav-right">
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-toggle">
+                    Diagrams
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="nav-dropdown-menu">
+                    <a href="diagram1.html" class="nav-dropdown-item active">
+                        <i class="fas fa-network-wired"></i>
+                        Ecosystem Map
+                    </a>
+                    <a href="diagram2.html" class="nav-dropdown-item">
+                        <i class="fas fa-dollar-sign"></i>
+                        Money Flows
+                    </a>
+                    <a href="diagram3.html" class="nav-dropdown-item">
+                        <i class="fas fa-bolt"></i>
+                        Power Map
+                    </a>
+                    <a href="diagram4.html" class="nav-dropdown-item">
+                        <i class="fas fa-shield-alt"></i>
+                        Conflicts Map
+                    </a>
+                    <a href="diagram5.html" class="nav-dropdown-item">
+                        <i class="fas fa-sync-alt"></i>
+                        Transformation
+                    </a>
+                    <a href="diagram-test.html" class="nav-dropdown-item">
+                        <i class="fas fa-flask"></i>
+                        Data Explorer
+                        <span class="alpha-badge">Alpha</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="diagram-header">
+            <h1>Healthcare Ecosystem Map</h1>
+            <p>Interactive visualization of stakeholders, relationships, and incentive structures</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <div class="control-label">Select View:</div>
+                <div class="layer-buttons">
+                    <button class="layer-btn active" data-layer="0">
+                        Executive View
+                    </button>
+                    <button class="layer-btn" data-layer="1">
+                        Standard View
+                    </button>
+                    <button class="layer-btn" data-layer="2">
+                        Detailed View
+                    </button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">Layout:</div>
+                <div class="save-load-buttons">
+                    <button class="action-btn" id="saveLayout">
+                        <i class="fas fa-save"></i>
+                        Save Layout
+                    </button>
+                    <button class="action-btn secondary" id="resetLayout">
+                        <i class="fas fa-rotate-right"></i>
+                        Reset Layout
+                    </button>
+                    <button class="action-btn secondary" id="exportLayout">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                    <button class="action-btn secondary" id="importLayout">
+                        <i class="fas fa-upload"></i>
+                        Import
+                    </button>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-label">Legend:</div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #90EE90;"></div>
+                    <span>Aligned</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #FFB6C6;"></div>
+                    <span>Misaligned</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #FFFFE0;"></div>
+                    <span>Mixed</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #E6F3FF;"></div>
+                    <span>Neutral</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="cy"></div>
+        <div class="tooltip" id="tooltip"></div>
+
+        <div class="footer">
+            <strong>How to Use:</strong> Click layer buttons to switch views • Hover over nodes for details • Click nodes for more information • Drag to pan • Scroll to zoom
+        </div>
+    </div>
+
+    <script>
+        // Node and edge data for all layers
+        const graphData = {
+            // Layer 0: Executive View
+            0: {
+                nodes: [
+                    {
+                        id: 'employer',
+                        label: 'EMPLOYERS\n(Self-Insured)',
+                        sublabel: '160M Americans\n$350B+ annual spend',
+                        alignment: 'aligned',
+                        description: 'Self-insured employers who pay all medical claims directly from company funds. Take ALL financial risk but often lack expertise to manage effectively.',
+                        details: [
+                            'Cover ~160 million Americans',
+                            'Healthcare is 2nd largest expense after payroll',
+                            'Take all financial risk (unlike insurers)',
+                            'Subject to ERISA fiduciary duty'
+                        ]
+                    },
+                    {
+                        id: 'employees',
+                        label: 'EMPLOYEES\n& FAMILIES',
+                        sublabel: '(Patients)',
+                        alignment: 'aligned',
+                        shape: 'ellipse',
+                        description: 'Workers and families covered by employer health plans. Share costs through premiums, deductibles, and copays.',
+                        details: [
+                            '40% have less than $400 in savings',
+                            'Functionally uninsured if deductible > bank balance',
+                            'Often cannot shop for care due to lack of price transparency',
+                            'May delay care due to cost uncertainty'
+                        ]
+                    },
+                    {
+                        id: 'middlemen',
+                        label: 'MIDDLEMEN',
+                        sublabel: 'Carriers/TPAs/PBMs\n⚠️ Take NO financial risk',
+                        alignment: 'misaligned',
+                        description: 'Administrative intermediaries including carriers/TPAs (process claims) and PBMs (manage pharmacy). Take NO financial risk but extract value.',
+                        details: [
+                            'Process claims and manage networks',
+                            'Take ZERO financial risk (employer takes it all)',
+                            'Extract value through spread pricing (20-40%)',
+                            'Control data and payment flows'
+                        ]
+                    },
+                    {
+                        id: 'providers',
+                        label: 'PROVIDERS',
+                        sublabel: 'Hospitals & Physicians',
+                        alignment: 'mixed',
+                        description: 'Hospitals and physicians who deliver actual healthcare services. Quality and pricing vary widely.',
+                        details: [
+                            'Deliver actual medical care',
+                            'Increasingly consolidated (market power)',
+                            'Price and quality often not correlated',
+                            '1 administrator per 2 physicians (billing complexity)'
+                        ]
+                    },
+                    {
+                        id: 'regulators',
+                        label: 'REGULATORS',
+                        sublabel: 'DOL, CMS',
+                        alignment: 'neutral',
+                        shape: 'ellipse',
+                        description: 'Federal agencies that set rules and enforce transparency requirements.',
+                        details: [
+                            'DOL: Enforces ERISA fiduciary duty',
+                            'CMS: Hospital price transparency rules',
+                            'CAA: Requires machine-readable files',
+                            'Increasing enforcement post-2021'
+                        ]
+                    }
+                ],
+                edges: [
+                    {
+                        source: 'employer',
+                        target: 'middlemen',
+                        label: 'Pays for\neverything',
+                        type: 'visible'
+                    },
+                    {
+                        source: 'employer',
+                        target: 'employees',
+                        label: 'Employs &\ninsures',
+                        type: 'visible'
+                    },
+                    {
+                        source: 'middlemen',
+                        target: 'providers',
+                        label: 'Manages\nnetwork & claims',
+                        type: 'visible'
+                    },
+                    {
+                        source: 'providers',
+                        target: 'employees',
+                        label: 'Delivers\ncare to',
+                        type: 'visible'
+                    },
+                    {
+                        source: 'regulators',
+                        target: 'employer',
+                        label: 'Oversees &\nrequires transparency',
+                        type: 'oversight'
+                    },
+                    {
+                        source: 'regulators',
+                        target: 'middlemen',
+                        label: 'Enforces\nrules on',
+                        type: 'oversight'
+                    }
+                ]
+            },
+            
+            // Layer 1: Standard View
+            1: {
+                nodes: [
+                    // Money Source
+                    {
+                        id: 'employer',
+                        label: 'EMPLOYERS',
+                        sublabel: '(Self-Insured)\nTake ALL risk',
+                        alignment: 'aligned',
+                        group: 'money-source',
+                        description: 'Self-insured employers covering 160M Americans with $350B+ annual spend.',
+                        details: [
+                            'Second-largest expense after payroll',
+                            'Take all financial risk (carriers take none)',
+                            'Often lack healthcare expertise',
+                            'Subject to fiduciary duty (CAA 2021)'
+                        ]
+                    },
+                    {
+                        id: 'employees',
+                        label: 'EMPLOYEES\n& FAMILIES',
+                        sublabel: 'Cost-sharing:\ndeductibles, copays',
+                        alignment: 'aligned',
+                        shape: 'ellipse',
+                        group: 'money-source',
+                        description: 'Workers and families who share costs and receive care.',
+                        details: [
+                            'Pay 20-30% of premiums',
+                            '40% have <$400 in savings',
+                            'High deductibles create functional uninsurance',
+                            'Cannot shop effectively without transparency'
+                        ]
+                    },
+                    
+                    // Middlemen
+                    {
+                        id: 'tpa',
+                        label: 'CARRIERS/TPAs',
+                        sublabel: 'Blue Cross, United, etc.\n⚠️ Spread pricing\n⚠️ Data withholding',
+                        alignment: 'misaligned',
+                        group: 'middlemen',
+                        description: 'Process claims and manage networks. Use spread pricing to extract 20-40% of costs.',
+                        details: [
+                            'Take ZERO financial risk',
+                            'Spread pricing: charge employers more than they pay providers',
+                            'May withhold data for 10+ months',
+                            'Float income from holding money before paying claims'
+                        ]
+                    },
+                    {
+                        id: 'pbm',
+                        label: 'PBMs',
+                        sublabel: 'CVS/Caremark, OptumRx\n⚠️ Massive spread\n⚠️ Rebate retention',
+                        alignment: 'misaligned',
+                        group: 'middlemen',
+                        description: 'Manage pharmacy benefits. Can mark up drugs 100-600% via spread pricing.',
+                        details: [
+                            'Control drug formularies',
+                            'Spread pricing: $20 drug → charge $150 → pay pharmacy $25',
+                            'Keep manufacturer rebates (should go to employer)',
+                            'Often owned by carriers (vertical integration)'
+                        ]
+                    },
+                    {
+                        id: 'bad-consultant',
+                        label: 'CONFLICTED\nCONSULTANTS',
+                        sublabel: 'Get carrier commissions\n⚠️ Misaligned advice',
+                        alignment: 'misaligned',
+                        shape: 'ellipse',
+                        group: 'middlemen',
+                        description: 'Consultants who receive 5-8% commission from carriers they recommend.',
+                        details: [
+                            'Paid commission by carriers (5-8% of premium)',
+                            'Higher premiums = more commission $',
+                            'Won\'t recommend direct contracts (no commission)',
+                            'Conflict of interest with employer'
+                        ]
+                    },
+                    {
+                        id: 'good-consultant',
+                        label: 'UNCONFLICTED\nCONSULTANTS',
+                        sublabel: 'Fee-only payment\n✓ Aligned advice',
+                        alignment: 'aligned',
+                        shape: 'ellipse',
+                        group: 'middlemen',
+                        description: 'Fee-only consultants aligned with employer interests.',
+                        details: [
+                            'Paid flat fee by employer only',
+                            'No commissions from vendors',
+                            'Can recommend any solution',
+                            'Incentive to reduce employer costs'
+                        ]
+                    },
+                    {
+                        id: 'reinsurer',
+                        label: 'REINSURERS',
+                        sublabel: '(Stop-Loss)\nCover catastrophic claims',
+                        alignment: 'mixed',
+                        group: 'middlemen',
+                        description: 'Cover catastrophic claims above attachment point ($50K-$250K).',
+                        details: [
+                            'Only other entity taking financial risk',
+                            'Protects employer from catastrophic claims',
+                            'Cost: ~$500 PMPM for family coverage',
+                            'Can "laser" (exclude) high-cost individuals'
+                        ]
+                    },
+                    
+                    // Care Delivery
+                    {
+                        id: 'hospitals',
+                        label: 'HOSPITALS &\nHEALTH SYSTEMS',
+                        sublabel: 'Inpatient care\n⚠️ Market consolidation\n⚠️ Monopoly pricing',
+                        alignment: 'mixed',
+                        group: 'care-delivery',
+                        description: 'Hospital systems delivering inpatient care. Consolidation creates pricing power.',
+                        details: [
+                            'Increasingly consolidated (market power)',
+                            'Price and quality often not correlated',
+                            'Highest prices often have lowest quality',
+                            'All-or-nothing contracts force expensive facilities into networks'
+                        ]
+                    },
+                    {
+                        id: 'physicians',
+                        label: 'PHYSICIANS\n& CLINICS',
+                        sublabel: 'Outpatient care\n⚠️ 1 admin per 2 doctors',
+                        alignment: 'mixed',
+                        shape: 'ellipse',
+                        group: 'care-delivery',
+                        description: 'Physicians delivering outpatient care. Drowning in billing complexity.',
+                        details: [
+                            'Increasingly hospital-employed',
+                            'Billing complexity requires massive admin staff',
+                            '1 administrator per 2 providers (should be 1 per 10)',
+                            'Independent practices offer better value'
+                        ]
+                    },
+                    {
+                        id: 'pharmacies',
+                        label: 'PHARMACIES',
+                        sublabel: 'Dispense medications\nSqueezed by PBM spread',
+                        alignment: 'mixed',
+                        group: 'care-delivery',
+                        description: 'Retail pharmacies squeezed by PBM spread pricing and DIR fees.',
+                        details: [
+                            'Paid by PBMs (not directly by employers)',
+                            'Subject to spread pricing and DIR fees',
+                            'Independent pharmacies struggling',
+                            'Often paid less than drug costs'
+                        ]
+                    },
+                    
+                    // Oversight
+                    {
+                        id: 'regulators',
+                        label: 'DOL/CMS',
+                        sublabel: 'Federal regulators\nEnforce CAA transparency',
+                        alignment: 'neutral',
+                        shape: 'ellipse',
+                        group: 'oversight',
+                        description: 'Federal agencies enforcing transparency and fiduciary standards.',
+                        details: [
+                            'DOL: ERISA fiduciary enforcement',
+                            'CMS: Hospital price transparency',
+                            'CAA 2021: Machine-readable files required',
+                            'Increasing enforcement activity'
+                        ]
+                    },
+                    {
+                        id: 'quality',
+                        label: 'LEAPFROG &\nQUALITY ORGS',
+                        sublabel: 'Independent safety ratings\nA-F grades',
+                        alignment: 'neutral',
+                        shape: 'ellipse',
+                        group: 'oversight',
+                        description: 'Independent organizations rating hospital safety and quality.',
+                        details: [
+                            'Leapfrog: A-F safety grades',
+                            'Based on errors, infections, practices',
+                            'Publicly reported',
+                            'Should be used by employers but often isn\'t'
+                        ]
+                    }
+                ],
+                edges: [
+                    // Employer relationships
+                    { source: 'employer', target: 'good-consultant', label: 'Hires & pays', type: 'visible' },
+                    { source: 'employer', target: 'bad-consultant', label: 'Hires & pays', type: 'visible' },
+                    { source: 'employer', target: 'tpa', label: 'Pays admin fees\n+ spread pricing', type: 'visible' },
+                    { source: 'employer', target: 'reinsurer', label: 'Pays stop-loss\npremium', type: 'visible' },
+                    { source: 'employer', target: 'employees', label: 'Premium share\n(20-30%)', type: 'hidden' },
+                    
+                    // TPA relationships
+                    { source: 'tpa', target: 'hospitals', label: 'Processes claims\nManages network', type: 'visible' },
+                    { source: 'tpa', target: 'physicians', label: 'Processes claims', type: 'visible' },
+                    { source: 'tpa', target: 'pbm', label: 'Often bundled\nwith or owns', type: 'hidden' },
+                    
+                    // PBM relationships
+                    { source: 'pbm', target: 'pharmacies', label: 'Manages pharmacy\nnetwork & pricing', type: 'visible' },
+                    
+                    // Care delivery
+                    { source: 'hospitals', target: 'employees', label: 'Delivers care', type: 'visible' },
+                    { source: 'physicians', target: 'employees', label: 'Delivers care', type: 'visible' },
+                    { source: 'pharmacies', target: 'employees', label: 'Dispenses meds', type: 'visible' },
+                    
+                    // Oversight
+                    { source: 'regulators', target: 'employer', label: 'Fiduciary duty\nCAA compliance', type: 'oversight' },
+                    { source: 'regulators', target: 'tpa', label: 'Transparency\nrequirements', type: 'oversight' },
+                    { source: 'quality', target: 'hospitals', label: 'Safety grades\nQuality data', type: 'oversight' },
+                    
+                    // Conflicts
+                    { source: 'bad-consultant', target: 'tpa', label: 'Commission\nfrom', type: 'conflict' }
+                ]
+            },
+            
+            // Layer 2: Detailed View
+            2: {
+                nodes: [
+                    // Money Source (expanded)
+                    {
+                        id: 'employer',
+                        label: 'EMPLOYERS',
+                        sublabel: '(Self-Insured)\nTake ALL risk\nOften lack expertise',
+                        alignment: 'aligned',
+                        group: 'money-source'
+                    },
+                    {
+                        id: 'employees',
+                        label: 'EMPLOYEES\n& FAMILIES',
+                        sublabel: '40% have <$400 savings\nFunctionally uninsured',
+                        alignment: 'aligned',
+                        shape: 'ellipse',
+                        group: 'money-source'
+                    },
+                    {
+                        id: 'employer-coalitions',
+                        label: 'EMPLOYER\nCOALITIONS',
+                        sublabel: 'PBGH, others\nCollective power',
+                        alignment: 'aligned',
+                        group: 'money-source'
+                    },
+                    
+                    // Advisors
+                    {
+                        id: 'bad-consultant',
+                        label: 'CONFLICTED\nCONSULTANTS',
+                        sublabel: 'Commission: 5-8%\n⚠️ Higher premiums = more $',
+                        alignment: 'misaligned',
+                        shape: 'ellipse',
+                        group: 'advisors'
+                    },
+                    {
+                        id: 'good-consultant',
+                        label: 'UNCONFLICTED\nCONSULTANTS',
+                        sublabel: 'Fee-only\n✓ Aligned',
+                        alignment: 'aligned',
+                        shape: 'ellipse',
+                        group: 'advisors'
+                    },
+                    
+                    // Claims Administration
+                    {
+                        id: 'carrier-aso',
+                        label: 'CARRIER ASOs',
+                        sublabel: 'Blue Cross, United, Cigna\n⚠️ Spread: 20-40%\n⚠️ Float income',
+                        alignment: 'misaligned',
+                        group: 'claims-admin'
+                    },
+                    {
+                        id: 'independent-tpa',
+                        label: 'INDEPENDENT\nTPAs',
+                        sublabel: 'Claims processing\nVary: transparent to spread',
+                        alignment: 'mixed',
+                        group: 'claims-admin'
+                    },
+                    
+                    // Pharmacy Administration
+                    {
+                        id: 'trad-pbm',
+                        label: 'TRADITIONAL\nPBMs',
+                        sublabel: 'CVS, OptumRx, ESI\n⚠️ Spread: 100-600%\n⚠️ Rebate retention',
+                        alignment: 'misaligned',
+                        group: 'pharmacy-admin'
+                    },
+                    {
+                        id: 'passthru-pbm',
+                        label: 'PASS-THROUGH\nPBMs',
+                        sublabel: 'Flat fee, no spread\n✓ Transparent pricing',
+                        alignment: 'aligned',
+                        group: 'pharmacy-admin'
+                    },
+                    
+                    // Support Functions
+                    {
+                        id: 'reinsurer',
+                        label: 'REINSURERS',
+                        sublabel: 'Stop-Loss\n$50K-$250K+ attachment',
+                        alignment: 'mixed',
+                        group: 'support'
+                    },
+                    {
+                        id: 'util-mgmt',
+                        label: 'UTILIZATION\nMANAGEMENT',
+                        sublabel: 'Prior auth\n⚠️ If paid on denials',
+                        alignment: 'mixed',
+                        shape: 'diamond',
+                        group: 'support'
+                    },
+                    {
+                        id: 'navigation',
+                        label: 'NAVIGATION/\nSTEERING',
+                        sublabel: 'Help find care\nQuality varies',
+                        alignment: 'mixed',
+                        shape: 'ellipse',
+                        group: 'support'
+                    },
+                    
+                    // Hospital Systems
+                    {
+                        id: 'consolidated-sys',
+                        label: 'CONSOLIDATED\nHEALTH SYSTEMS',
+                        sublabel: 'Multi-facility\n⚠️ Market dominance\n⚠️ Price ≠ quality',
+                        alignment: 'mixed',
+                        group: 'hospitals'
+                    },
+                    {
+                        id: 'independent-hosp',
+                        label: 'INDEPENDENT\nHOSPITALS',
+                        sublabel: 'Community hospitals\nBetter value',
+                        alignment: 'aligned',
+                        group: 'hospitals'
+                    },
+                    
+                    // Physician Practices
+                    {
+                        id: 'hosp-employed',
+                        label: 'HOSPITAL-\nEMPLOYED MDs',
+                        sublabel: 'Refer to parent system\n⚠️ Facility fees',
+                        alignment: 'mixed',
+                        shape: 'ellipse',
+                        group: 'physicians'
+                    },
+                    {
+                        id: 'independent-md',
+                        label: 'INDEPENDENT\nPHYSICIANS',
+                        sublabel: 'Lower overhead\n✓ Often higher quality',
+                        alignment: 'aligned',
+                        shape: 'ellipse',
+                        group: 'physicians'
+                    },
+                    {
+                        id: 'dpc',
+                        label: 'DIRECT PRIMARY\nCARE',
+                        sublabel: 'Monthly membership\n✓ No insurance billing',
+                        alignment: 'aligned',
+                        shape: 'ellipse',
+                        group: 'physicians'
+                    },
+                    
+                    // Pharmacy Services
+                    {
+                        id: 'retail-pharm',
+                        label: 'RETAIL\nPHARMACIES',
+                        sublabel: 'CVS, Walgreens, independents\nSqueezed by PBM',
+                        alignment: 'mixed',
+                        group: 'pharmacies'
+                    },
+                    {
+                        id: 'specialty-pharm',
+                        label: 'SPECIALTY\nPHARMACIES',
+                        sublabel: 'High-cost biologics\n⚠️ Often PBM-owned',
+                        alignment: 'mixed',
+                        group: 'pharmacies'
+                    },
+                    {
+                        id: 'cost-plus',
+                        label: 'MARK CUBAN\nCOST PLUS DRUGS',
+                        sublabel: '✓ Transparent pricing\n✓ Cost + 15% + $5',
+                        alignment: 'aligned',
+                        group: 'pharmacies'
+                    },
+                    
+                    // Centers of Excellence
+                    {
+                        id: 'coe',
+                        label: 'CENTERS OF\nEXCELLENCE',
+                        sublabel: 'Quality + fair pricing\n✓ Bundled rates',
+                        alignment: 'aligned',
+                        shape: 'ellipse',
+                        group: 'coe'
+                    },
+                    
+                    // Oversight & Data
+                    {
+                        id: 'regulators',
+                        label: 'FEDERAL\nREGULATORS',
+                        sublabel: 'DOL, CMS, FTC\nCAA enforcement',
+                        alignment: 'neutral',
+                        shape: 'ellipse',
+                        group: 'oversight'
+                    },
+                    {
+                        id: 'quality',
+                        label: 'QUALITY\nORGANIZATIONS',
+                        sublabel: 'Leapfrog, NCQA, NQF\nA-F safety grades',
+                        alignment: 'neutral',
+                        shape: 'ellipse',
+                        group: 'oversight'
+                    },
+                    {
+                        id: 'transparency-data',
+                        label: 'TRANSPARENCY\nDATA PROVIDERS',
+                        sublabel: 'PAYERSET, others\n✓ Cost + quality data',
+                        alignment: 'aligned',
+                        group: 'oversight'
+                    }
+                ],
+                edges: [
+                    // Employer relationships
+                    { source: 'employer', target: 'good-consultant', label: 'Hires, pays fee', type: 'visible' },
+                    { source: 'employer', target: 'bad-consultant', label: 'Hires, pays commission', type: 'visible' },
+                    { source: 'employer', target: 'carrier-aso', label: 'Admin + spread', type: 'visible' },
+                    { source: 'employer', target: 'independent-tpa', label: 'Alternative', type: 'hidden' },
+                    { source: 'employer', target: 'reinsurer', label: 'Stop-loss premium', type: 'visible' },
+                    { source: 'employer', target: 'employees', label: 'Premium share 20-30%', type: 'hidden' },
+                    { source: 'employer', target: 'independent-hosp', label: 'DIRECT CONTRACTS', type: 'power' },
+                    { source: 'employer', target: 'independent-md', label: 'DIRECT CONTRACTS', type: 'power' },
+                    { source: 'employer', target: 'employer-coalitions', label: 'May join', type: 'hidden' },
+                    { source: 'employer', target: 'transparency-data', label: 'Should use', type: 'hidden' },
+                    
+                    // Consultant relationships
+                    { source: 'bad-consultant', target: 'carrier-aso', label: '⚠️ Gets 5-8% commission', type: 'conflict' },
+                    { source: 'bad-consultant', target: 'carrier-aso', label: '⚠️ Recommends (conflict!)', type: 'conflict' },
+                    { source: 'good-consultant', target: 'transparency-data', label: '✓ Uses for analysis', type: 'power' },
+                    
+                    // TPA relationships
+                    { source: 'carrier-aso', target: 'consolidated-sys', label: 'Negotiates, processes', type: 'visible' },
+                    { source: 'carrier-aso', target: 'independent-hosp', label: 'Processes claims', type: 'visible' },
+                    { source: 'carrier-aso', target: 'hosp-employed', label: 'Manages network', type: 'visible' },
+                    { source: 'carrier-aso', target: 'independent-md', label: 'Manages network', type: 'visible' },
+                    { source: 'carrier-aso', target: 'trad-pbm', label: 'Often owns/bundles', type: 'hidden' },
+                    { source: 'carrier-aso', target: 'consolidated-sys', label: '⚠️ May underpay', type: 'conflict' },
+                    { source: 'carrier-aso', target: 'util-mgmt', label: 'Uses for prior auth', type: 'visible' },
+                    { source: 'carrier-aso', target: 'navigation', label: 'May offer', type: 'hidden' },
+                    
+                    { source: 'independent-tpa', target: 'independent-hosp', label: 'More flexible', type: 'visible' },
+                    { source: 'independent-tpa', target: 'passthru-pbm', label: 'May partner', type: 'hidden' },
+                    
+                    // PBM relationships
+                    { source: 'trad-pbm', target: 'retail-pharm', label: '⚠️ Spread + DIR fees', type: 'conflict' },
+                    { source: 'trad-pbm', target: 'specialty-pharm', label: '⚠️ Forces use of', type: 'conflict' },
+                    { source: 'passthru-pbm', target: 'retail-pharm', label: '✓ Transparent pricing', type: 'power' },
+                    { source: 'passthru-pbm', target: 'cost-plus', label: 'May include', type: 'hidden' },
+                    
+                    // Care delivery
+                    { source: 'consolidated-sys', target: 'employees', label: 'Delivers care', type: 'visible' },
+                    { source: 'independent-hosp', target: 'employees', label: 'Delivers care', type: 'visible' },
+                    { source: 'hosp-employed', target: 'employees', label: 'Care + facility fees', type: 'visible' },
+                    { source: 'independent-md', target: 'employees', label: 'Delivers care', type: 'visible' },
+                    { source: 'dpc', target: 'employees', label: '✓ Unlimited access', type: 'power' },
+                    { source: 'coe', target: 'employees', label: '✓ High-quality complex care', type: 'power' },
+                    { source: 'retail-pharm', target: 'employees', label: 'Dispenses meds', type: 'visible' },
+                    { source: 'specialty-pharm', target: 'employees', label: 'Specialty meds', type: 'visible' },
+                    { source: 'cost-plus', target: 'employees', label: '✓ Transparent pricing', type: 'power' },
+                    
+                    // Oversight
+                    { source: 'regulators', target: 'employer', label: 'CAA: Fiduciary duty', type: 'oversight' },
+                    { source: 'regulators', target: 'carrier-aso', label: 'Transparency rules', type: 'oversight' },
+                    { source: 'regulators', target: 'consolidated-sys', label: 'Price transparency', type: 'oversight' },
+                    { source: 'quality', target: 'consolidated-sys', label: 'Safety grades', type: 'oversight' },
+                    { source: 'quality', target: 'independent-hosp', label: 'Safety grades', type: 'oversight' },
+                    { source: 'transparency-data', target: 'employer', label: 'Cost + quality data', type: 'power' },
+                    { source: 'transparency-data', target: 'good-consultant', label: 'Enables tools', type: 'power' },
+                    { source: 'transparency-data', target: 'carrier-aso', label: 'Benchmarks against', type: 'power' },
+                    
+                    // Coalition
+                    { source: 'employer-coalitions', target: 'employer', label: 'Best practices, leverage', type: 'power' },
+                    { source: 'employer-coalitions', target: 'transparency-data', label: 'Works with', type: 'hidden' },
+                    
+                    // Navigation
+                    { source: 'navigation', target: 'independent-hosp', label: 'Steers to high-value', type: 'hidden' },
+                    { source: 'navigation', target: 'coe', label: 'Steers to', type: 'hidden' }
+                ]
+            }
+        };
+
+        // Initialize Cytoscape
+        let cy;
+        let currentLayer = 0;
+
+        // Save layout to localStorage
+        function saveLayout() {
+            const positions = {};
+            cy.nodes().forEach(node => {
+                positions[node.id()] = node.position();
+            });
+
+            const layoutData = {
+                layer: currentLayer,
+                positions: positions,
+                zoom: cy.zoom(),
+                pan: cy.pan()
+            };
+
+            localStorage.setItem(`diagram_layout_${currentLayer}`, JSON.stringify(layoutData));
+
+            // Show feedback
+            const btn = document.getElementById('saveLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+            btn.style.borderColor = 'var(--payerset-green)';
+            btn.style.color = 'var(--payerset-green)';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 2000);
+        }
+
+        // Load saved layout from localStorage or default layout file
+        async function loadSavedLayout(layerNum) {
+            // First, check localStorage (user's saved layout)
+            const savedData = localStorage.getItem(`diagram_layout_${layerNum}`);
+            if (savedData) {
+                try {
+                    const layoutData = JSON.parse(savedData);
+                    console.log('Loaded layout from localStorage');
+                    return layoutData;
+                } catch (e) {
+                    console.error('Error loading saved layout from localStorage:', e);
+                }
+            }
+
+            // If no localStorage data, try to load default layout
+            try {
+                const response = await fetch(`layouts/diagram1-layer${layerNum}.json`);
+                if (response.ok) {
+                    const layoutData = await response.json();
+                    console.log('Loaded default layout from file');
+                    return layoutData;
+                }
+            } catch (e) {
+                console.log('No default layout file found, will use algorithmic layout');
+            }
+
+            return null;
+        }
+
+        async function initCytoscape(layerNum) {
+            const data = graphData[layerNum];
+
+            // Transform data into Cytoscape format
+            const elements = [
+                ...data.nodes.map(n => ({
+                    data: {
+                        id: n.id,
+                        label: n.label,
+                        sublabel: n.sublabel || '',
+                        alignment: n.alignment,
+                        shape: n.shape || 'rectangle',
+                        group: n.group || '',
+                        description: n.description || '',
+                        details: n.details || []
+                    }
+                })),
+                ...data.edges.map(e => ({
+                    data: {
+                        id: `${e.source}-${e.target}`,
+                        source: e.source,
+                        target: e.target,
+                        label: e.label || '',
+                        type: e.type || 'visible'
+                    }
+                }))
+            ];
+
+            // Destroy existing instance if it exists
+            if (cy) {
+                cy.destroy();
+            }
+
+            // Check for saved layout (localStorage or default file)
+            const savedLayout = await loadSavedLayout(layerNum);
+
+            // Create new instance
+            cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: elements,
+                style: [
+                    {
+                        selector: 'node',
+                        style: {
+                            'label': 'data(label)',
+                            'text-valign': 'center',
+                            'text-halign': 'center',
+                            'font-size': '12px',
+                            'font-weight': 'bold',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '120px',
+                            'width': 'label',
+                            'height': 'label',
+                            'padding': '15px',
+                            'border-width': 3,
+                            'border-color': '#333',
+                            'transition-property': 'background-color, border-color, border-width',
+                            'transition-duration': '0.3s'
+                        }
+                    },
+                    {
+                        selector: 'node[alignment="aligned"]',
+                        style: {
+                            'background-color': '#90EE90',
+                            'border-color': '#228B22'
+                        }
+                    },
+                    {
+                        selector: 'node[alignment="misaligned"]',
+                        style: {
+                            'background-color': '#FFB6C6',
+                            'border-color': '#DC143C'
+                        }
+                    },
+                    {
+                        selector: 'node[alignment="mixed"]',
+                        style: {
+                            'background-color': '#FFFFE0',
+                            'border-color': '#DAA520'
+                        }
+                    },
+                    {
+                        selector: 'node[alignment="neutral"]',
+                        style: {
+                            'background-color': '#E6F3FF',
+                            'border-color': '#4A90E2'
+                        }
+                    },
+                    {
+                        selector: 'node[shape="ellipse"]',
+                        style: {
+                            'shape': 'ellipse'
+                        }
+                    },
+                    {
+                        selector: 'node[shape="diamond"]',
+                        style: {
+                            'shape': 'diamond'
+                        }
+                    },
+                    {
+                        selector: 'node:hover',
+                        style: {
+                            'border-width': 5,
+                            'border-color': 'var(--payerset-blue)'
+                        }
+                    },
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 2,
+                            'line-color': '#666',
+                            'target-arrow-color': '#666',
+                            'target-arrow-shape': 'triangle',
+                            'curve-style': 'bezier',
+                            'label': 'data(label)',
+                            'font-size': '10px',
+                            'text-background-color': '#fff',
+                            'text-background-opacity': 0.8,
+                            'text-background-padding': '3px',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '80px'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="visible"]',
+                        style: {
+                            'line-style': 'solid',
+                            'width': 3,
+                            'line-color': '#333'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="hidden"]',
+                        style: {
+                            'line-style': 'dashed',
+                            'line-dash-pattern': [6, 3],
+                            'line-color': '#DC143C',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="oversight"]',
+                        style: {
+                            'line-style': 'dotted',
+                            'line-color': '#4A90E2',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="conflict"]',
+                        style: {
+                            'line-style': 'solid',
+                            'line-color': '#DC143C',
+                            'width': 3,
+                            'target-arrow-color': '#DC143C'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="power"]',
+                        style: {
+                            'line-style': 'solid',
+                            'line-color': '#228B22',
+                            'width': 3,
+                            'target-arrow-color': '#228B22'
+                        }
+                    }
+                ],
+                layout: {
+                    name: savedLayout ? 'preset' : 'cose',
+                    positions: savedLayout ? (node => savedLayout.positions[node.id()]) : undefined,
+                    animate: !savedLayout,
+                    animationDuration: savedLayout ? 0 : 1000,
+                    // Better COSE layout parameters
+                    nodeRepulsion: 10000,
+                    idealEdgeLength: 180,
+                    edgeElasticity: 150,
+                    nestingFactor: 1.2,
+                    gravity: 0.8,
+                    numIter: 1500,
+                    randomize: false,
+                    componentSpacing: 200,
+                    nodeOverlap: 20
+                },
+                wheelSensitivity: 0.2,
+                minZoom: 0.3,
+                maxZoom: 3
+            });
+
+            // Apply saved zoom/pan if available
+            if (savedLayout) {
+                cy.zoom(savedLayout.zoom);
+                cy.pan(savedLayout.pan);
+            }
+
+            // Add interactivity
+            setupInteractivity();
+        }
+
+        // Reset layout to default
+        function resetLayout() {
+            localStorage.removeItem(`diagram_layout_${currentLayer}`);
+            initCytoscape(currentLayer);
+
+            // Show feedback
+            const btn = document.getElementById('resetLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Reset!';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 1500);
+        }
+
+        // Export layout to file
+        function exportLayout() {
+            const positions = {};
+            cy.nodes().forEach(node => {
+                positions[node.id()] = node.position();
+            });
+
+            const layoutData = {
+                diagram: 'diagram1',
+                layer: currentLayer,
+                positions: positions,
+                zoom: cy.zoom(),
+                pan: cy.pan(),
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(layoutData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `diagram1-layer${currentLayer}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            // Show feedback
+            const btn = document.getElementById('exportLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Exported!';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 1500);
+        }
+
+        // Import layout from file
+        function importLayout() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const layoutData = JSON.parse(event.target.result);
+
+                        // Validate it's the right diagram
+                        if (layoutData.diagram !== 'diagram1') {
+                            alert('This layout file is not for Diagram 1');
+                            return;
+                        }
+
+                        // Save to localStorage and reload
+                        localStorage.setItem(`diagram_layout_${layoutData.layer}`, JSON.stringify(layoutData));
+
+                        // If it's for current layer, apply immediately
+                        if (layoutData.layer === currentLayer) {
+                            initCytoscape(currentLayer);
+                        }
+
+                        // Show feedback
+                        const btn = document.getElementById('importLayout');
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="fas fa-check"></i> Imported!';
+
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                        }, 1500);
+
+                    } catch (error) {
+                        alert('Error importing layout file: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function setupInteractivity() {
+            const tooltip = document.getElementById('tooltip');
+
+            // Hover tooltips
+            cy.on('mouseover', 'node', function(evt) {
+                const node = evt.target;
+                const data = node.data();
+                
+                let content = `<h4>${data.label}</h4>`;
+                if (data.description) {
+                    content += `<p style="margin: 8px 0;">${data.description}</p>`;
+                }
+                if (data.details && data.details.length > 0) {
+                    content += '<ul>';
+                    data.details.forEach(detail => {
+                        content += `<li>${detail}</li>`;
+                    });
+                    content += '</ul>';
+                }
+                
+                tooltip.innerHTML = content;
+                tooltip.style.display = 'block';
+            });
+
+            cy.on('mousemove', 'node', function(evt) {
+                tooltip.style.left = evt.originalEvent.pageX + 15 + 'px';
+                tooltip.style.top = evt.originalEvent.pageY + 15 + 'px';
+            });
+
+            cy.on('mouseout', 'node', function() {
+                tooltip.style.display = 'none';
+            });
+
+            // Click events
+            cy.on('tap', 'node', function(evt) {
+                const node = evt.target;
+                const data = node.data();
+                console.log('Clicked node:', data);
+                // Could open modal or navigate to detailed page
+                alert(`Clicked: ${data.label}\n\n${data.description}`);
+            });
+        }
+
+        // Layer switching
+        document.querySelectorAll('.layer-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const layer = parseInt(this.dataset.layer);
+
+                // Update active button
+                document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Reinitialize with new layer
+                currentLayer = layer;
+                initCytoscape(layer);
+            });
+        });
+
+        // Layout control buttons
+        document.getElementById('saveLayout').addEventListener('click', saveLayout);
+        document.getElementById('resetLayout').addEventListener('click', resetLayout);
+        document.getElementById('exportLayout').addEventListener('click', exportLayout);
+        document.getElementById('importLayout').addEventListener('click', importLayout);
+
+        // Dropdown navigation toggle
+        const dropdown = document.querySelector('.nav-dropdown');
+        const dropdownToggle = document.querySelector('.nav-dropdown-toggle');
+
+        dropdownToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+            }
+        });
+
+        // Initialize with Layer 0
+        initCytoscape(0);
+    </script>
+</body>
+</html>

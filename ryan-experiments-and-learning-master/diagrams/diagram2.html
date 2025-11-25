@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Money Flows - Interactive | Payerset</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="shared/diagram-common.css">
+    <style>
+        /* Diagram 2 Specific Styles */
+        .stats-panel {
+            padding: 20px 30px;
+            background: #fff9f0;
+            border-bottom: 2px solid #ffe0b0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-value.bad {
+            color: #DC143C;
+        }
+
+        .stat-value.good {
+            color: #228B22;
+        }
+
+        .stat-value.neutral {
+            color: #333;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .comparison-box {
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(34, 139, 34, 0.1);
+            border-left: 4px solid #228B22;
+            border-radius: 4px;
+        }
+
+        .comparison-box strong {
+            color: #228B22;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="diagram-nav">
+        <div class="nav-left">
+            <a href="../index.html" class="nav-logo">Payerset</a>
+            <span class="nav-divider">|</span>
+            <span class="diagram-title">Money Flows</span>
+        </div>
+        <div class="nav-right">
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-toggle">
+                    Diagrams
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="nav-dropdown-menu">
+                    <a href="diagram1.html" class="nav-dropdown-item">
+                        <i class="fas fa-network-wired"></i>
+                        Ecosystem Map
+                    </a>
+                    <a href="diagram2.html" class="nav-dropdown-item active">
+                        <i class="fas fa-dollar-sign"></i>
+                        Money Flows
+                    </a>
+                    <a href="diagram3.html" class="nav-dropdown-item">
+                        <i class="fas fa-bolt"></i>
+                        Power Map
+                    </a>
+                    <a href="diagram4.html" class="nav-dropdown-item">
+                        <i class="fas fa-shield-alt"></i>
+                        Conflicts Map
+                    </a>
+                    <a href="diagram5.html" class="nav-dropdown-item">
+                        <i class="fas fa-sync-alt"></i>
+                        Transformation
+                    </a>
+                    <a href="diagram-test.html" class="nav-dropdown-item">
+                        <i class="fas fa-flask"></i>
+                        Data Explorer
+                        <span class="alpha-badge">Alpha</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="diagram-header">
+            <h1>Healthcare Money Flows</h1>
+            <p>Follow the money: Where every dollar actually goes (and where it leaks)</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <div class="control-label">Select View:</div>
+                <div class="layer-buttons">
+                    <button class="layer-btn active" data-layer="0">
+                        Simple Flow
+                    </button>
+                    <button class="layer-btn" data-layer="1">
+                        Standard Flow
+                    </button>
+                    <button class="layer-btn" data-layer="2">
+                        Complete Flow
+                    </button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">Layout:</div>
+                <div class="save-load-buttons">
+                    <button class="action-btn" id="saveLayout">
+                        <i class="fas fa-save"></i>
+                        Save Layout
+                    </button>
+                    <button class="action-btn secondary" id="resetLayout">
+                        <i class="fas fa-rotate-right"></i>
+                        Reset Layout
+                    </button>
+                    <button class="action-btn secondary" id="exportLayout">
+                        <i class="fas fa-download"></i>
+                        Export
+                    </button>
+                    <button class="action-btn secondary" id="importLayout">
+                        <i class="fas fa-upload"></i>
+                        Import
+                    </button>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-label">Money Flow:</div>
+                <div class="legend-item">
+                    <div class="legend-line" style="background: #228B22;"></div>
+                    <span>Visible</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-line" style="background: #DC143C; background-image: repeating-linear-gradient(90deg, #DC143C, #DC143C 5px, transparent 5px, transparent 10px);"></div>
+                    <span>Hidden/Leaked</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-line" style="background: #666;"></div>
+                    <span>Return Flow</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-panel" id="stats-panel">
+            <!-- Stats will be dynamically inserted here -->
+        </div>
+
+        <div id="cy"></div>
+        <div class="tooltip" id="tooltip"></div>
+
+        <div class="footer">
+            <strong>Key Insight:</strong> Follow the red dashed lines to see where money leaks out. 
+            The gap between what employers pay and providers receive is ~15-30% in most cases.
+            <div class="comparison-box">
+                <strong>With Full Transparency:</strong> Employers can reduce leakage by 50-70%, 
+                saving $10-20M on a $100M spend while actually paying providers MORE.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Money flow data for all layers
+        const moneyFlowData = {
+            // Layer 0: Simple Flow
+            0: {
+                stats: {
+                    budget: '$100M',
+                    leakage: '$15M',
+                    leakagePercent: '15%',
+                    providersReceive: '$70M',
+                    gap: '$15M'
+                },
+                nodes: [
+                    {
+                        id: 'employer-budget',
+                        label: 'EMPLOYER\nBUDGET',
+                        amount: '$100M',
+                        type: 'money-pool',
+                        alignment: 'source',
+                        description: 'Total healthcare budget from employer. This represents the money available to purchase healthcare for employees.',
+                        details: [
+                            'Second-largest expense after payroll',
+                            'Employer takes all financial risk',
+                            'Should buy $100M worth of care',
+                            'Actually buys only ~$70M of care'
+                        ]
+                    },
+                    {
+                        id: 'middlemen-box',
+                        label: 'MIDDLEMEN\n(TPAs, PBMs)',
+                        amount: 'Process & Extract',
+                        type: 'intermediary',
+                        alignment: 'misaligned',
+                        description: 'Claims processors and pharmacy benefit managers. Take no risk but extract value.',
+                        details: [
+                            'Process claims and manage networks',
+                            'Take ZERO financial risk',
+                            'Keep $15M through various mechanisms',
+                            'Legitimate admin: $5M, Extraction: $10M'
+                        ]
+                    },
+                    {
+                        id: 'leakage-pool',
+                        label: 'MONEY LEAKED',
+                        amount: '$15M',
+                        type: 'money-pool',
+                        alignment: 'bad',
+                        description: 'Money that disappears between what employer pays and what providers receive.',
+                        details: [
+                            'Spread pricing: $8M',
+                            'Hidden fees: $3M',
+                            'Float income: $2M',
+                            'Rebate retention: $2M'
+                        ]
+                    },
+                    {
+                        id: 'providers-receive',
+                        label: 'PROVIDERS\nRECEIVE',
+                        amount: '$70M',
+                        type: 'money-pool',
+                        alignment: 'good',
+                        description: 'What hospitals, doctors, and pharmacies actually receive for delivering care.',
+                        details: [
+                            'Medical services: $50M',
+                            'Pharmacy: $15M',
+                            'Other services: $5M',
+                            'Should receive $85M with fair pricing'
+                        ]
+                    },
+                    {
+                        id: 'admin-legit',
+                        label: 'LEGITIMATE\nADMIN',
+                        amount: '$5M',
+                        type: 'money-pool',
+                        alignment: 'neutral',
+                        description: 'Necessary administrative costs for processing claims and managing benefits.',
+                        details: [
+                            'Claims processing',
+                            'Member services',
+                            'Technology systems',
+                            'Could be reduced to $3M with efficiency'
+                        ]
+                    },
+                    {
+                        id: 'reinsurance',
+                        label: 'STOP-LOSS\nINSURANCE',
+                        amount: '$10M',
+                        type: 'money-pool',
+                        alignment: 'neutral',
+                        description: 'Reinsurance for catastrophic claims. Only other entity taking risk.',
+                        details: [
+                            'Covers claims >$100K per person',
+                            'Protects employer from catastrophic risk',
+                            'Legitimate business expense',
+                            'Could negotiate better rates with data'
+                        ]
+                    }
+                ],
+                edges: [
+                    {
+                        source: 'employer-budget',
+                        target: 'middlemen-box',
+                        label: '$100M\nPays everything',
+                        amount: '$100M',
+                        type: 'visible-large'
+                    },
+                    {
+                        source: 'middlemen-box',
+                        target: 'leakage-pool',
+                        label: '$15M\nLeaked out',
+                        amount: '$15M',
+                        type: 'hidden-leak'
+                    },
+                    {
+                        source: 'middlemen-box',
+                        target: 'admin-legit',
+                        label: '$5M\nLegit admin',
+                        amount: '$5M',
+                        type: 'visible'
+                    },
+                    {
+                        source: 'employer-budget',
+                        target: 'reinsurance',
+                        label: '$10M\nStop-loss',
+                        amount: '$10M',
+                        type: 'visible'
+                    },
+                    {
+                        source: 'middlemen-box',
+                        target: 'providers-receive',
+                        label: '$70M\nTo providers',
+                        amount: '$70M',
+                        type: 'visible-large'
+                    }
+                ]
+            },
+
+            // Layer 1: Standard Flow
+            1: {
+                stats: {
+                    budget: '$100M',
+                    leakage: '$15M',
+                    leakagePercent: '15%',
+                    providersReceive: '$70M',
+                    gap: '$15M'
+                },
+                nodes: [
+                    // Source
+                    {
+                        id: 'employer-budget',
+                        label: 'EMPLOYER\nBUDGET',
+                        amount: '$100M',
+                        type: 'money-pool',
+                        alignment: 'source'
+                    },
+                    
+                    // First Split
+                    {
+                        id: 'to-tpa',
+                        label: 'TO TPA/CARRIER',
+                        amount: '$75M',
+                        type: 'money-pool',
+                        alignment: 'neutral',
+                        description: 'Medical claims budget managed by TPA/Carrier',
+                        details: [
+                            'Medical services: $75M budgeted',
+                            'TPA processes all claims',
+                            'TPA controls payment timing',
+                            'TPA negotiates rates (supposedly on your behalf)'
+                        ]
+                    },
+                    {
+                        id: 'to-pbm',
+                        label: 'TO PBM',
+                        amount: '$15M',
+                        type: 'money-pool',
+                        alignment: 'neutral',
+                        description: 'Pharmacy budget managed by PBM',
+                        details: [
+                            'Prescription drugs: $15M budgeted',
+                            'PBM controls formulary',
+                            'PBM negotiates with pharmacies',
+                            'PBM collects rebates from manufacturers'
+                        ]
+                    },
+                    {
+                        id: 'to-reinsurance',
+                        label: 'STOP-LOSS\nPREMIUM',
+                        amount: '$10M',
+                        type: 'money-pool',
+                        alignment: 'neutral',
+                        description: 'Reinsurance for catastrophic claims'
+                    },
+                    
+                    // TPA Flow
+                    {
+                        id: 'tpa-spread',
+                        label: 'TPA SPREAD\nPRICING',
+                        amount: '$8M',
+                        type: 'money-pool',
+                        alignment: 'bad',
+                        description: 'Hidden markup: TPA charges employer more than they pay providers',
+                        details: [
+                            'Charges employer: $75M',
+                            'Pays providers: $50M',
+                            'Underpayments: $5M',
+                            'Keeps spread: $8M',
+                            'Plus legitimate admin fees separately'
+                        ]
+                    },
+                    {
+                        id: 'tpa-admin',
+                        label: 'TPA ADMIN\nFEES',
+                        amount: '$3M',
+                        type: 'money-pool',
+                        alignment: 'neutral',
+                        description: 'Disclosed administrative fees (PMPM)',
+                        details: [
+                            'Claims processing',
+                            'Member services',
+                            'Network management',
+                            'Often $25-75 PMPM'
+                        ]
+                    },
+                    {
+                        id: 'tpa-float',
+                        label: 'FLOAT\nINCOME',
+                        amount: '$2M',
+                        type: 'money-pool',
+                        alignment: 'bad',
+                        description: 'Investment income from holding employer money 45-90 days',
+                        details: [
+                            'Employer pays claims budget upfront',
+                            'TPA holds money 45-90 days',
+                            'Invests during hold period',
+                            'Keeps investment returns'
+                        ]
+                    },
+                    {
+                        id: 'hospitals-receive',
+                        label: 'HOSPITALS\nRECEIVE',
+                        amount: '$40M',
+                        type: 'money-pool',
+                        alignment: 'good',
+                        description: 'What hospitals actually receive for inpatient care',
+                        details: [
+                            'Should receive based on contracted rates',
+                            'Often paid less (underpayments)',
+                            'Payment delayed 60-90 days',
+                            'With transparency: could get $45M'
+                        ]
+                    },
+                    {
+                        id: 'physicians-receive',
+                        label: 'PHYSICIANS\nRECEIVE',
+                        amount: '$15M',
+                        type: 'money-pool',
+                        alignment: 'good',
+                        description: 'What physicians receive for outpatient care'
+                    },
+                    
+                    // PBM Flow
+                    {
+                        id: 'pbm-spread',
+                        label: 'PBM SPREAD\nPRICING',
+                        amount: '$4M',
+                        type: 'money-pool',
+                        alignment: 'bad',
+                        description: 'Massive pharmacy spread: can be 100-600% markup',
+                        details: [
+                            'Drug costs pharmacy: $6M (NADAC)',
+                            'PBM charges employer: $15M',
+                            'PBM pays pharmacy: $7M',
+                            'PBM keeps spread: $4M',
+                            'Plus rebates retained below'
+                        ]
+                    },
+                    {
+                        id: 'pbm-rebates',
+                        label: 'REBATES\nKEPT',
+                        amount: '$2M',
+                        type: 'money-pool',
+                        alignment: 'bad',
+                        description: 'Manufacturer rebates not passed to employer',
+                        details: [
+                            'Manufacturers pay rebates to PBM',
+                            'Should go to employer',
+                            'Often retained by PBM',
+                            'Creates incentive for high-cost drugs'
+                        ]
+                    },
+                    {
+                        id: 'pharmacies-receive',
+                        label: 'PHARMACIES\nRECEIVE',
+                        amount: '$7M',
+                        type: 'money-pool',
+                        alignment: 'good',
+                        description: 'What pharmacies receive (often barely covers costs)',
+                        details: [
+                            'Actual drug cost: $6M',
+                            'Paid by PBM: $7M initially',
+                            'DIR fees clawed back: -$1M',
+                            'Net received: $6M (barely profitable)',
+                            'Independent pharmacies struggling'
+                        ]
+                    },
+                    
+                    // Summary pools
+                    {
+                        id: 'total-leakage',
+                        label: 'TOTAL\nLEAKAGE',
+                        amount: '$16M',
+                        type: 'money-pool',
+                        alignment: 'bad',
+                        description: 'All money extracted that doesn\'t pay for care',
+                        details: [
+                            'TPA spread: $8M',
+                            'PBM spread: $4M',
+                            'Rebates kept: $2M',
+                            'Float income: $2M',
+                            'Total: $16M wasted'
+                        ]
+                    },
+                    {
+                        id: 'total-received',
+                        label: 'TOTAL TO\nPROVIDERS',
+                        amount: '$62M',
+                        type: 'money-pool',
+                        alignment: 'good',
+                        description: 'Total actually received by care providers',
+                        details: [
+                            'Hospitals: $40M',
+                            'Physicians: $15M',
+                            'Pharmacies: $7M',
+                            'Should be: $80M+ with transparency'
+                        ]
+                    }
+                ],
+                edges: [
+                    // Initial splits
+                    { source: 'employer-budget', target: 'to-tpa', label: '$75M\nMedical', amount: '$75M', type: 'visible-large' },
+                    { source: 'employer-budget', target: 'to-pbm', label: '$15M\nPharmacy', amount: '$15M', type: 'visible' },
+                    { source: 'employer-budget', target: 'to-reinsurance', label: '$10M\nStop-loss', amount: '$10M', type: 'visible' },
+                    
+                    // TPA flows
+                    { source: 'to-tpa', target: 'tpa-spread', label: '$8M\nHidden spread', amount: '$8M', type: 'hidden-leak' },
+                    { source: 'to-tpa', target: 'tpa-admin', label: '$3M\nAdmin fees', amount: '$3M', type: 'visible' },
+                    { source: 'to-tpa', target: 'tpa-float', label: '$2M\nFloat income', amount: '$2M', type: 'hidden-leak' },
+                    { source: 'to-tpa', target: 'hospitals-receive', label: '$40M\nTo hospitals', amount: '$40M', type: 'visible' },
+                    { source: 'to-tpa', target: 'physicians-receive', label: '$15M\nTo physicians', amount: '$15M', type: 'visible' },
+                    
+                    // PBM flows
+                    { source: 'to-pbm', target: 'pbm-spread', label: '$4M\nHidden spread', amount: '$4M', type: 'hidden-leak' },
+                    { source: 'to-pbm', target: 'pbm-rebates', label: '$2M\nRebates kept', amount: '$2M', type: 'hidden-leak' },
+                    { source: 'to-pbm', target: 'pharmacies-receive', label: '$7M\nTo pharmacies', amount: '$7M', type: 'visible' },
+                    
+                    // Aggregation
+                    { source: 'tpa-spread', target: 'total-leakage', label: '', amount: '', type: 'aggregate' },
+                    { source: 'pbm-spread', target: 'total-leakage', label: '', amount: '', type: 'aggregate' },
+                    { source: 'pbm-rebates', target: 'total-leakage', label: '', amount: '', type: 'aggregate' },
+                    { source: 'tpa-float', target: 'total-leakage', label: '', amount: '', type: 'aggregate' },
+                    
+                    { source: 'hospitals-receive', target: 'total-received', label: '', amount: '', type: 'aggregate' },
+                    { source: 'physicians-receive', target: 'total-received', label: '', amount: '', type: 'aggregate' },
+                    { source: 'pharmacies-receive', target: 'total-received', label: '', amount: '', type: 'aggregate' }
+                ]
+            },
+
+            // Layer 2: Complete Flow (with all the gory details)
+            2: {
+                stats: {
+                    budget: '$100M',
+                    leakage: '$18M',
+                    leakagePercent: '18%',
+                    providersReceive: '$65M',
+                    gap: '$17M'
+                },
+                nodes: [
+                    // Source
+                    {
+                        id: 'employer-budget',
+                        label: 'EMPLOYER\nBUDGET',
+                        amount: '$100M',
+                        type: 'money-pool',
+                        alignment: 'source'
+                    },
+                    
+                    // Initial splits
+                    { id: 'to-tpa', label: 'TO TPA/CARRIER', amount: '$70M', type: 'money-pool', alignment: 'neutral' },
+                    { id: 'to-pbm', label: 'TO PBM', amount: '$18M', type: 'money-pool', alignment: 'neutral' },
+                    { id: 'to-reinsurance', label: 'STOP-LOSS', amount: '$10M', type: 'money-pool', alignment: 'neutral' },
+                    { id: 'to-consultant', label: 'CONSULTANT FEE', amount: '$2M', type: 'money-pool', alignment: 'mixed',
+                        description: 'Consultant fees - may be fee-only or commission',
+                        details: [
+                            'Fee-only: transparent, aligned',
+                            'Commission: 5-8% of premium from carrier',
+                            'If commission: consultant wants higher costs',
+                            'This example shows conflicted consultant'
+                        ]
+                    },
+                    
+                    // TPA detailed flows
+                    { id: 'tpa-bills', label: 'TPA BILLS\nEMPLOYER', amount: '$70M', type: 'process', alignment: 'neutral',
+                        description: 'What TPA reports as "claims paid"'
+                    },
+                    { id: 'tpa-spread', label: 'TPA SPREAD', amount: '$7M', type: 'money-pool', alignment: 'bad',
+                        description: 'Difference between what TPA charges and pays'
+                    },
+                    { id: 'tpa-admin', label: 'TPA ADMIN\nFEES', amount: '$3M', type: 'money-pool', alignment: 'neutral' },
+                    { id: 'tpa-float', label: 'FLOAT\nINCOME', amount: '$1.5M', type: 'money-pool', alignment: 'bad' },
+                    { id: 'tpa-subsidiaries', label: 'SUBSIDIARY\nFEES', amount: '$2M', type: 'money-pool', alignment: 'bad',
+                        description: 'Payments to TPA-owned entities that count as "medical costs"',
+                        details: [
+                            'Own PBM: pay ourselves',
+                            'Own medical group: pay ourselves',
+                            'Own specialty pharmacy: pay ourselves',
+                            'Counts toward MLR requirement',
+                            'Hides true profit'
+                        ]
+                    },
+                    { id: 'underpayments', label: 'UNDERPAYMENTS', amount: '$2.5M', type: 'money-pool', alignment: 'bad',
+                        description: 'TPA pays provider less than contracted rate',
+                        details: [
+                            'Contract says provider gets $10K',
+                            'TPA pays $9,500',
+                            'Keeps $500 difference',
+                            'Employer never knows',
+                            'Provider must chase or write off'
+                        ]
+                    },
+                    
+                    { id: 'hospitals-contracted', label: 'HOSPITALS\nCONTRACTED', amount: '$42M', type: 'process', alignment: 'neutral',
+                        description: 'What TPA contracted to pay hospitals'
+                    },
+                    { id: 'hospitals-receive', label: 'HOSPITALS\nRECEIVE', amount: '$39.5M', type: 'money-pool', alignment: 'good',
+                        description: 'What hospitals actually receive after underpayments'
+                    },
+                    
+                    { id: 'physicians-contracted', label: 'PHYSICIANS\nCONTRACTED', amount: '$14M', type: 'process', alignment: 'neutral' },
+                    { id: 'physicians-receive', label: 'PHYSICIANS\nRECEIVE', amount: '$13M', type: 'money-pool', alignment: 'good' },
+                    
+                    { id: 'other-medical', label: 'OTHER MEDICAL\nSERVICES', amount: '$6M', type: 'money-pool', alignment: 'good',
+                        description: 'Labs, imaging, DME, etc.'
+                    },
+                    
+                    // PBM detailed flows
+                    { id: 'pbm-charges', label: 'PBM CHARGES\nEMPLOYER', amount: '$18M', type: 'process', alignment: 'neutral' },
+                    { id: 'pbm-spread', label: 'PBM SPREAD', amount: '$5M', type: 'money-pool', alignment: 'bad',
+                        description: 'Massive markup on drugs (can be 100-600%)',
+                        details: [
+                            'Example: Generic drug',
+                            'NADAC (true cost): $20',
+                            'PBM charges employer: $150',
+                            'PBM pays pharmacy: $25',
+                            'PBM keeps: $125 (625% markup!)'
+                        ]
+                    },
+                    { id: 'pbm-rebates', label: 'REBATES\nKEPT', amount: '$2.5M', type: 'money-pool', alignment: 'bad' },
+                    { id: 'pbm-admin', label: 'PBM ADMIN', amount: '$1M', type: 'money-pool', alignment: 'neutral' },
+                    { id: 'specialty-markup', label: 'SPECIALTY\nPHARMACY\nMARKUP', amount: '$1.5M', type: 'money-pool', alignment: 'bad',
+                        description: 'PBM forces use of owned specialty pharmacy at high markup'
+                    },
+                    
+                    { id: 'retail-pharm-paid', label: 'RETAIL\nPHARMACY\nPAID', amount: '$6M', type: 'process', alignment: 'neutral' },
+                    { id: 'dir-fees', label: 'DIR FEES\nCLAWED BACK', amount: '$1M', type: 'money-pool', alignment: 'bad',
+                        description: 'Retroactive fees charged to pharmacy',
+                        details: [
+                            'PBM pays pharmacy $30 for drug',
+                            'Later: PBM claws back $5 as "DIR fee"',
+                            'Pharmacy nets $25',
+                            'Employer thinks PBM paid $30',
+                            'PBM keeps $5'
+                        ]
+                    },
+                    { id: 'retail-pharm-receive', label: 'RETAIL\nPHARMACY\nRECEIVES', amount: '$5M', type: 'money-pool', alignment: 'good' },
+                    
+                    { id: 'specialty-pharm-paid', label: 'SPECIALTY\nPHARMACY\nPAID', amount: '$4M', type: 'process', alignment: 'neutral' },
+                    { id: 'specialty-pharm-receive', label: 'SPECIALTY\nPHARMACY\nRECEIVES', amount: '$4M', type: 'money-pool', alignment: 'mixed',
+                        description: 'Often PBM-owned, so money stays in family'
+                    },
+                    
+                    // Aggregation nodes
+                    { id: 'total-leakage', label: 'TOTAL\nLEAKAGE', amount: '$23M', type: 'money-pool', alignment: 'bad',
+                        description: 'All extracted value that doesn\'t pay for care',
+                        details: [
+                            'TPA spread: $7M',
+                            'PBM spread: $5M',
+                            'Float: $1.5M',
+                            'Subsidiaries: $2M',
+                            'Underpayments: $2.5M',
+                            'Rebates kept: $2.5M',
+                            'DIR fees: $1M',
+                            'Specialty markup: $1.5M',
+                            'TOTAL: $23M (23% of budget!)'
+                        ]
+                    },
+                    { id: 'total-providers', label: 'TOTAL TO\nPROVIDERS', amount: '$67.5M', type: 'money-pool', alignment: 'good',
+                        description: 'What providers actually receive',
+                        details: [
+                            'Hospitals: $39.5M',
+                            'Physicians: $13M',
+                            'Retail pharmacy: $5M',
+                            'Specialty pharmacy: $4M',
+                            'Other medical: $6M',
+                            'With transparency: could be $85M+'
+                        ]
+                    },
+                    { id: 'legit-admin', label: 'LEGITIMATE\nADMIN', amount: '$9.5M', type: 'money-pool', alignment: 'neutral',
+                        description: 'Necessary administrative costs',
+                        details: [
+                            'TPA admin: $3M',
+                            'PBM admin: $1M',
+                            'Consultant: $2M',
+                            'Stop-loss: $10M (risk premium)',
+                            'Could be optimized to $6M admin'
+                        ]
+                    }
+                ],
+                edges: [
+                    // Initial splits
+                    { source: 'employer-budget', target: 'to-tpa', label: '$70M', amount: '$70M', type: 'visible-large' },
+                    { source: 'employer-budget', target: 'to-pbm', label: '$18M', amount: '$18M', type: 'visible' },
+                    { source: 'employer-budget', target: 'to-reinsurance', label: '$10M', amount: '$10M', type: 'visible' },
+                    { source: 'employer-budget', target: 'to-consultant', label: '$2M', amount: '$2M', type: 'visible' },
+                    
+                    // TPA detailed flow
+                    { source: 'to-tpa', target: 'tpa-bills', label: 'Bills', amount: '$70M', type: 'process-flow' },
+                    { source: 'tpa-bills', target: 'tpa-spread', label: '$7M spread', amount: '$7M', type: 'hidden-leak' },
+                    { source: 'tpa-bills', target: 'tpa-admin', label: '$3M admin', amount: '$3M', type: 'visible' },
+                    { source: 'tpa-bills', target: 'tpa-float', label: '$1.5M float', amount: '$1.5M', type: 'hidden-leak' },
+                    { source: 'tpa-bills', target: 'tpa-subsidiaries', label: '$2M subsidiaries', amount: '$2M', type: 'hidden-leak' },
+                    
+                    { source: 'tpa-bills', target: 'hospitals-contracted', label: '$42M', amount: '$42M', type: 'visible' },
+                    { source: 'hospitals-contracted', target: 'underpayments', label: '$2.5M\nunderpaid', amount: '$2.5M', type: 'hidden-leak' },
+                    { source: 'hospitals-contracted', target: 'hospitals-receive', label: '$39.5M\nactually paid', amount: '$39.5M', type: 'visible' },
+                    
+                    { source: 'tpa-bills', target: 'physicians-contracted', label: '$14M', amount: '$14M', type: 'visible' },
+                    { source: 'physicians-contracted', target: 'underpayments', label: '$1M\nunderpaid', amount: '$1M', type: 'hidden-leak' },
+                    { source: 'physicians-contracted', target: 'physicians-receive', label: '$13M\nactually paid', amount: '$13M', type: 'visible' },
+                    
+                    { source: 'tpa-bills', target: 'other-medical', label: '$6M', amount: '$6M', type: 'visible' },
+                    
+                    // PBM detailed flow
+                    { source: 'to-pbm', target: 'pbm-charges', label: 'Charges', amount: '$18M', type: 'process-flow' },
+                    { source: 'pbm-charges', target: 'pbm-spread', label: '$5M spread', amount: '$5M', type: 'hidden-leak' },
+                    { source: 'pbm-charges', target: 'pbm-rebates', label: '$2.5M rebates', amount: '$2.5M', type: 'hidden-leak' },
+                    { source: 'pbm-charges', target: 'pbm-admin', label: '$1M admin', amount: '$1M', type: 'visible' },
+                    { source: 'pbm-charges', target: 'specialty-markup', label: '$1.5M markup', amount: '$1.5M', type: 'hidden-leak' },
+                    
+                    { source: 'pbm-charges', target: 'retail-pharm-paid', label: '$6M paid', amount: '$6M', type: 'visible' },
+                    { source: 'retail-pharm-paid', target: 'dir-fees', label: '$1M\nDIR clawback', amount: '$1M', type: 'hidden-leak' },
+                    { source: 'retail-pharm-paid', target: 'retail-pharm-receive', label: '$5M net', amount: '$5M', type: 'visible' },
+                    
+                    { source: 'pbm-charges', target: 'specialty-pharm-paid', label: '$4M paid', amount: '$4M', type: 'visible' },
+                    { source: 'specialty-pharm-paid', target: 'specialty-pharm-receive', label: '$4M', amount: '$4M', type: 'visible' },
+                    
+                    // Aggregations to leakage
+                    { source: 'tpa-spread', target: 'total-leakage', label: '', amount: '', type: 'aggregate' },
+                    { source: 'tpa-float', target: 'total-leakage', label: '', amount: '', type: 'aggregate' },
+                    { source: 'tpa-subsidiaries', target: 'total-leakage', label: '', amount: '', type: 'aggregate' },
+                    { source: 'underpayments', target: 'total-leakage', label: '', amount: '', type: 'aggregate' },
+                    { source: 'pbm-spread', target: 'total-leakage', label: '', amount: '', type: 'aggregate' },
+                    { source: 'pbm-rebates', target: 'total-leakage', label: '', amount: '', type: 'aggregate' },
+                    { source: 'dir-fees', target: 'total-leakage', label: '', amount: '', type: 'aggregate' },
+                    { source: 'specialty-markup', target: 'total-leakage', label: '', amount: '', type: 'aggregate' },
+                    
+                    // Aggregations to providers
+                    { source: 'hospitals-receive', target: 'total-providers', label: '', amount: '', type: 'aggregate' },
+                    { source: 'physicians-receive', target: 'total-providers', label: '', amount: '', type: 'aggregate' },
+                    { source: 'retail-pharm-receive', target: 'total-providers', label: '', amount: '', type: 'aggregate' },
+                    { source: 'specialty-pharm-receive', target: 'total-providers', label: '', amount: '', type: 'aggregate' },
+                    { source: 'other-medical', target: 'total-providers', label: '', amount: '', type: 'aggregate' },
+                    
+                    // Legit admin aggregation
+                    { source: 'tpa-admin', target: 'legit-admin', label: '', amount: '', type: 'aggregate' },
+                    { source: 'pbm-admin', target: 'legit-admin', label: '', amount: '', type: 'aggregate' },
+                    { source: 'to-consultant', target: 'legit-admin', label: '', amount: '', type: 'aggregate' },
+                    { source: 'to-reinsurance', target: 'legit-admin', label: '', amount: '', type: 'aggregate' }
+                ]
+            }
+        };
+
+        // Initialize Cytoscape
+        let cy;
+        let currentLayer = 0;
+
+        // Save layout to localStorage
+        function saveLayout() {
+            const positions = {};
+            cy.nodes().forEach(node => {
+                positions[node.id()] = node.position();
+            });
+
+            const layoutData = {
+                layer: currentLayer,
+                positions: positions,
+                zoom: cy.zoom(),
+                pan: cy.pan()
+            };
+
+            localStorage.setItem(`diagram2_layout_${currentLayer}`, JSON.stringify(layoutData));
+
+            // Show feedback
+            const btn = document.getElementById('saveLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+            btn.style.borderColor = 'var(--payerset-green)';
+            btn.style.color = 'var(--payerset-green)';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 2000);
+        }
+
+        // Load saved layout from localStorage or default file
+        async function loadSavedLayout(layerNum) {
+            // First, check localStorage (user's saved layout)
+            const savedData = localStorage.getItem(`diagram2_layout_${layerNum}`);
+            if (savedData) {
+                try {
+                    const layoutData = JSON.parse(savedData);
+                    console.log('Loaded layout from localStorage');
+                    return layoutData;
+                } catch (e) {
+                    console.error('Error loading saved layout from localStorage:', e);
+                }
+            }
+
+            // If no localStorage data, try to load default layout
+            try {
+                const response = await fetch(`layouts/diagram2-layer${layerNum}.json`);
+                if (response.ok) {
+                    const layoutData = await response.json();
+                    console.log('Loaded default layout from file');
+                    return layoutData;
+                }
+            } catch (e) {
+                console.log('No default layout file found, will use algorithmic layout');
+            }
+
+            return null;
+        }
+
+        // Export layout to file
+        function exportLayout() {
+            const positions = {};
+            cy.nodes().forEach(node => {
+                positions[node.id()] = node.position();
+            });
+
+            const layoutData = {
+                diagram: 'diagram2',
+                layer: currentLayer,
+                positions: positions,
+                zoom: cy.zoom(),
+                pan: cy.pan(),
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(layoutData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `diagram2-layer${currentLayer}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            // Show feedback
+            const btn = document.getElementById('exportLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Exported!';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 1500);
+        }
+
+        // Import layout from file
+        function importLayout() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const layoutData = JSON.parse(event.target.result);
+
+                        // Validate it's the right diagram
+                        if (layoutData.diagram !== 'diagram2') {
+                            alert('This layout file is not for Diagram 2');
+                            return;
+                        }
+
+                        // Save to localStorage and reload
+                        localStorage.setItem(`diagram2_layout_${layoutData.layer}`, JSON.stringify(layoutData));
+
+                        // If it's for current layer, apply immediately
+                        if (layoutData.layer === currentLayer) {
+                            initCytoscape(currentLayer);
+                        }
+
+                        // Show feedback
+                        const btn = document.getElementById('importLayout');
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="fas fa-check"></i> Imported!';
+
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                        }, 1500);
+
+                    } catch (error) {
+                        alert('Error importing layout file: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // Reset layout to default
+        function resetLayout() {
+            localStorage.removeItem(`diagram2_layout_${currentLayer}`);
+            initCytoscape(currentLayer);
+
+            // Show feedback
+            const btn = document.getElementById('resetLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Reset!';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 1500);
+        }
+
+        function updateStats(layerNum) {
+            const stats = moneyFlowData[layerNum].stats;
+            const statsPanel = document.getElementById('stats-panel');
+            
+            statsPanel.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value neutral">${stats.budget}</div>
+                    <div class="stat-label">Employer Budget</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value bad">${stats.leakage}</div>
+                    <div class="stat-label">Money Leaked (${stats.leakagePercent})</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value good">${stats.providersReceive}</div>
+                    <div class="stat-label">Providers Receive</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value bad">${stats.gap}</div>
+                    <div class="stat-label">The Gap</div>
+                </div>
+            `;
+        }
+
+        async function initCytoscape(layerNum) {
+            const data = moneyFlowData[layerNum];
+
+            // Update stats
+            updateStats(layerNum);
+
+            // Transform data into Cytoscape format
+            const elements = [
+                ...data.nodes.map(n => ({
+                    data: {
+                        id: n.id,
+                        label: n.label,
+                        amount: n.amount || '',
+                        type: n.type,
+                        alignment: n.alignment,
+                        description: n.description || '',
+                        details: n.details || []
+                    }
+                })),
+                ...data.edges.map(e => ({
+                    data: {
+                        id: `${e.source}-${e.target}-${Math.random()}`,
+                        source: e.source,
+                        target: e.target,
+                        label: e.label || '',
+                        amount: e.amount || '',
+                        type: e.type || 'visible'
+                    }
+                }))
+            ];
+
+            // Destroy existing instance if it exists
+            if (cy) {
+                cy.destroy();
+            }
+
+            // Check for saved layout (localStorage or default file)
+            const savedLayout = await loadSavedLayout(layerNum);
+
+            // Create new instance
+            cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: elements,
+                style: [
+                    {
+                        selector: 'node',
+                        style: {
+                            'label': function(ele) {
+                                return ele.data('label') + '\n' + ele.data('amount');
+                            },
+                            'text-valign': 'center',
+                            'text-halign': 'center',
+                            'font-size': '11px',
+                            'font-weight': 'bold',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '100px',
+                            'width': 'label',
+                            'height': 'label',
+                            'padding': '15px',
+                            'border-width': 3,
+                            'transition-property': 'background-color, border-color, border-width',
+                            'transition-duration': '0.3s'
+                        }
+                    },
+                    // Node types
+                    {
+                        selector: 'node[type="money-pool"]',
+                        style: {
+                            'shape': 'ellipse',
+                            'font-size': '12px',
+                            'border-width': 4
+                        }
+                    },
+                    {
+                        selector: 'node[type="intermediary"]',
+                        style: {
+                            'shape': 'rectangle',
+                            'font-size': '11px'
+                        }
+                    },
+                    {
+                        selector: 'node[type="process"]',
+                        style: {
+                            'shape': 'diamond',
+                            'font-size': '10px',
+                            'background-color': '#f0f0f0',
+                            'border-color': '#999'
+                        }
+                    },
+                    // Alignments
+                    {
+                        selector: 'node[alignment="source"]',
+                        style: {
+                            'background-color': '#4A90E2',
+                            'border-color': '#2E5C8A',
+                            'color': '#fff'
+                        }
+                    },
+                    {
+                        selector: 'node[alignment="good"]',
+                        style: {
+                            'background-color': '#90EE90',
+                            'border-color': '#228B22'
+                        }
+                    },
+                    {
+                        selector: 'node[alignment="bad"]',
+                        style: {
+                            'background-color': '#FFB6C6',
+                            'border-color': '#DC143C'
+                        }
+                    },
+                    {
+                        selector: 'node[alignment="neutral"]',
+                        style: {
+                            'background-color': '#E8E8E8',
+                            'border-color': '#666'
+                        }
+                    },
+                    {
+                        selector: 'node[alignment="mixed"]',
+                        style: {
+                            'background-color': '#FFFFE0',
+                            'border-color': '#DAA520'
+                        }
+                    },
+                    {
+                        selector: 'node[alignment="misaligned"]',
+                        style: {
+                            'background-color': '#FFB6C6',
+                            'border-color': '#DC143C'
+                        }
+                    },
+                    {
+                        selector: 'node:hover',
+                        style: {
+                            'border-width': 6,
+                            'border-color': '#f5576c'
+                        }
+                    },
+                    // Edges
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 2,
+                            'line-color': '#666',
+                            'target-arrow-color': '#666',
+                            'target-arrow-shape': 'triangle',
+                            'curve-style': 'bezier',
+                            'label': 'data(label)',
+                            'font-size': '9px',
+                            'text-background-color': '#fff',
+                            'text-background-opacity': 0.9,
+                            'text-background-padding': '2px',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '70px'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="visible"]',
+                        style: {
+                            'line-style': 'solid',
+                            'width': 2,
+                            'line-color': '#228B22',
+                            'target-arrow-color': '#228B22'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="visible-large"]',
+                        style: {
+                            'line-style': 'solid',
+                            'width': 6,
+                            'line-color': '#228B22',
+                            'target-arrow-color': '#228B22'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="hidden-leak"]',
+                        style: {
+                            'line-style': 'dashed',
+                            'line-dash-pattern': [8, 4],
+                            'line-color': '#DC143C',
+                            'target-arrow-color': '#DC143C',
+                            'width': 4
+                        }
+                    },
+                    {
+                        selector: 'edge[type="aggregate"]',
+                        style: {
+                            'line-style': 'dotted',
+                            'line-color': '#999',
+                            'target-arrow-color': '#999',
+                            'width': 1,
+                            'opacity': 0.5
+                        }
+                    },
+                    {
+                        selector: 'edge[type="process-flow"]',
+                        style: {
+                            'line-style': 'solid',
+                            'line-color': '#666',
+                            'target-arrow-color': '#666',
+                            'width': 2
+                        }
+                    }
+                ],
+                layout: {
+                    name: savedLayout ? 'preset' : 'breadthfirst',
+                    positions: savedLayout ? (node => savedLayout.positions[node.id()]) : undefined,
+                    directed: true,
+                    spacingFactor: 1.5,
+                    animate: !savedLayout,
+                    animationDuration: savedLayout ? 0 : 1000,
+                    avoidOverlap: true,
+                    nodeDimensionsIncludeLabels: true
+                },
+                wheelSensitivity: 0.2,
+                minZoom: 0.3,
+                maxZoom: 3
+            });
+
+            // Apply saved zoom/pan if available
+            if (savedLayout) {
+                cy.zoom(savedLayout.zoom);
+                cy.pan(savedLayout.pan);
+            }
+
+            // Add interactivity
+            setupInteractivity();
+        }
+
+        function setupInteractivity() {
+            const tooltip = document.getElementById('tooltip');
+
+            // Hover tooltips
+            cy.on('mouseover', 'node', function(evt) {
+                const node = evt.target;
+                const data = node.data();
+                
+                let content = `<h4>${data.label}</h4>`;
+                if (data.amount) {
+                    content += `<div class="amount">${data.amount}</div>`;
+                }
+                if (data.description) {
+                    content += `<p style="margin: 8px 0;">${data.description}</p>`;
+                }
+                if (data.details && data.details.length > 0) {
+                    content += '<ul>';
+                    data.details.forEach(detail => {
+                        content += `<li>${detail}</li>`;
+                    });
+                    content += '</ul>';
+                }
+                
+                tooltip.innerHTML = content;
+                tooltip.style.display = 'block';
+            });
+
+            cy.on('mousemove', 'node', function(evt) {
+                tooltip.style.left = evt.originalEvent.pageX + 15 + 'px';
+                tooltip.style.top = evt.originalEvent.pageY + 15 + 'px';
+            });
+
+            cy.on('mouseout', 'node', function() {
+                tooltip.style.display = 'none';
+            });
+
+            // Edge tooltips
+            cy.on('mouseover', 'edge', function(evt) {
+                const edge = evt.target;
+                const data = edge.data();
+                
+                if (data.amount || data.label) {
+                    let content = `<h4>Money Flow</h4>`;
+                    if (data.amount) {
+                        content += `<div class="amount">${data.amount}</div>`;
+                    }
+                    if (data.label) {
+                        content += `<p style="margin: 8px 0;">${data.label}</p>`;
+                    }
+                    
+                    tooltip.innerHTML = content;
+                    tooltip.style.display = 'block';
+                }
+            });
+
+            cy.on('mouseout', 'edge', function() {
+                tooltip.style.display = 'none';
+            });
+
+            // Click events
+            cy.on('tap', 'node', function(evt) {
+                const node = evt.target;
+                const data = node.data();
+                console.log('Clicked node:', data);
+            });
+        }
+
+        // Layer switching
+        document.querySelectorAll('.layer-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const layer = parseInt(this.dataset.layer);
+
+                // Update active button
+                document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                // Reinitialize with new layer
+                currentLayer = layer;
+                initCytoscape(layer);
+            });
+        });
+
+        // Layout control buttons
+        document.getElementById('saveLayout').addEventListener('click', saveLayout);
+        document.getElementById('resetLayout').addEventListener('click', resetLayout);
+        document.getElementById('exportLayout').addEventListener('click', exportLayout);
+        document.getElementById('importLayout').addEventListener('click', importLayout);
+
+        // Dropdown navigation toggle
+        const dropdown = document.querySelector('.nav-dropdown');
+        const dropdownToggle = document.querySelector('.nav-dropdown-toggle');
+
+        dropdownToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dropdown.classList.toggle('open');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+            }
+        });
+
+        // Initialize with Layer 0
+        initCytoscape(0);
+    </script>
+</body>
+</html>

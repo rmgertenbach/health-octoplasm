@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benchmark Dashboard - Employer Healthcare Audit</title>
+  <meta name="description" content="Discover if you're overpaying for healthcare. Free audit tool for employers.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../shared/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="../index.html" class="logo">Healthcare Transparency</a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">For Employers</a>
+        <a href="benchmark.html" class="nav-link active">Benchmark</a>
+        <a href="spread-calculator.html" class="nav-link">Detect Spread</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section style="background: linear-gradient(135deg, var(--color-employer-light) 0%, var(--color-white) 100%); padding: 48px 0;">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 16px;">
+        <span style="background: var(--color-employer-primary); color: white; padding: 8px 16px; border-radius: var(--radius-full); font-weight: var(--font-semibold);">
+          FREE HEALTHCARE AUDIT
+        </span>
+      </div>
+
+      <h1 style="font-size: var(--text-4xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 16px; color: var(--color-employer-primary);">
+        Discover If You're Overpaying
+      </h1>
+      <p style="text-align: center; color: var(--color-gray-700); margin-bottom: 32px; font-size: var(--text-lg); max-width: 700px; margin-left: auto; margin-right: auto;">
+        Most self-insured employers pay 30% more than they should.
+        <br>
+        <strong>Find out in 5 minutes with real transparency data.</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- Demo Dashboard -->
+  <section class="section" id="dashboardSection">
+    <div class="container">
+      <div class="alert alert-info" style="margin-bottom: 32px;">
+        <div>
+          <h3 style="font-size: var(--text-lg); font-weight: var(--font-bold); margin-bottom: 8px;">
+            <i class="fa-solid fa-chart-line" style="margin-right: 4px;"></i> Interactive Demo
+          </h3>
+          <p style="margin: 0;">
+            This is a <strong>live demo</strong> with sample data from a 500-employee company.
+            Click "Run Full Audit" below to see a detailed analysis. In the full version, you'll
+            input your actual rates to get your real overpayment analysis.
+          </p>
+        </div>
+      </div>
+
+      <!-- Company Summary Card -->
+      <div class="card" style="background: linear-gradient(135deg, var(--color-employer-primary), var(--color-employer-secondary)); color: white; margin-bottom: 32px;">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div>
+            <div style="opacity: 0.9; margin-bottom: 4px;">Company</div>
+            <div style="font-size: var(--text-2xl); font-weight: var(--font-bold);" id="companyName">TechCo Austin</div>
+          </div>
+          <div>
+            <div style="opacity: 0.9; margin-bottom: 4px;">Employees</div>
+            <div style="font-size: var(--text-2xl); font-weight: var(--font-bold);" id="employeeCount">500</div>
+          </div>
+          <div>
+            <div style="opacity: 0.9; margin-bottom: 4px;">Annual Spend</div>
+            <div style="font-size: var(--text-2xl); font-weight: var(--font-bold);" id="annualSpend">$8.0M</div>
+          </div>
+          <div>
+            <div style="opacity: 0.9; margin-bottom: 4px;">Plan Type</div>
+            <div style="font-size: var(--text-2xl); font-weight: var(--font-bold);" id="planType">Self-Insured</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overpayment Alert -->
+      <div id="overpaymentAlert" style="display: none;">
+        <!-- Populated by JavaScript -->
+      </div>
+
+      <!-- Top Savings Opportunities -->
+      <div id="savingsOpportunities" style="display: none;">
+        <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 24px;">
+          Top Savings Opportunities
+        </h2>
+        <div id="savingsGrid" class="grid grid-cols-1 gap-6">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Detailed Procedure Analysis -->
+      <div id="procedureAnalysis" style="display: none; margin-top: 48px;">
+        <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 24px;">
+          Detailed Procedure Analysis
+        </h2>
+        <div id="procedureTable">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div style="text-align: center; margin-top: 48px;">
+        <button id="runAuditBtn" class="btn btn-primary btn-xl" style="background-color: var(--color-employer-primary);">
+          Run Full Audit Analysis
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Next Steps -->
+  <section class="section bg-gray-50" id="nextSteps" style="display: none;">
+    <div class="container">
+      <h2 class="section-title">What To Do With This Information</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="card">
+          <div style="font-size: 48px; text-align: center; margin-bottom: 16px; color: var(--color-employer-primary);"><i class="fa-solid fa-clipboard-check"></i></div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 12px;">
+            1. Document Everything
+          </h3>
+          <p style="text-align: center; color: var(--color-gray-700);">
+            Download this audit report. Under CAA, you need to document your due diligence.
+            This report proves you identified overpayments.
+          </p>
+          <button id="downloadReportBtn" class="btn btn-primary" style="width: 100%; margin-top: 16px; background-color: var(--color-employer-primary);">
+            Download Report (PDF)
+          </button>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 48px; text-align: center; margin-bottom: 16px; color: var(--color-employer-primary);"><i class="fa-solid fa-comments"></i></div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 12px;">
+            2. Confront Your TPA
+          </h3>
+          <p style="text-align: center; color: var(--color-gray-700);">
+            Show them this data. Ask why you're paying 200-400% of Medicare. Demand better rates
+            or switch to a TPA that uses transparency data.
+          </p>
+          <a href="#" class="btn btn-outline" style="width: 100%; margin-top: 16px;">
+            TPA Discussion Guide
+          </a>
+        </div>
+
+        <div class="card">
+          <div style="font-size: 48px; text-align: center; margin-bottom: 16px; color: var(--color-employer-primary);"><i class="fa-solid fa-handshake"></i></div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 12px;">
+            3. Explore Direct Contracts
+          </h3>
+          <p style="text-align: center; color: var(--color-gray-700);">
+            Skip the middlemen. Contract directly with high-value providers at Medicare + 140%.
+            Save millions while improving quality.
+          </p>
+          <a href="#" class="btn btn-outline" style="width: 100%; margin-top: 16px;">
+            Direct Contract Guide
+          </a>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 32px; border: 2px solid var(--color-success);">
+        <div style="text-align: center;">
+          <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 16px; color: var(--color-success);">
+            Want Help Implementing These Savings?
+          </h3>
+          <p style="color: var(--color-gray-700); margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto;">
+            Our full platform includes ongoing monitoring, TPA negotiations, direct contract facilitation,
+            and compliance documentation. <strong>Most clients save 10-30x our fee in Year 1.</strong>
+          </p>
+          <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+            <a href="#" class="btn btn-primary btn-lg" style="background-color: var(--color-success);">
+              Schedule Demo
+            </a>
+            <a href="index.html" class="btn btn-outline btn-lg">
+              Learn More
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">How This Audit Works</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8" style="max-width: 900px; margin: 0 auto;">
+        <div class="card">
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); margin-bottom: 12px;">
+            <i class="fa-solid fa-chart-line" style="margin-right: 8px; color: var(--color-employer-primary);"></i> Real Transparency Data
+          </h3>
+          <p style="color: var(--color-gray-700); margin-bottom: 12px;">
+            We use actual negotiated rates from the Transparency in Coverage (TiC) mandate.
+            These are the real prices that commercial payers negotiate with providers.
+          </p>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+            Data sources: Payer MRFs, Hospital Price Transparency, Medicare Fee Schedules
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); margin-bottom: 12px;">
+            <i class="fa-solid fa-scale-balanced" style="margin-right: 8px; color: var(--color-employer-primary);"></i> Medicare Benchmark
+          </h3>
+          <p style="color: var(--color-gray-700); margin-bottom: 12px;">
+            Medicare rates are set by independent experts and represent fair payment.
+            Commercial rates should be Medicare + 40% to 140% (to cover uncompensated care).
+          </p>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+            Anything above 200% is likely overpayment
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); margin-bottom: 12px;">
+            <i class="fa-solid fa-bullseye" style="margin-right: 8px; color: var(--color-employer-primary);"></i> Market Comparison
+          </h3>
+          <p style="color: var(--color-gray-700); margin-bottom: 12px;">
+            We compare your rates to what other employers pay for the same procedure in your market.
+            If you're in the 70th percentile, you're paying more than 70% of peers.
+          </p>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+            Goal: Be in the 30th-50th percentile (paying less than average)
+          </p>
+        </div>
+
+        <div class="card">
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); margin-bottom: 12px;">
+            <i class="fa-solid fa-dollar-sign" style="margin-right: 8px; color: var(--color-employer-primary);"></i> ROI Calculation
+          </h3>
+          <p style="color: var(--color-gray-700); margin-bottom: 12px;">
+            We calculate potential savings if you paid Medicare + 140% (fair rate) instead of
+            your current rates. This is conservative - many employers save even more.
+          </p>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-600); margin: 0;">
+            Typical savings: 15-30% of total healthcare spend
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background-color: var(--color-gray-900); color: var(--color-gray-300); padding: 48px 0;">
+    <div class="container">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Employer Tools
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="benchmark.html" style="color: var(--color-gray-300);">Benchmark Dashboard</a></li>
+            <li style="margin-bottom: 8px;"><a href="spread-calculator.html" style="color: var(--color-gray-300);">Detect Spread Pricing</a></li>
+            <li style="margin-bottom: 8px;"><a href="index.html" style="color: var(--color-gray-300);">Back to Employer Home</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Resources
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">CAA Compliance Guide</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Self-Insurance 101</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">PBGH Case Study</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Other Roles
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="../patients/index.html" style="color: var(--color-gray-300);">For Patients</a></li>
+            <li style="margin-bottom: 8px;"><a href="../providers/index.html" style="color: var(--color-gray-300);">For Providers</a></li>
+            <li style="margin-bottom: 8px;"><a href="../index.html" style="color: var(--color-gray-300);">Back to Home</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--color-gray-700); margin-top: 32px; padding-top: 32px; text-align: center; font-size: var(--text-sm);">
+        <p>&copy; 2025 Healthcare Transparency Platform. Data updated monthly.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../shared/components.js"></script>
+  <script src="../shared/data-mock.js"></script>
+  <script>
+    // Run audit on button click
+    document.getElementById('runAuditBtn').addEventListener('click', runAudit);
+
+    function runAudit() {
+      // Show loading
+      const btn = document.getElementById('runAuditBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing Your Rates...';
+
+      // Simulate analysis delay
+      setTimeout(() => {
+        displayAuditResults();
+        btn.style.display = 'none';
+
+        // Show next steps
+        document.getElementById('nextSteps').style.display = 'block';
+
+        // Scroll to results
+        document.getElementById('overpaymentAlert').scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 2000);
+    }
+
+    function displayAuditResults() {
+      const data = HealthcareData.getEmployerBenchmark();
+
+      // Overpayment Alert
+      const alertDiv = document.getElementById('overpaymentAlert');
+      alertDiv.innerHTML = '';
+      alertDiv.appendChild(HealthcareUI.createOverpaymentAlert({
+        currentSpend: data.summary.totalAnnualSpend,
+        fairSpend: data.summary.fairMarketSpend,
+      }));
+      alertDiv.style.display = 'block';
+      alertDiv.style.animation = 'fadeIn 0.6s ease-out';
+
+      // Savings Opportunities
+      const topOpportunities = [...data.procedures]
+        .sort((a, b) => b.potentialSavings - a.potentialSavings)
+        .slice(0, 3);
+
+      const savingsGrid = document.getElementById('savingsGrid');
+      savingsGrid.innerHTML = '';
+
+      topOpportunities.forEach((proc, index) => {
+        const card = HealthcareUI.createSavingsOpportunityCard({
+          icon: getSavingsIcon(index),
+          title: proc.procedure,
+          description: `Currently paying ${HealthcareUI.formatPercentage((proc.currentRate - proc.fairRate) / proc.fairRate)} above fair rate`,
+          savings: proc.potentialSavings,
+          details: [
+            { label: 'Current rate', value: HealthcareUI.formatCurrency(proc.currentRate) },
+            { label: 'Fair rate (Medicare + 140%)', value: HealthcareUI.formatCurrency(proc.fairRate) },
+            { label: 'Medicare rate', value: HealthcareUI.formatCurrency(proc.medicareRate) },
+            { label: 'Your % of Medicare', value: `${proc.percentOfMedicare}%` },
+            { label: 'Annual volume', value: `${proc.annualVolume} procedures` },
+          ],
+        });
+        card.style.animation = `slideInFromLeft 0.5s ease-out ${index * 0.1}s backwards`;
+        savingsGrid.appendChild(card);
+      });
+
+      document.getElementById('savingsOpportunities').style.display = 'block';
+
+      // Detailed Procedure Table
+      displayProcedureTable(data.procedures);
+      document.getElementById('procedureAnalysis').style.display = 'block';
+    }
+
+    function displayProcedureTable(procedures) {
+      const tableDiv = document.getElementById('procedureTable');
+
+      const table = document.createElement('div');
+      table.style.cssText = 'overflow-x: auto; background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-md);';
+
+      table.innerHTML = `
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background: var(--color-gray-100); border-bottom: 2px solid var(--color-gray-300);">
+              <th style="padding: 16px; text-align: left; font-weight: var(--font-semibold);">Procedure</th>
+              <th style="padding: 16px; text-align: right; font-weight: var(--font-semibold);">Your Rate</th>
+              <th style="padding: 16px; text-align: right; font-weight: var(--font-semibold);">Fair Rate</th>
+              <th style="padding: 16px; text-align: right; font-weight: var(--font-semibold);">% of Medicare</th>
+              <th style="padding: 16px; text-align: right; font-weight: var(--font-semibold);">Overpayment</th>
+              <th style="padding: 16px; text-align: right; font-weight: var(--font-semibold);">Annual Savings</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${procedures.map((proc, index) => `
+              <tr style="border-bottom: 1px solid var(--color-gray-200); ${index % 2 === 0 ? 'background: var(--color-gray-50);' : ''}">
+                <td style="padding: 16px;">
+                  <div style="font-weight: var(--font-medium);">${proc.procedure}</div>
+                  <div style="font-size: var(--text-sm); color: var(--color-gray-600);">Volume: ${proc.annualVolume}/year</div>
+                </td>
+                <td style="padding: 16px; text-align: right; font-weight: var(--font-semibold);">
+                  ${HealthcareUI.formatCurrency(proc.currentRate)}
+                </td>
+                <td style="padding: 16px; text-align: right; color: var(--color-success); font-weight: var(--font-semibold);">
+                  ${HealthcareUI.formatCurrency(proc.fairRate)}
+                </td>
+                <td style="padding: 16px; text-align: right;">
+                  <span class="badge ${proc.percentOfMedicare <= 150 ? 'badge-success' : proc.percentOfMedicare <= 200 ? 'badge-warning' : 'badge-error'}">
+                    ${proc.percentOfMedicare}%
+                  </span>
+                </td>
+                <td style="padding: 16px; text-align: right; color: var(--color-error); font-weight: var(--font-semibold);">
+                  ${HealthcareUI.formatCurrency(proc.overpaymentVsFair)}
+                </td>
+                <td style="padding: 16px; text-align: right; font-size: var(--text-lg); color: var(--color-success); font-weight: var(--font-bold);">
+                  ${HealthcareUI.formatCurrency(proc.potentialSavings)}
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+          <tfoot>
+            <tr style="background: var(--color-employer-light); border-top: 3px solid var(--color-employer-primary); font-weight: var(--font-bold);">
+              <td colspan="5" style="padding: 16px; text-align: right; font-size: var(--text-lg);">
+                TOTAL POTENTIAL SAVINGS:
+              </td>
+              <td style="padding: 16px; text-align: right; font-size: var(--text-2xl); color: var(--color-success);">
+                ${HealthcareUI.formatCurrency(procedures.reduce((sum, p) => sum + p.potentialSavings, 0))}
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      `;
+
+      tableDiv.innerHTML = '';
+      tableDiv.appendChild(table);
+    }
+
+    function getSavingsIcon(index) {
+      const iconClasses = ['fa-camera', 'fa-hospital', 'fa-microscope', 'fa-syringe', 'fa-user-doctor'];
+      const iconClass = iconClasses[index] || 'fa-dollar-sign';
+      return `<i class="fa-solid ${iconClass}" style="color: var(--color-employer-primary);"></i>`;
+    }
+
+    // Download report (placeholder)
+    document.addEventListener('click', (e) => {
+      if (e.target.id === 'downloadReportBtn') {
+        e.preventDefault();
+        HealthcareUI.showModal(
+          'Download Report',
+          `
+            <p style="margin-bottom: 24px;">In the full version, you'll be able to download a comprehensive PDF report including:</p>
+            <ul style="margin-bottom: 24px; padding-left: 24px;">
+              <li>Executive summary</li>
+              <li>Detailed procedure-by-procedure analysis</li>
+              <li>Market comparison charts</li>
+              <li>Recommended actions</li>
+              <li>CAA compliance documentation</li>
+            </ul>
+            <div class="alert alert-info">
+              <strong>For now:</strong> Take screenshots of this page or print to PDF using your browser.
+            </div>
+          `,
+          { size: 'small' }
+        );
+      }
+    });
+  </script>
+</body>
+</html>

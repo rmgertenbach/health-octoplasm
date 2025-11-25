@@ -1,0 +1,22 @@
+# MCP Server Dependencies - Phase 1
+
+# Core Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+
+# Database
+snowflake-connector-python==3.4.0
+duckdb==0.9.2
+
+# Anthropic Claude
+anthropic==0.7.7
+
+# Utilities
+python-dotenv==1.0.0
+httpx==0.25.2
+pydantic-settings==2.1.0
+
+# Optional - for development
+pytest==7.4.3
+black==23.12.0

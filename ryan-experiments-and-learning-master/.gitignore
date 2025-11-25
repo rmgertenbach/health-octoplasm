@@ -1,0 +1,42 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build outputs (if you add a build process later)
+dist/
+build/
+
+# Dependencies (if you add npm later)
+node_modules/
+
+.context/
+
+# Claude Code local settings
+.claude/
+
+# Python artifacts
+*.pyc
+__pycache__/
+*.egg-info/

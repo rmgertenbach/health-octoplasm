@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal | Healthcare Transparency Exploration | Payerset</title>
+    <meta name="description" content="Explore healthcare transparency through personas, campaigns, and educational content. Understanding the problems before solving them.">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="../transparency-hub/shared/css/core.css">
+    <link rel="stylesheet" href="shared/css/personas.css">
+
+    <style>
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: var(--space-xl);
+            margin: var(--space-2xl) 0;
+        }
+
+        .content-card {
+            background: var(--white);
+            padding: var(--space-xl);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-md);
+            transition: all var(--transition-normal);
+            border: 2px solid transparent;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--payerset-blue);
+        }
+
+        .content-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--space-md);
+            border-radius: var(--radius-circle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--white);
+            background: linear-gradient(135deg, var(--payerset-blue), var(--info-blue));
+        }
+
+        .content-card.campaign .content-icon {
+            background: linear-gradient(135deg, var(--success-green), #059669);
+        }
+
+        .content-title {
+            font-size: 1.5rem;
+            font-weight: var(--font-bold);
+            margin-bottom: var(--space-sm);
+            text-align: center;
+            color: var(--gray-900);
+        }
+
+        .content-description {
+            color: var(--gray-600);
+            text-align: center;
+            line-height: 1.6;
+            margin-bottom: var(--space-md);
+            flex: 1;
+        }
+
+        .content-badge {
+            display: inline-block;
+            padding: 0.375rem 0.875rem;
+            background: var(--payerset-blue-soft);
+            color: var(--payerset-blue);
+            border-radius: var(--radius-pill);
+            font-size: 0.875rem;
+            font-weight: var(--font-semibold);
+            text-align: center;
+            margin-top: var(--space-md);
+        }
+
+        .content-card.campaign .content-badge {
+            background: var(--success-green-light);
+            color: var(--success-green);
+        }
+
+        .section-intro {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto var(--space-2xl);
+            color: var(--gray-600);
+            font-size: 1.125rem;
+            line-height: 1.7;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gray-300), transparent);
+            margin: var(--space-3xl) 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="persona-hero" style="color: var(--payerset-blue);">
+        <div class="hero-badge fade-in">
+            <i class="fas fa-book-open"></i>
+            Journal & Exploration
+        </div>
+
+        <div class="hero-icon fade-in delay-100" style="background: linear-gradient(135deg, var(--payerset-blue), var(--info-blue));">
+            <i class="fas fa-compass"></i>
+        </div>
+
+        <h1 class="hero-title fade-in delay-200">
+            Healthcare Transparency<br>
+            <span style="background: linear-gradient(135deg, var(--payerset-blue), var(--info-blue)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">Exploration & Insights</span>
+        </h1>
+
+        <p class="hero-subtitle fade-in delay-300">
+            Understanding the problems, exploring the personas, and mapping the path to transparency—one story at a time.
+        </p>
+    </section>
+
+    <!-- Breadcrumb -->
+    <div class="container">
+        <nav class="breadcrumb">
+            <a href="../index.html">Home</a>
+            <span class="breadcrumb-separator">/</span>
+            <span>Journal</span>
+        </nav>
+    </div>
+
+    <!-- Featured Entry -->
+    <div class="container">
+        <section style="background: linear-gradient(135deg, rgba(0, 146, 202, 0.1), rgba(59, 130, 246, 0.1)); padding: var(--space-2xl); border-radius: var(--radius-xl); margin: var(--space-xl) 0; border: 2px solid rgba(0, 146, 202, 0.2);">
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: var(--space-md);">
+                <i class="fas fa-star" style="color: var(--warning-orange);"></i>
+                <span style="font-weight: var(--font-semibold); color: var(--warning-orange); text-transform: uppercase; font-size: 0.875rem; letter-spacing: 0.05em;">Featured Entry</span>
+            </div>
+            <a href="../2025-11/persona-campaign-launch.html" style="text-decoration: none; color: inherit; display: block;">
+                <h2 style="font-size: 1.75rem; font-weight: var(--font-bold); margin-bottom: var(--space-sm); color: var(--gray-900);">
+                    Building the Foundation: Personas & Campaign Strategy
+                </h2>
+                <p style="color: var(--gray-700); font-size: 1.0625rem; line-height: 1.7; margin-bottom: var(--space-md);">
+                    How we created a systematic approach to healthcare transparency marketing grounded in real pain points and PBGH-validated data. This entry documents the creation of our three persona frameworks (patients, employers, providers) and the complete Stage 1 "Problem Awareness" campaign with 9 production-ready content pieces.
+                </p>
+                <div style="display: flex; align-items: center; gap: var(--space-lg); flex-wrap: wrap; color: var(--gray-600); font-size: 0.9375rem;">
+                    <span><i class="fas fa-calendar"></i> November 24, 2024</span>
+                    <span><i class="fas fa-clock"></i> 8 min read</span>
+                    <span><i class="fas fa-users"></i> 3 personas</span>
+                    <span><i class="fas fa-megaphone"></i> 9 content pieces</span>
+                </div>
+                <div style="margin-top: var(--space-md);">
+                    <span style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--payerset-blue); font-weight: var(--font-semibold);">
+                        Read the full entry
+                        <i class="fas fa-arrow-right"></i>
+                    </span>
+                </div>
+            </a>
+        </section>
+    </div>
+
+    <!-- Persona Exploration Section -->
+    <div class="container">
+        <section>
+            <h2 class="section-heading">
+                <i class="fas fa-users"></i>
+                Persona Explorations
+            </h2>
+            <p class="section-intro">
+                Meet the people at the heart of healthcare transparency. Each persona represents real struggles with a broken system—and the potential for transformation.
+            </p>
+
+            <div class="content-grid">
+                <a href="personas-patients.html" class="content-card">
+                    <div class="content-icon" style="background: linear-gradient(135deg, var(--info-blue), #2563EB);">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h3 class="content-title">Patient Personas</h3>
+                    <p class="content-description">
+                        Meet Sarah, Michael, and Diana—patients struggling with surprise bills, hidden costs, and a system designed to confuse. Their pain points reveal why transparency matters.
+                    </p>
+                    <span class="content-badge">Explore Patient Stories →</span>
+                </a>
+
+                <a href="personas-employers.html" class="content-card">
+                    <div class="content-icon" style="background: linear-gradient(135deg, var(--success-green), #059669);">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 class="content-title">Employer Personas</h3>
+                    <p class="content-description">
+                        Meet Jennifer, Robert, and Lisa—benefits professionals managing millions in healthcare spend while being kept in the dark by conflicted advisors. The 30% overpayment is real.
+                    </p>
+                    <span class="content-badge">Explore Employer Stories →</span>
+                </a>
+
+                <a href="personas-providers.html" class="content-card">
+                    <div class="content-icon" style="background: linear-gradient(135deg, var(--warning-orange), #D97706);">
+                        <i class="fas fa-user-doctor"></i>
+                    </div>
+                    <h3 class="content-title">Provider Personas</h3>
+                    <p class="content-description">
+                        Meet Dr. Patel, James, and Dr. Kim—independent providers delivering exceptional care while fighting an artificially tilted playing field. Quality should win.
+                    </p>
+                    <span class="content-badge">Explore Provider Stories →</span>
+                </a>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Marketing Campaign Section -->
+        <section>
+            <h2 class="section-heading">
+                <i class="fas fa-megaphone"></i>
+                Marketing Campaigns
+            </h2>
+            <p class="section-intro">
+                Evidence-based campaigns that reveal hidden problems and create demand for transparency. Each campaign is grounded in real data, real personas, and real pain points.
+            </p>
+
+            <div class="content-grid">
+                <a href="stage-1-marketing-campaign.md" class="content-card campaign" download>
+                    <div class="content-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3 class="content-title">Stage 1: Problem Awareness Campaign</h3>
+                    <p class="content-description">
+                        <strong>"You're Being Overcharged (And You Didn't Even Know It)"</strong><br><br>
+                        The first campaign focused on opening eyes to hidden realities. 9 content pieces across all personas revealing the 30% overpayment, billing errors, and system manipulation. PBGH-backed, data-driven, impossible to ignore.
+                    </p>
+                    <span class="content-badge">Download Campaign Guide (MD)</span>
+                </a>
+
+                <div class="content-card" style="opacity: 0.6; cursor: not-allowed; border: 2px dashed var(--gray-300);">
+                    <div class="content-icon" style="background: linear-gradient(135deg, var(--gray-400), var(--gray-500));">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="content-title">Stage 2: Understanding & Empowerment</h3>
+                    <p class="content-description">
+                        <strong>Coming Next</strong><br><br>
+                        Once audiences recognize the problem, teach them they have power to fight back. Tools, scripts, guides, and support for taking action. Currently in development.
+                    </p>
+                    <span class="content-badge" style="background: var(--gray-200); color: var(--gray-600);">Coming Soon</span>
+                </div>
+
+                <div class="content-card" style="opacity: 0.6; cursor: not-allowed; border: 2px dashed var(--gray-300);">
+                    <div class="content-icon" style="background: linear-gradient(135deg, var(--gray-400), var(--gray-500));">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="content-title">Stage 3: Readiness for Solution</h3>
+                    <p class="content-description">
+                        <strong>Future</strong><br><br>
+                        Create demand for Payerset products before launch. Beta programs, product teasers, early access. Turn awareness into action. Planned for later.
+                    </p>
+                    <span class="content-badge" style="background: var(--gray-200); color: var(--gray-600);">Planned</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Recent Journal Entries Section -->
+        <section>
+            <h2 class="section-heading">
+                <i class="fas fa-pen-fancy"></i>
+                Recent Journal Entries
+            </h2>
+            <p class="section-intro">
+                Documenting our journey building healthcare transparency tools, one insight at a time.
+            </p>
+
+            <div class="content-grid">
+                <a href="../2025-11/persona-campaign-launch.html" class="content-card">
+                    <div class="content-icon" style="background: linear-gradient(135deg, var(--warning-orange), #D97706);">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3 class="content-title">Building the Foundation</h3>
+                    <p class="content-description">
+                        <strong>November 24, 2024</strong><br><br>
+                        How we created a systematic approach to healthcare transparency marketing grounded in real pain points and PBGH-validated data. Documenting the creation of personas and Stage 1 campaign.
+                    </p>
+                    <span class="content-badge">Read Entry →</span>
+                </a>
+
+                <a href="../2025-11/index.html" class="content-card">
+                    <div class="content-icon" style="background: linear-gradient(135deg, var(--payerset-blue), var(--info-blue));">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3 class="content-title">"Explain it to Mom"</h3>
+                    <p class="content-description">
+                        <strong>November 2025</strong><br><br>
+                        A presentation-style exploration of healthcare transparency through storytelling and visual communication. Making complexity accessible.
+                    </p>
+                    <span class="content-badge">View Presentation →</span>
+                </a>
+
+                <div class="content-card" style="opacity: 0.6; border: 2px dashed var(--gray-300);">
+                    <div class="content-icon" style="background: linear-gradient(135deg, var(--gray-400), var(--gray-500));">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                    <h3 class="content-title">More Coming Soon</h3>
+                    <p class="content-description">
+                        <strong>Future Entries</strong><br><br>
+                        As we build, we'll document. Implementation stories, data insights, user feedback, market learnings, and the evolution of transparency.
+                    </p>
+                    <span class="content-badge" style="background: var(--gray-200); color: var(--gray-600);">Stay Tuned</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"></div>
+
+        <!-- Context & Background Section -->
+        <section>
+            <h2 class="section-heading">
+                <i class="fas fa-book"></i>
+                Context & Background
+            </h2>
+            <p class="section-intro">
+                The research, data, and stories that inform our approach to transparency. Understanding the landscape before building solutions.
+            </p>
+
+            <div class="content-grid">
+                <a href="../timeline.html" class="content-card">
+                    <div class="content-icon">
+                        <i class="fas fa-timeline"></i>
+                    </div>
+                    <h3 class="content-title">Transparency Timeline</h3>
+                    <p class="content-description">
+                        The history of healthcare price transparency from chargemasters to the CAA. How we got here and where we're going.
+                    </p>
+                    <span class="content-badge">View Timeline →</span>
+                </a>
+
+                <a href="../use-cases.html" class="content-card">
+                    <div class="content-icon">
+                        <i class="fas fa-lightbulb"></i>
+                    </div>
+                    <h3 class="content-title">Use Case Catalog</h3>
+                    <p class="content-description">
+                        Comprehensive catalog of transparency use cases by persona. From spread pricing detection to direct contracting.
+                    </p>
+                    <span class="content-badge">Explore Use Cases →</span>
+                </a>
+
+                <a href="../diagrams/diagram1.html" class="content-card">
+                    <div class="content-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3 class="content-title">Healthcare Ecosystem Map</h3>
+                    <p class="content-description">
+                        Visual map of stakeholders, money flows, power dynamics, and conflicts of interest in the healthcare system.
+                    </p>
+                    <span class="content-badge">View Diagrams →</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section style="background: linear-gradient(135deg, var(--payerset-blue-soft), var(--info-blue-light)); padding: var(--space-2xl); border-radius: var(--radius-xl); margin: var(--space-3xl) 0; text-align: center;">
+            <h2 style="font-size: 2rem; margin-bottom: var(--space-md); color: var(--gray-900);">
+                Ready to Explore?
+            </h2>
+            <p style="font-size: 1.125rem; color: var(--gray-700); max-width: 600px; margin: 0 auto var(--space-xl);">
+                Start with the personas to understand the human impact, then dive into the campaign guide to see how we'll create awareness and demand for transparency.
+            </p>
+            <div style="display: flex; gap: var(--space-md); justify-content: center; flex-wrap: wrap;">
+                <a href="personas-patients.html" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: var(--payerset-blue); color: var(--white); border-radius: var(--radius-md); text-decoration: none; font-weight: var(--font-semibold); transition: all var(--transition-fast);">
+                    Start with Patient Personas
+                    <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="stage-1-marketing-campaign.md" download style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background: var(--white); color: var(--payerset-blue); border-radius: var(--radius-md); text-decoration: none; font-weight: var(--font-semibold); transition: all var(--transition-fast); border: 2px solid var(--payerset-blue);">
+                    Download Campaign Guide
+                    <i class="fas fa-download"></i>
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+        <div class="footer-links">
+            <a href="../index.html" class="footer-link">Main Site</a>
+            <a href="personas-patients.html" class="footer-link">Patient Personas</a>
+            <a href="personas-employers.html" class="footer-link">Employer Personas</a>
+            <a href="personas-providers.html" class="footer-link">Provider Personas</a>
+            <a href="../timeline.html" class="footer-link">Transparency Timeline</a>
+            <a href="https://payerset.com" class="footer-link" target="_blank" rel="noopener noreferrer">
+                Visit Payerset
+                <i class="fas fa-external-link-alt" style="font-size: 0.75rem; margin-left: 0.25rem;"></i>
+            </a>
+        </div>
+        <div>
+            &copy; 2024 Payerset. Understanding healthcare transparency together.
+        </div>
+    </footer>
+</body>
+</html>

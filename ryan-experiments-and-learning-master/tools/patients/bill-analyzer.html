@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Analyzer - Step-by-Step Price Check | Payerset</title>
+    <meta name="description" content="Upload your medical bill and follow our guided process to check if you're overpaying.">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="/shared/css/core.css">
+    <link rel="stylesheet" href="/shared/css/components.css">
+
+    <!-- Page-specific styles -->
+    <style>
+        /* Wizard Container */
+        .wizard-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: var(--space-2xl) var(--space-md);
+        }
+
+        /* Wizard Steps */
+        .wizard-step {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .wizard-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-content {
+            background: var(--white);
+            padding: var(--space-2xl);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .step-content h1 {
+            margin-bottom: var(--space-sm);
+            color: var(--gray-900);
+        }
+
+        .subtitle {
+            color: var(--gray-600);
+            font-size: 1.125rem;
+            margin-bottom: var(--space-xl);
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 3px dashed var(--gray-300);
+            border-radius: var(--radius-lg);
+            padding: var(--space-2xl);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            background: var(--gray-50);
+        }
+
+        .upload-zone:hover {
+            border-color: var(--payerset-blue);
+            background: var(--payerset-blue-soft);
+        }
+
+        .upload-zone.drag-over {
+            border-color: var(--payerset-blue);
+            background: var(--payerset-blue-soft);
+            border-style: solid;
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: var(--payerset-blue);
+            margin-bottom: var(--space-md);
+        }
+
+        .upload-zone h3 {
+            margin-bottom: var(--space-xs);
+        }
+
+        .upload-zone p {
+            color: var(--gray-600);
+            margin-bottom: var(--space-xs);
+        }
+
+        .upload-hint {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+
+        /* Extracted Data */
+        .extracted-field {
+            margin-bottom: var(--space-lg);
+        }
+
+        .extracted-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+            color: var(--gray-700);
+        }
+
+        .extracted-field input,
+        .extracted-field select {
+            width: 100%;
+        }
+
+        .field-source {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--success-green);
+            margin-top: 0.25rem;
+        }
+
+        .field-citation {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--payerset-blue);
+            margin-top: 0.25rem;
+            margin-left: var(--space-sm);
+        }
+
+        /* Loading State */
+        .loading-state {
+            text-align: center;
+            padding: var(--space-2xl);
+        }
+
+        .loading-state .spinner {
+            margin: 0 auto var(--space-lg);
+        }
+
+        .loading-state h2 {
+            margin-bottom: var(--space-sm);
+        }
+
+        .loading-state p {
+            color: var(--gray-600);
+            font-size: 1.125rem;
+        }
+
+        /* Results State */
+        .results-state {
+            display: none;
+        }
+
+        .results-state.show {
+            display: block;
+        }
+
+        /* Verdict Card */
+        .verdict-card {
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-xl);
+            text-align: center;
+        }
+
+        .verdict-card.overcharged {
+            background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+            border: 3px solid var(--danger-red);
+        }
+
+        .verdict-card.fair {
+            background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+            border: 3px solid var(--success-green);
+        }
+
+        .verdict-card.excellent {
+            background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+            border: 3px solid var(--info-blue);
+        }
+
+        .verdict-icon {
+            font-size: 3rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .verdict-card.overcharged .verdict-icon {
+            color: var(--danger-red);
+        }
+
+        .verdict-card.fair .verdict-icon {
+            color: var(--success-green);
+        }
+
+        .verdict-card.excellent .verdict-icon {
+            color: var(--info-blue);
+        }
+
+        .verdict-card h2 {
+            margin-bottom: var(--space-sm);
+        }
+
+        .verdict-card p {
+            margin-bottom: var(--space-md);
+            font-size: 1.125rem;
+        }
+
+        .savings-amount {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--gray-900);
+        }
+
+        /* Comparison Table */
+        .comparison-table {
+            width: 100%;
+            margin-bottom: var(--space-xl);
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--gray-200);
+        }
+
+        .comparison-table thead {
+            background: var(--gray-100);
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: var(--space-md);
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table th {
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .price-charged {
+            color: var(--danger-red);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .price-fair {
+            color: var(--success-green);
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        /* Action Cards */
+        .action-cards {
+            display: grid;
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .action-card {
+            background: var(--white);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--gray-200);
+            transition: all var(--transition-normal);
+        }
+
+        .action-card:hover {
+            border-color: var(--payerset-blue);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--payerset-blue-soft);
+            color: var(--payerset-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: var(--space-md);
+        }
+
+        .action-card h3 {
+            margin-bottom: var(--space-sm);
+        }
+
+        .action-card p {
+            color: var(--gray-600);
+            margin-bottom: var(--space-md);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-md);
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: var(--space-xl);
+            border-bottom: 1px solid var(--gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--gray-600);
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color var(--transition-fast);
+        }
+
+        .modal-close:hover {
+            color: var(--gray-900);
+        }
+
+        .modal-body {
+            padding: var(--space-xl);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .wizard-container {
+                padding: var(--space-xl) var(--space-sm);
+            }
+
+            .step-content {
+                padding: var(--space-xl) var(--space-md);
+            }
+
+            .upload-icon {
+                font-size: 3rem;
+            }
+
+            .savings-amount {
+                font-size: 1.5rem;
+            }
+
+            .comparison-table {
+                font-size: 0.875rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: var(--space-sm);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="wizard-container">
+            <!-- Progress Indicator -->
+            <div class="step-indicator" id="stepIndicator">
+                <div class="step-item active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label">Upload Bill</div>
+                </div>
+                <div class="step-item" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label">Review Details</div>
+                </div>
+                <div class="step-item" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label">Get Results</div>
+                </div>
+                <div class="step-item" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label">Your Situation</div>
+                </div>
+                <div class="step-item" data-step="5">
+                    <div class="step-number">5</div>
+                    <div class="step-label">Take Action</div>
+                </div>
+            </div>
+
+            <!-- Step 1: Upload Bill -->
+            <div class="wizard-step active" id="step-1">
+                <div class="step-content">
+                    <h1>Let's Check Your Medical Bill</h1>
+                    <p class="subtitle">Upload a photo or PDF of your bill, and we'll analyze it for you.</p>
+
+                    <!-- Drag-drop upload zone -->
+                    <div class="upload-zone" id="uploadZone">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3>Drag your bill here</h3>
+                        <p>or click to browse</p>
+                        <span class="upload-hint">Supports: PDF, JPG, PNG (max 10MB)</span>
+                        <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png" hidden>
+                    </div>
+
+                    <div class="divider">
+                        <span>OR</span>
+                    </div>
+
+                    <button class="btn btn-secondary btn-block" onclick="wizard.skipToManual()">
+                        <i class="fas fa-keyboard"></i>
+                        Enter Details Manually
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Review OCR Results -->
+            <div class="wizard-step" id="step-2">
+                <div class="step-content">
+                    <h1>Review Your Bill Details</h1>
+                    <p class="subtitle">Please verify the information we extracted from your bill.</p>
+
+                    <div id="extractedData">
+                        <!-- Populated by wizard.js -->
+                    </div>
+
+                    <div class="button-row">
+                        <button class="btn btn-secondary" onclick="wizard.prevStep()">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="btn btn-primary" onclick="wizard.nextStep()">
+                            Looks Good <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Processing & Results -->
+            <div class="wizard-step" id="step-3">
+                <!-- Loading state -->
+                <div class="loading-state" id="loadingState">
+                    <div class="spinner"></div>
+                    <h2>Analyzing Your Bill...</h2>
+                    <p>We're comparing your charges against <strong>18,000+ real negotiated rates</strong></p>
+                </div>
+
+                <!-- Results state -->
+                <div class="results-state" id="resultsState">
+                    <div class="step-content">
+                        <div class="verdict-card" id="verdictCard">
+                            <!-- Populated by wizard.js -->
+                        </div>
+
+                        <h3 style="margin-bottom: var(--space-md);">Price Breakdown</h3>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Amount</th>
+                                    <th>Note</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comparisonBody">
+                                <!-- Populated by wizard.js -->
+                            </tbody>
+                        </table>
+
+                        <button class="btn btn-primary btn-lg btn-block" onclick="wizard.nextStep()">
+                            What Can I Do? <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: Your Situation (Questionnaire) -->
+            <div class="wizard-step" id="step-4">
+                <div class="step-content">
+                    <h1>Tell Us About Your Situation</h1>
+                    <p class="subtitle">Answer a few questions to get personalized negotiation strategies.</p>
+
+                    <form id="situationForm" onsubmit="event.preventDefault();">
+                        <!-- Insurance Status -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-id-card"></i> Do you have health insurance?
+                            </label>
+                            <select id="insuranceStatus" class="form-input">
+                                <option value="">Select...</option>
+                                <option value="insured">Yes, I have insurance</option>
+                                <option value="uninsured">No, I'm uninsured</option>
+                                <option value="underinsured">I have insurance but it didn't cover this</option>
+                            </select>
+                        </div>
+
+                        <!-- Financial Situation -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-wallet"></i> What's your financial situation?
+                            </label>
+                            <select id="financialSituation" class="form-input">
+                                <option value="">Select...</option>
+                                <option value="can_pay_fair">I can pay the fair price ($<span id="fairPriceDisplay">425</span>)</option>
+                                <option value="need_payment_plan">I need a payment plan</option>
+                                <option value="financial_hardship">I'm experiencing financial hardship</option>
+                                <option value="cannot_pay">I cannot afford to pay</option>
+                            </select>
+                        </div>
+
+                        <!-- Previous Actions -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-tasks"></i> Have you already taken any action?
+                            </label>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" id="action_called" value="called">
+                                    <span>Called billing department</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" id="action_itemized" value="itemized">
+                                    <span>Requested itemized bill</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" id="action_disputed" value="disputed">
+                                    <span>Filed a dispute</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="checkbox" id="action_none" value="none">
+                                    <span>This is my first action</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Communication Preference -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-comments"></i> How do you prefer to negotiate?
+                            </label>
+                            <select id="communicationPreference" class="form-input">
+                                <option value="">Select...</option>
+                                <option value="phone">Phone call (fastest)</option>
+                                <option value="letter">Written letter (most formal)</option>
+                                <option value="email">Email (documented trail)</option>
+                                <option value="all">All methods</option>
+                            </select>
+                        </div>
+
+                        <!-- Urgency -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-clock"></i> How urgent is this?
+                            </label>
+                            <select id="urgency" class="form-input">
+                                <option value="">Select...</option>
+                                <option value="not_urgent">Just received the bill</option>
+                                <option value="follow_up">Sent to collections/past due</option>
+                                <option value="urgent">Affecting my credit score</option>
+                                <option value="very_urgent">Facing legal action</option>
+                            </select>
+                        </div>
+
+                        <!-- Provider Relationship -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-hospital"></i> Your relationship with this provider?
+                            </label>
+                            <select id="providerRelationship" class="form-input">
+                                <option value="">Select...</option>
+                                <option value="one_time">One-time service</option>
+                                <option value="occasional">Occasional patient</option>
+                                <option value="regular">Regular patient (ongoing care)</option>
+                            </select>
+                        </div>
+
+                        <!-- Additional Notes -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-comment"></i> Anything else we should know? (Optional)
+                            </label>
+                            <textarea id="additionalNotes" class="form-input" rows="3"
+                                      placeholder="E.g., billing errors, quality of care issues, previous disputes..."></textarea>
+                        </div>
+                    </form>
+
+                    <div class="button-row">
+                        <button class="btn btn-secondary" onclick="wizard.prevStep()">
+                            <i class="fas fa-arrow-left"></i> Back
+                        </button>
+                        <button class="btn btn-primary" onclick="wizard.nextStep()">
+                            Get My Action Plan <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Action Plan -->
+            <div class="wizard-step" id="step-5">
+                <div class="step-content">
+                    <h1>Here's Your Action Plan</h1>
+                    <p class="subtitle">Follow these steps to reduce your medical bill.</p>
+
+                    <div class="action-cards">
+                        <div class="action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <h3>1. Call Billing Department</h3>
+                            <p>Use our AI-powered script to negotiate your bill down to the fair price.</p>
+                            <button class="btn btn-primary" onclick="wizard.downloadNegotiationScript()">
+                                <i class="fas fa-file-alt"></i> Download Script
+                            </button>
+                            <div style="margin-top: 1rem; text-align: center;">
+                                <a href="#" onclick="event.preventDefault(); wizard.openAPIKeyModal();"
+                                   style="font-size: 0.875rem; color: var(--payerset-blue); text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;">
+                                    <i class="fas fa-key"></i>
+                                    <span id="apiKeyStatus">Add OpenAI Key for Enhanced Scripts</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                            <h3>2. Request Itemized Bill</h3>
+                            <p>Get a detailed breakdown to dispute specific charges.</p>
+                            <button class="btn btn-secondary">
+                                <i class="fas fa-file-alt"></i> Sample Letter
+                            </button>
+                        </div>
+
+                        <div class="action-card">
+                            <div class="action-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h3>3. Rate This Provider</h3>
+                            <p>Help others avoid overcharges by sharing your experience.</p>
+                            <button class="btn btn-secondary" onclick="window.location.href='/2025-11/provider-reviews.html'">
+                                <i class="fas fa-star"></i> Leave Review
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="button-row">
+                        <button class="btn btn-secondary" onclick="wizard.reset()">
+                            <i class="fas fa-redo"></i> Check Another Bill
+                        </button>
+                        <button class="btn btn-primary" onclick="wizard.downloadReport()">
+                            <i class="fas fa-download"></i> Download Full Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- API Key Settings Modal -->
+        <div class="modal-overlay" id="apiKeyModal" style="display: none;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>OpenAI API Key Settings</h2>
+                    <button class="modal-close" onclick="wizard.closeAPIKeyModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p style="color: var(--gray-600); margin-bottom: 1rem;">
+                        Add your OpenAI API key to generate AI-enhanced negotiation scripts. Your key is stored locally in your browser and never sent to our servers.
+                    </p>
+
+                    <div class="alert alert-info" style="margin-bottom: 1.5rem;">
+                        <i class="fas fa-info-circle"></i>
+                        <div>
+                            <strong>How to get an API key:</strong>
+                            <ol style="margin: 0.5rem 0 0 1.5rem;">
+                                <li>Visit <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">platform.openai.com/api-keys</a></li>
+                                <li>Sign in or create an account</li>
+                                <li>Click "Create new secret key"</li>
+                                <li>Copy the key (starts with "sk-")</li>
+                                <li>Paste it below</li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="apiKeyInput">
+                            OpenAI API Key
+                            <span style="color: var(--danger-red);">*</span>
+                        </label>
+                        <input type="password" id="apiKeyInput" class="form-input"
+                               placeholder="sk-..."
+                               autocomplete="off">
+                        <span class="form-hint">
+                            <i class="fas fa-lock"></i>
+                            Your key is encrypted and stored only in your browser
+                        </span>
+                    </div>
+
+                    <div class="button-row" style="margin-top: 1.5rem;">
+                        <button class="btn btn-secondary" onclick="wizard.closeAPIKeyModal()">
+                            Cancel
+                        </button>
+                        <button class="btn btn-primary" onclick="wizard.saveAPIKey()">
+                            <i class="fas fa-save"></i> Save Key
+                        </button>
+                    </div>
+
+                    <div style="margin-top: 1rem; text-align: center;">
+                        <a href="#" onclick="event.preventDefault(); wizard.removeAPIKey();"
+                           style="font-size: 0.875rem; color: var(--danger-red); text-decoration: none;">
+                            <i class="fas fa-trash"></i> Remove Saved Key
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+
+    <!-- Component Loader -->
+    <script src="/shared/js/component-loader.js"></script>
+
+    <!-- Wizard JavaScript will be loaded next -->
+    <script src="/shared/js/wizard.js"></script>
+</body>
+</html>

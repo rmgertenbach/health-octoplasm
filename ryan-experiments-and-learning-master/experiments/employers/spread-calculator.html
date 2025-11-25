@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spread Pricing Detector - Find Hidden Fees</title>
+  <meta name="description" content="Detect spread pricing in your healthcare claims. Find hidden fees between what you pay and what providers receive.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../shared/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="../index.html" class="logo">Healthcare Transparency</a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">For Employers</a>
+        <a href="benchmark.html" class="nav-link">Benchmark</a>
+        <a href="spread-calculator.html" class="nav-link active">Detect Spread</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section style="background: linear-gradient(135deg, var(--color-employer-light) 0%, var(--color-white) 100%); padding: 48px 0;">
+    <div class="container">
+      <div style="text-align: center; margin-bottom: 16px;">
+        <span style="background: var(--color-error); color: white; padding: 8px 16px; border-radius: var(--radius-full); font-weight: var(--font-semibold);">
+          <i class="fa-solid fa-triangle-exclamation" style="margin-right: 4px;"></i> HIDDEN FEES DETECTOR
+        </span>
+      </div>
+
+      <h1 style="font-size: var(--text-4xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 16px; color: var(--color-employer-primary);">
+        Spread Pricing Detector
+      </h1>
+      <p style="text-align: center; color: var(--color-gray-700); margin-bottom: 32px; font-size: var(--text-lg); max-width: 700px; margin-left: auto; margin-right: auto;">
+        TPAs and PBMs pocket the difference between what you pay and what providers receive.
+        <br>
+        <strong>You don't even know it's happening.</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- What Is Spread Pricing -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">What Is Spread Pricing?</h2>
+
+      <div style="max-width: 900px; margin: 0 auto;">
+        <!-- Visual Diagram -->
+        <div class="card" style="background: var(--color-gray-50); padding: 48px; margin-bottom: 32px;">
+          <div style="display: flex; flex-direction: column; gap: 24px;">
+            <!-- You Pay -->
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+              <div style="flex: 1; min-width: 200px; text-align: center;">
+                <div style="font-size: var(--text-sm); color: var(--color-gray-600); margin-bottom: 8px;">YOU (Employer)</div>
+                <div style="background: var(--color-error); color: white; padding: 24px; border-radius: var(--radius-xl); font-size: var(--text-3xl); font-weight: var(--font-bold);">
+                  $13,000
+                </div>
+                <div style="font-size: var(--text-sm); color: var(--color-gray-600); margin-top: 8px;">What you pay TPA</div>
+              </div>
+
+              <div style="font-size: var(--text-4xl); color: var(--color-gray-400);">→</div>
+
+              <div style="flex: 1; min-width: 200px; text-align: center;">
+                <div style="font-size: var(--text-sm); color: var(--color-gray-600); margin-bottom: 8px;">TPA / MIDDLEMAN</div>
+                <div style="background: var(--color-warning); color: white; padding: 24px; border-radius: var(--radius-xl);">
+                  <div style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 8px;">$3,000</div>
+                  <div style="font-size: var(--text-base); opacity: 0.9;">SPREAD KEPT</div>
+                </div>
+                <div style="font-size: var(--text-sm); color: var(--color-gray-600); margin-top: 8px;">Hidden "profit"</div>
+              </div>
+
+              <div style="font-size: var(--text-4xl); color: var(--color-gray-400);">→</div>
+
+              <div style="flex: 1; min-width: 200px; text-align: center;">
+                <div style="font-size: var(--text-sm); color: var(--color-gray-600); margin-bottom: 8px;">PROVIDER</div>
+                <div style="background: var(--color-success); color: white; padding: 24px; border-radius: var(--radius-xl); font-size: var(--text-3xl); font-weight: var(--font-bold);">
+                  $10,000
+                </div>
+                <div style="font-size: var(--text-sm); color: var(--color-gray-600); margin-top: 8px;">What provider receives</div>
+              </div>
+            </div>
+
+            <div class="alert alert-error" style="margin: 0;">
+              <div>
+                <strong>The Problem:</strong> You think you paid the negotiated rate. But the TPA kept 23% ($3,000) as "spread"
+                and only paid the provider $10,000. This happens on thousands of claims per year.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- How It Works -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="card">
+            <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); margin-bottom: 12px; color: var(--color-employer-primary);">
+              How TPAs Hide It
+            </h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <i class="fa-solid fa-circle-xmark" style="color: var(--color-error); margin-right: 8px;"></i> Show you the higher "contracted rate"
+              </li>
+              <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <i class="fa-solid fa-circle-xmark" style="color: var(--color-error); margin-right: 8px;"></i> Don't disclose what they actually paid
+              </li>
+              <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <i class="fa-solid fa-circle-xmark" style="color: var(--color-error); margin-right: 8px;"></i> Pocket the difference as "profit"
+              </li>
+              <li style="padding: 8px 0;">
+                <i class="fa-solid fa-circle-xmark" style="color: var(--color-error); margin-right: 8px;"></i> No transparency in your contract
+              </li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); margin-bottom: 12px; color: var(--color-success);">
+              How To Stop It
+            </h3>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <i class="fa-solid fa-circle-check" style="color: var(--color-success); margin-right: 8px;"></i> Demand "pass-through" pricing
+              </li>
+              <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <i class="fa-solid fa-circle-check" style="color: var(--color-success); margin-right: 8px;"></i> Get remittance data from providers
+              </li>
+              <li style="padding: 8px 0; border-bottom: 1px solid var(--color-gray-200);">
+                <i class="fa-solid fa-circle-check" style="color: var(--color-success); margin-right: 8px;"></i> Audit claims regularly
+              </li>
+              <li style="padding: 8px 0;">
+                <i class="fa-solid fa-circle-check" style="color: var(--color-success); margin-right: 8px;"></i> Use transparency data to verify
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Demo Analysis -->
+  <section class="section bg-gray-50">
+    <div class="container">
+      <div class="alert alert-info" style="margin-bottom: 32px;">
+        <div>
+          <h3 style="font-size: var(--text-lg); font-weight: var(--font-bold); margin-bottom: 8px;">
+            <i class="fa-solid fa-chart-line" style="margin-right: 4px;"></i> Interactive Demo
+          </h3>
+          <p style="margin: 0;">
+            This demo uses <strong>real sample data</strong> showing how spread pricing works.
+            In the full version, you'd upload your claims data to analyze your actual spread.
+          </p>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-bottom: 32px;">
+        <button id="analyzeBtn" class="btn btn-primary btn-xl" style="background-color: var(--color-employer-primary);">
+          Analyze Sample Claims Data
+        </button>
+      </div>
+
+      <!-- Results -->
+      <div id="resultsSection" style="display: none;">
+        <!-- Summary Card -->
+        <div id="summaryCard" class="card" style="margin-bottom: 32px;">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Claims Table -->
+        <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 24px;">
+          Sample Claims with Spread Pricing Detected
+        </h3>
+        <div id="claimsTable">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contract Red Flags -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title"><i class="fa-solid fa-flag" style="color: var(--color-error); margin-right: 8px;"></i> TPA Contract Red Flags</h2>
+      <p class="section-subtitle">
+        These contract clauses enable spread pricing. If you see them, demand changes.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6" style="max-width: 900px; margin: 0 auto;">
+        <div class="card" style="border-left: 4px solid var(--color-error);">
+          <h3 style="font-size: var(--text-lg); font-weight: var(--font-bold); color: var(--color-error); margin-bottom: 12px;">
+            <i class="fa-solid fa-flag" style="margin-right: 8px;"></i> "Proprietary pricing methodology"
+          </h3>
+          <p style="color: var(--color-gray-700); margin: 0;">
+            <strong>Translation:</strong> "We won't tell you how we calculate rates."
+            <br><br>
+            <strong>Demand instead:</strong> Full transparency on pricing calculations.
+          </p>
+        </div>
+
+        <div class="card" style="border-left: 4px solid var(--color-error);">
+          <h3 style="font-size: var(--text-lg); font-weight: var(--font-bold); color: var(--color-error); margin-bottom: 12px;">
+            <i class="fa-solid fa-flag" style="margin-right: 8px;"></i> "Discount guarantee"
+          </h3>
+          <p style="color: var(--color-gray-700); margin: 0;">
+            <strong>Translation:</strong> "We'll show big discounts from inflated prices."
+            <br><br>
+            <strong>Demand instead:</strong> % of Medicare benchmarks, not "discounts."
+          </p>
+        </div>
+
+        <div class="card" style="border-left: 4px solid var(--color-error);">
+          <h3 style="font-size: var(--text-lg); font-weight: var(--font-bold); color: var(--color-error); margin-bottom: 12px;">
+            <i class="fa-solid fa-flag" style="margin-right: 8px;"></i> "Performance guarantees are confidential"
+          </h3>
+          <p style="color: var(--color-gray-700); margin: 0;">
+            <strong>Translation:</strong> "We can't prove we're actually saving you money."
+            <br><br>
+            <strong>Demand instead:</strong> Transparent reporting against market benchmarks.
+          </p>
+        </div>
+
+        <div class="card" style="border-left: 4px solid var(--color-error);">
+          <h3 style="font-size: var(--text-lg); font-weight: var(--font-bold); color: var(--color-error); margin-bottom: 12px;">
+            <i class="fa-solid fa-flag" style="margin-right: 8px;"></i> "Fees based on savings"
+          </h3>
+          <p style="color: var(--color-gray-700); margin: 0;">
+            <strong>Translation:</strong> "We profit by claiming we saved you money (without proof)."
+            <br><br>
+            <strong>Demand instead:</strong> Flat admin fees, independently audited savings.
+          </p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 32px; background: var(--color-success); color: white; text-align: center; padding: 32px;">
+        <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 16px; color: white;">
+          <i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> What You SHOULD Demand
+        </h3>
+        <div style="max-width: 600px; margin: 0 auto;">
+          <ul style="list-style: none; padding: 0; margin: 0; text-align: left;">
+            <li style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.3);">
+              <i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> <strong>Pass-through pricing:</strong> TPA paid = Provider received
+            </li>
+            <li style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.3);">
+              <i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> <strong>Full claims data access:</strong> Including remittance amounts
+            </li>
+            <li style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.3);">
+              <i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> <strong>Flat admin fees:</strong> Not % of claims or "savings"
+            </li>
+            <li style="padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.3);">
+              <i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> <strong>Independent audits:</strong> Right to verify all payments
+            </li>
+            <li style="padding: 12px 0;">
+              <i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> <strong>Transparency reports:</strong> Monthly benchmarking vs. market
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How to Fix This -->
+  <section class="section bg-gray-50">
+    <div class="container">
+      <h2 class="section-title">How To Eliminate Spread Pricing</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="card">
+          <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: var(--color-employer-primary); color: white; border-radius: var(--radius-xl); font-size: 32px; font-weight: var(--font-bold); margin: 0 auto 16px; display: flex;">1</div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 12px;">
+            Audit Your Claims
+          </h3>
+          <p style="text-align: center; color: var(--color-gray-700); margin-bottom: 16px;">
+            Upload 3-6 months of claims data. Compare what you paid to what providers received.
+            Calculate total spread.
+          </p>
+          <button class="btn btn-outline" style="width: 100%;">Upload Claims Data</button>
+        </div>
+
+        <div class="card">
+          <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: var(--color-employer-primary); color: white; border-radius: var(--radius-xl); font-size: 32px; font-weight: var(--font-bold); margin: 0 auto 16px; display: flex;">2</div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 12px;">
+            Confront Your TPA
+          </h3>
+          <p style="text-align: center; color: var(--color-gray-700); margin-bottom: 16px;">
+            Show them the data. Demand pass-through pricing or switch to a transparent TPA.
+          </p>
+          <button class="btn btn-outline" style="width: 100%;">TPA Discussion Script</button>
+        </div>
+
+        <div class="card">
+          <div style="display: inline-flex; align-items: center; justify-content: center; width: 64px; height: 64px; background: var(--color-employer-primary); color: white; border-radius: var(--radius-xl); font-size: 32px; font-weight: var(--font-bold); margin: 0 auto 16px; display: flex;">3</div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); text-align: center; margin-bottom: 12px;">
+            Switch Models
+          </h3>
+          <p style="text-align: center; color: var(--color-gray-700); margin-bottom: 16px;">
+            Move to direct contracts, reference-based pricing, or pass-through pharmacy.
+          </p>
+          <button class="btn btn-outline" style="width: 100%;">Alternative Models</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background-color: var(--color-gray-900); color: var(--color-gray-300); padding: 48px 0;">
+    <div class="container">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Employer Tools
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="benchmark.html" style="color: var(--color-gray-300);">Benchmark Dashboard</a></li>
+            <li style="margin-bottom: 8px;"><a href="spread-calculator.html" style="color: var(--color-gray-300);">Detect Spread Pricing</a></li>
+            <li style="margin-bottom: 8px;"><a href="index.html" style="color: var(--color-gray-300);">Back to Employer Home</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Resources
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Spread Pricing White Paper</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Contract Red Flags Checklist</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Pass-Through PBM Guide</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Other Roles
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="../patients/index.html" style="color: var(--color-gray-300);">For Patients</a></li>
+            <li style="margin-bottom: 8px;"><a href="../providers/index.html" style="color: var(--color-gray-300);">For Providers</a></li>
+            <li style="margin-bottom: 8px;"><a href="../index.html" style="color: var(--color-gray-300);">Back to Home</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--color-gray-700); margin-top: 32px; padding-top: 32px; text-align: center; font-size: var(--text-sm);">
+        <p>&copy; 2025 Healthcare Transparency Platform. Stop the spread.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../shared/components.js"></script>
+  <script src="../shared/data-mock.js"></script>
+  <script>
+    document.getElementById('analyzeBtn').addEventListener('click', analyzeSpread);
+
+    function analyzeSpread() {
+      const btn = document.getElementById('analyzeBtn');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Analyzing Claims...';
+
+      setTimeout(() => {
+        displaySpreadAnalysis();
+        btn.style.display = 'none';
+
+        document.getElementById('resultsSection').scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }, 2000);
+    }
+
+    function displaySpreadAnalysis() {
+      const data = HealthcareData.getSpreadPricingAnalysis();
+
+      // Summary Card
+      const summaryCard = document.getElementById('summaryCard');
+      summaryCard.style.cssText = 'background: linear-gradient(135deg, var(--color-error), #DC2626); color: white; padding: 48px;';
+      summaryCard.innerHTML = `
+        <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 32px; color: white; text-align: center;">
+          <i class="fa-solid fa-triangle-exclamation" style="margin-right: 8px;"></i> Spread Pricing Detected
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div style="text-align: center;">
+            <div style="opacity: 0.9; margin-bottom: 8px;">Claims Analyzed</div>
+            <div style="font-size: var(--text-4xl); font-weight: var(--font-bold);">${data.summary.totalClaims}</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="opacity: 0.9; margin-bottom: 8px;">You Paid</div>
+            <div style="font-size: var(--text-4xl); font-weight: var(--font-bold);">${HealthcareUI.formatCurrency(data.summary.totalEmployerPaid)}</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="opacity: 0.9; margin-bottom: 8px;">Provider Received</div>
+            <div style="font-size: var(--text-4xl); font-weight: var(--font-bold);">${HealthcareUI.formatCurrency(data.summary.totalProviderReceived)}</div>
+          </div>
+          <div style="text-align: center; background: rgba(0,0,0,0.2); border-radius: var(--radius-xl); padding: 16px;">
+            <div style="opacity: 0.9; margin-bottom: 8px;">SPREAD KEPT</div>
+            <div style="font-size: var(--text-4xl); font-weight: var(--font-bold);">${HealthcareUI.formatCurrency(data.summary.totalSpread)}</div>
+            <div style="opacity: 0.9; margin-top: 8px;">(${HealthcareUI.formatPercentage(data.summary.averageSpreadPercent)} avg)</div>
+          </div>
+        </div>
+
+        <div style="margin-top: 32px; padding: 24px; background: rgba(255,255,255,0.2); border-radius: var(--radius-xl); text-align: center;">
+          <div style="font-size: var(--text-lg); margin-bottom: 8px;">Breakdown:</div>
+          <div style="display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;">
+            <div>
+              <strong>Medical Spread:</strong> ${HealthcareUI.formatCurrency(data.summary.medicalSpread)}
+            </div>
+            <div>
+              <strong>Pharmacy Spread:</strong> ${HealthcareUI.formatCurrency(data.summary.pharmacySpread)}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Claims Table
+      const claimsTable = document.getElementById('claimsTable');
+      const table = document.createElement('div');
+      table.style.cssText = 'overflow-x: auto; background: white; border-radius: var(--radius-xl); box-shadow: var(--shadow-md);';
+
+      table.innerHTML = `
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background: var(--color-gray-100); border-bottom: 2px solid var(--color-gray-300);">
+              <th style="padding: 16px; text-align: left; font-weight: var(--font-semibold);">Claim ID</th>
+              <th style="padding: 16px; text-align: left; font-weight: var(--font-semibold);">Date</th>
+              <th style="padding: 16px; text-align: left; font-weight: var(--font-semibold);">Procedure</th>
+              <th style="padding: 16px; text-align: right; font-weight: var(--font-semibold);">You Paid</th>
+              <th style="padding: 16px; text-align: right; font-weight: var(--font-semibold);">Provider Got</th>
+              <th style="padding: 16px; text-align: right; font-weight: var(--font-semibold);">Spread</th>
+              <th style="padding: 16px; text-align: right; font-weight: var(--font-semibold);">% Spread</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.claims.map((claim, index) => `
+              <tr style="border-bottom: 1px solid var(--color-gray-200); ${index % 2 === 0 ? 'background: var(--color-gray-50);' : ''}" class="claim-row">
+                <td style="padding: 16px; font-family: var(--font-mono); font-size: var(--text-sm);">${claim.claimId}</td>
+                <td style="padding: 16px;">${new Date(claim.date).toLocaleDateString()}</td>
+                <td style="padding: 16px;">
+                  <div style="font-weight: var(--font-medium);">${claim.procedure}</div>
+                  <div style="font-size: var(--text-sm); color: var(--color-gray-600);">${claim.procedureCode} • ${claim.providerName}</div>
+                </td>
+                <td style="padding: 16px; text-align: right; font-weight: var(--font-semibold);">
+                  ${HealthcareUI.formatCurrency(claim.employerPaid)}
+                </td>
+                <td style="padding: 16px; text-align: right; font-weight: var(--font-semibold); color: var(--color-success);">
+                  ${HealthcareUI.formatCurrency(claim.providerReceived)}
+                </td>
+                <td style="padding: 16px; text-align: right; font-weight: var(--font-bold); font-size: var(--text-lg); color: var(--color-error);">
+                  ${HealthcareUI.formatCurrency(claim.spreadAmount)}
+                </td>
+                <td style="padding: 16px; text-align: right;">
+                  <span class="badge badge-error">${HealthcareUI.formatPercentage(claim.spreadPercent)}</span>
+                </td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      `;
+
+      claimsTable.innerHTML = '';
+      claimsTable.appendChild(table);
+
+      // Show results
+      document.getElementById('resultsSection').style.display = 'block';
+      document.getElementById('resultsSection').style.animation = 'fadeIn 0.6s ease-out';
+
+      // Animate rows
+      setTimeout(() => {
+        document.querySelectorAll('.claim-row').forEach((row, index) => {
+          row.style.animation = `fadeIn 0.4s ease-out ${index * 0.05}s backwards`;
+        });
+      }, 100);
+    }
+  </script>
+</body>
+</html>

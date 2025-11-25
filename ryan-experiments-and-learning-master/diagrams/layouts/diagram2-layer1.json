@@ -1,0 +1,68 @@
+{
+  "diagram": "diagram2",
+  "layer": 1,
+  "positions": {
+    "employer-budget": {
+      "x": 900,
+      "y": 166.25
+    },
+    "to-tpa": {
+      "x": 1575,
+      "y": 365.75
+    },
+    "to-pbm": {
+      "x": 225,
+      "y": 365.75
+    },
+    "to-reinsurance": {
+      "x": 900,
+      "y": 365.75
+    },
+    "tpa-spread": {
+      "x": 1950,
+      "y": 565.25
+    },
+    "tpa-admin": {
+      "x": 1350,
+      "y": 565.25
+    },
+    "tpa-float": {
+      "x": 1650,
+      "y": 565.25
+    },
+    "hospitals-receive": {
+      "x": 750,
+      "y": 565.25
+    },
+    "physicians-receive": {
+      "x": 1050,
+      "y": 565.25
+    },
+    "pbm-spread": {
+      "x": 150,
+      "y": 565.25
+    },
+    "pbm-rebates": {
+      "x": -150,
+      "y": 565.25
+    },
+    "pharmacies-receive": {
+      "x": 450,
+      "y": 565.25
+    },
+    "total-leakage": {
+      "x": 1350,
+      "y": 764.75
+    },
+    "total-received": {
+      "x": 450,
+      "y": 764.75
+    }
+  },
+  "zoom": 0.7896528250510552,
+  "pan": {
+    "x": 185.16678012253226,
+    "y": 31.416609938733814
+  },
+  "exportDate": "2025-11-11T21:13:30.893Z"
+}

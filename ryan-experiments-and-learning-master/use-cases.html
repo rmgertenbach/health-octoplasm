@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Use Case Catalog - Healthcare Transparency Solutions</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/use-cases.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo">Payerset</a>
+    <div class="nav-links">
+      <a href="index.html#problem" class="nav-link">The Problem</a>
+      <a href="index.html#cuban" class="nav-link">The Questions</a>
+      <a href="index.html#proof" class="nav-link">The Proof</a>
+      <a href="index.html#solution" class="nav-link">The Solution</a>
+      <a href="index.html#impact" class="nav-link">Impact</a>
+      <a href="use-cases.html" class="nav-link active">Use Cases</a>
+
+      <div class="nav-dropdown" id="diagrams-dropdown">
+        <div class="nav-link nav-dropdown-toggle">
+          Diagrams
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="nav-dropdown-menu">
+          <a href="timeline.html" class="nav-dropdown-item">
+            <i class="fas fa-timeline"></i>
+            Transparency Timeline
+          </a>
+          <a href="diagrams/diagram1.html" class="nav-dropdown-item">
+            <i class="fas fa-network-wired"></i>
+            Ecosystem Map
+          </a>
+          <a href="diagrams/diagram2.html" class="nav-dropdown-item">
+            <i class="fas fa-dollar-sign"></i>
+            Money Flows
+          </a>
+          <a href="diagrams/diagram3.html" class="nav-dropdown-item">
+            <i class="fas fa-bolt"></i>
+            Power Map
+          </a>
+          <a href="diagrams/diagram4.html" class="nav-dropdown-item">
+            <i class="fas fa-shield-alt"></i>
+            Conflicts Map
+          </a>
+          <a href="diagrams/diagram5.html" class="nav-dropdown-item">
+            <i class="fas fa-sync-alt"></i>
+            Transformation
+          </a>
+          <a href="diagrams/diagram-test.html" class="nav-dropdown-item">
+            <i class="fas fa-flask"></i>
+            Data Explorer
+            <span class="alpha-badge">Alpha</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" id="tools-dropdown">
+        <div class="nav-link nav-dropdown-toggle">
+          Use Tools
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="nav-dropdown-menu">
+          <a href="experiments/patients/index.html" class="nav-dropdown-item">
+            <i class="fas fa-user"></i>
+            Patient Tools
+          </a>
+          <a href="experiments/employers/index.html" class="nav-dropdown-item">
+            <i class="fas fa-briefcase"></i>
+            Employer Tools
+          </a>
+          <a href="experiments/providers/index.html" class="nav-dropdown-item">
+            <i class="fas fa-user-doctor"></i>
+            Provider Tools
+          </a>
+          <a href="experiments/learn/stakeholder-map.html" class="nav-dropdown-item">
+            <i class="fas fa-graduation-cap"></i>
+            Learn: Stakeholder Map
+          </a>
+        </div>
+      </div>
+
+      <a href="https://payerset.com" class="nav-link nav-cta" target="_blank" rel="noopener noreferrer">Visit Payerset</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero hero-small" style="background: linear-gradient(135deg, #0066CC 0%, #004C99 100%); padding: 100px 0 80px;">
+    <div class="container">
+      <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+        <h1 style="font-size: 3rem; font-weight: 700; color: white; margin-bottom: 20px; line-height: 1.2;">
+          Healthcare Transparency Use Case Catalog
+        </h1>
+        <p style="font-size: 1.3rem; color: rgba(255,255,255,0.9); margin-bottom: 30px; line-height: 1.6;">
+          50+ actionable use cases prioritized by buildability and data availability
+        </p>
+
+        <!-- Quick Stats -->
+        <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 30px;">
+          <div style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: #10B981;">17</div>
+            <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Buildable Now</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: #F59E0B;">16</div>
+            <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Enhanced Features</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: #3B82F6;">17</div>
+            <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Visionary</div>
+          </div>
+          <div style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: white;">57%</div>
+            <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Data Ready</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filter Controls -->
+  <section style="background: #f5f7fa; border-bottom: 2px solid #e2e8f0; padding: 32px 0; position: sticky; top: 0; z-index: 100;">
+    <div class="container">
+      <div id="filters-root"></div>
+    </div>
+  </section>
+
+  <!-- Use Cases Grid -->
+  <section style="padding: 80px 0 100px; background: white;">
+    <div class="container">
+      <div id="use-cases-root"></div>
+    </div>
+  </section>
+
+  <!-- Data Availability Legend -->
+  <section style="background: #f5f7fa; padding: 60px 0; border-top: 2px solid #e2e8f0;">
+    <div class="container">
+      <div style="max-width: 900px; margin: 0 auto;">
+        <h3 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 24px; text-align: center;">
+          Data Availability Legend
+        </h3>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px;">
+          <!-- Available -->
+          <div style="background: white; padding: 24px; border-radius: 8px; border-left: 4px solid #10B981;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+              <i class="fas fa-check-circle" style="font-size: 1.5rem; color: #10B981;"></i>
+              <span style="font-weight: 600; color: #10B981;">Available</span>
+            </div>
+            <p style="color: #64748b; font-size: 0.9rem; margin: 0;">
+              Data is available now in Payerset. Ready to use for building this use case.
+            </p>
+          </div>
+
+          <!-- Partial -->
+          <div style="background: white; padding: 24px; border-radius: 8px; border-left: 4px solid #F59E0B;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+              <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem; color: #F59E0B;"></i>
+              <span style="font-weight: 600; color: #F59E0B;">Partial Gap</span>
+            </div>
+            <p style="color: #64748b; font-size: 0.9rem; margin: 0;">
+              Data is partially available or has gaps. Workarounds possible but may limit functionality.
+            </p>
+          </div>
+
+          <!-- Critical Gap -->
+          <div style="background: white; padding: 24px; border-radius: 8px; border-left: 4px solid #EF4444;">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+              <i class="fas fa-times-circle" style="font-size: 1.5rem; color: #EF4444;"></i>
+              <span style="font-weight: 600; color: #EF4444;">Critical Gap</span>
+            </div>
+            <p style="color: #64748b; font-size: 0.9rem; margin: 0;">
+              Data is critically missing. Requires external partnership, integration, or development.
+            </p>
+          </div>
+        </div>
+
+        <!-- Priority Indicators -->
+        <div style="margin-top: 32px; padding-top: 32px; border-top: 1px solid #e2e8f0;">
+          <h4 style="font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; text-align: center;">
+            Gap Priority Levels
+          </h4>
+          <div style="display: flex; justify-content: center; gap: 32px; flex-wrap: wrap;">
+            <div style="text-align: center;">
+              <div style="font-size: 1.5rem; margin-bottom: 4px;">
+                <i class="fas fa-circle" style="color: #EF4444;"></i>
+              </div>
+              <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Highest</div>
+              <div style="font-size: 0.85rem; color: #64748b;">Critical blocker</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 1.5rem; margin-bottom: 4px;">
+                <i class="fas fa-circle" style="color: #F59E0B;"></i>
+              </div>
+              <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Medium</div>
+              <div style="font-size: 0.85rem; color: #64748b;">Important enhancement</div>
+            </div>
+            <div style="text-align: center;">
+              <div style="font-size: 1.5rem; margin-bottom: 4px;">
+                <i class="fas fa-circle" style="color: #10B981;"></i>
+              </div>
+              <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 4px;">Lower</div>
+              <div style="font-size: 0.85rem; color: #64748b;">Nice to have</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Critical Data Gaps Section -->
+  <section style="background: white; padding: 80px 0; border-top: 2px solid #e2e8f0;">
+    <div class="container">
+      <div style="max-width: 1000px; margin: 0 auto;">
+        <h2 style="font-size: 2rem; font-weight: 700; margin-bottom: 16px; text-align: center;">
+          Critical Data Acquisition Priorities
+        </h2>
+        <p style="text-align: center; color: #64748b; margin-bottom: 40px; font-size: 1.1rem;">
+          Addressing these gaps will unlock the highest-value use cases
+        </p>
+
+        <div id="data-gaps-root"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal Container (for use case details) -->
+  <div id="use-case-modal-root"></div>
+
+  <!-- Footer -->
+  <footer style="background: #1a1a1a; color: white; padding: 80px 0 40px;">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px;">
+        <div>
+          <h4 style="font-size: 1.2rem; margin-bottom: 16px; font-weight: 600;">About This Catalog</h4>
+          <p style="color: #a0aec0; line-height: 1.6; font-size: 0.9rem;">
+            A comprehensive guide to healthcare transparency use cases, prioritized by buildability and data availability. Based on real market needs and proven PBGH strategies.
+          </p>
+        </div>
+
+        <div>
+          <h4 style="font-size: 1.2rem; margin-bottom: 16px; font-weight: 600;">Explore More</h4>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 12px;">
+              <a href="index.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-book-open"></i> The Full Story
+              </a>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <a href="experiments/learn/stakeholder-map.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-diagram-project"></i> Stakeholder Map
+              </a>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <a href="glossary.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-book"></i> Glossary of Terms
+              </a>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <a href="experiments/index.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-tools"></i> Interactive Tools
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="font-size: 1.2rem; margin-bottom: 16px; font-weight: 600;">By Persona</h4>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 12px;">
+              <a href="experiments/employers/index.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-briefcase"></i> Employers
+              </a>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <a href="experiments/patients/index.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-user"></i> Patients
+              </a>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <a href="experiments/providers/index.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-user-doctor"></i> Providers
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid #374151; padding-top: 30px; text-align: center; color: #a0aec0; font-size: 0.9rem;">
+        Healthcare Transparency Catalog • Built to demonstrate the power of price transparency
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="js/data-lake-inventory.js"></script>
+  <script src="js/use-cases-data.js"></script>
+  <script src="js/use-cases-app.js"></script>
+
+  <!-- Navigation Dropdown Script -->
+  <script>
+    // Handle dropdown functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const diagramsDropdown = document.getElementById('diagrams-dropdown');
+      const toolsDropdown = document.getElementById('tools-dropdown');
+
+      function toggleDropdown(dropdown, otherDropdown) {
+        dropdown.classList.toggle('open');
+        if (otherDropdown) {
+          otherDropdown.classList.remove('open');
+        }
+      }
+
+      // Diagrams dropdown
+      const diagramsToggle = diagramsDropdown.querySelector('.nav-dropdown-toggle');
+      diagramsToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        toggleDropdown(diagramsDropdown, toolsDropdown);
+      });
+
+      // Tools dropdown
+      const toolsToggle = toolsDropdown.querySelector('.nav-dropdown-toggle');
+      toolsToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        toggleDropdown(toolsDropdown, diagramsDropdown);
+      });
+
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!diagramsDropdown.contains(e.target) && !toolsDropdown.contains(e.target)) {
+          diagramsDropdown.classList.remove('open');
+          toolsDropdown.classList.remove('open');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

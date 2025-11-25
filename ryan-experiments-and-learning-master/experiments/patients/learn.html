@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healthcare 101 - Learn How Healthcare Pricing Works</title>
+  <meta name="description" content="Plain-language education about healthcare pricing, insurance, and how to navigate the system.">
+  <link rel="stylesheet" href="../shared/styles.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="../index.html" class="logo">Healthcare Transparency</a>
+      <nav class="nav">
+        <a href="index.html" class="nav-link">For Patients</a>
+        <a href="search.html" class="nav-link">Search</a>
+        <a href="learn.html" class="nav-link active">Learn</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero" style="background: linear-gradient(135deg, var(--color-patient-light) 0%, var(--color-white) 100%);">
+    <div class="container">
+      <h1 class="hero-title" style="color: var(--color-patient-primary);">
+        Healthcare 101
+      </h1>
+      <p class="hero-subtitle">
+        Healthcare is confusing by design. Let's make it simple.
+        <br>
+        <strong>No jargon. No BS. Just what you need to know.</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- Learning Modules -->
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-cols-1 gap-8" style="max-width: 900px; margin: 0 auto;">
+
+        <!-- Module 1: Why Prices Vary -->
+        <div class="card module-card" id="module1">
+          <div style="display: flex; align-items: flex-start; gap: 16px; margin-bottom: 24px;">
+            <div style="
+              width: 64px;
+              height: 64px;
+              background: var(--color-patient-primary);
+              color: white;
+              border-radius: var(--radius-xl);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: var(--text-3xl);
+              font-weight: var(--font-bold);
+              flex-shrink: 0;
+            ">1</div>
+            <div style="flex: 1;">
+              <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+                Why Does the Same MRI Cost $400 or $3,000?
+              </h2>
+              <p style="font-size: var(--text-lg); color: var(--color-gray-600); margin: 0;">
+                5 minute read • The most important thing to understand
+              </p>
+            </div>
+          </div>
+
+          <div class="module-content">
+            <h3 style="font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 16px; color: var(--color-patient-primary);">
+              The Short Answer: Because They Can
+            </h3>
+            <p style="margin-bottom: 16px;">
+              Healthcare prices aren't based on cost or quality. They're based on
+              <strong>what providers think they can get away with</strong>.
+            </p>
+
+            <div style="background: var(--color-patient-light); padding: 24px; border-radius: var(--radius-xl); margin-bottom: 24px;">
+              <h4 style="font-weight: var(--font-semibold); margin-bottom: 12px;">Real Example:</h4>
+              <p style="margin-bottom: 12px;">Same MRI scan in Austin, Texas:</p>
+              <ul style="margin: 0; padding-left: 24px;">
+                <li><strong>HighQuality Imaging:</strong> $425 (Grade A quality)</li>
+                <li><strong>MegaHealth Hospital:</strong> $2,800 (Grade C quality)</li>
+              </ul>
+              <p style="margin-top: 12px; font-weight: var(--font-semibold);">
+                Same machine. Same scan. 7x price difference. Worse quality costs more.
+              </p>
+            </div>
+
+            <h3 style="font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 16px; color: var(--color-patient-primary);">
+              Why This Happens
+            </h3>
+
+            <div style="margin-bottom: 24px;">
+              <h4 style="font-weight: var(--font-semibold); margin-bottom: 8px;">1. You Don't Know the Price</h4>
+              <p>
+                Imagine going to a restaurant where they don't show prices until AFTER you eat.
+                That's healthcare. Providers charge whatever they want because you can't compare.
+              </p>
+            </div>
+
+            <div style="margin-bottom: 24px;">
+              <h4 style="font-weight: var(--font-semibold); margin-bottom: 8px;">2. Insurance Hides It</h4>
+              <p>
+                Your insurance pays (most of) it, so you don't care. But guess who pays for insurance?
+                You do - through premiums, deductibles, and lower wages.
+              </p>
+            </div>
+
+            <div style="margin-bottom: 24px;">
+              <h4 style="font-weight: var(--font-semibold); margin-bottom: 8px;">3. No Correlation with Quality</h4>
+              <p>
+                Expensive doesn't mean better. Often the opposite. Big hospital systems charge more
+                because they can, not because they're higher quality.
+              </p>
+            </div>
+
+            <div class="alert alert-success">
+              <div>
+                <strong><i class="fa-solid fa-circle-check" style="margin-right: 4px;"></i> The Good News:</strong> Federal transparency laws now require hospitals and insurers
+                to publish their prices. That's what this website uses. Now you can know BEFORE you go.
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-outline module-toggle" onclick="toggleModule('module1')" style="margin-top: 16px;">
+            Show Less
+          </button>
+        </div>
+
+        <!-- Module 2: How Insurance Works -->
+        <div class="card module-card" id="module2" style="cursor: pointer;">
+          <div style="display: flex; align-items: flex-start; gap: 16px;" onclick="toggleModule('module2')">
+            <div style="
+              width: 64px;
+              height: 64px;
+              background: var(--color-patient-primary);
+              color: white;
+              border-radius: var(--radius-xl);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: var(--text-3xl);
+              font-weight: var(--font-bold);
+              flex-shrink: 0;
+            ">2</div>
+            <div style="flex: 1;">
+              <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+                How Insurance Actually Works (And Why It's Complicated)
+              </h2>
+              <p style="font-size: var(--text-lg); color: var(--color-gray-600); margin: 0;">
+                3 minute read • Deductibles, coinsurance, and out-of-pocket maximums explained
+              </p>
+            </div>
+          </div>
+
+          <div class="module-content" style="display: none; margin-top: 24px;">
+            <h3 style="font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 16px; color: var(--color-patient-primary);">
+              The Basics
+            </h3>
+
+            <div style="background: var(--color-gray-50); padding: 24px; border-radius: var(--radius-xl); margin-bottom: 24px;">
+              <h4 style="font-weight: var(--font-semibold); margin-bottom: 16px;">Key Terms:</h4>
+
+              <div style="margin-bottom: 16px;">
+                <strong>Premium:</strong> What you pay every month just to have insurance. Like a membership fee.
+              </div>
+
+              <div style="margin-bottom: 16px;">
+                <strong>Deductible:</strong> How much YOU pay before insurance starts helping. If your deductible
+                is $3,000, you pay the first $3,000 of care yourself.
+              </div>
+
+              <div style="margin-bottom: 16px;">
+                <strong>Coinsurance:</strong> After you hit your deductible, you still pay a percentage (usually 20%).
+                Insurance pays the rest (80%).
+              </div>
+
+              <div>
+                <strong>Out-of-Pocket Maximum:</strong> The most you'll ever pay in a year. After this, insurance pays 100%.
+              </div>
+            </div>
+
+            <h3 style="font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 16px; color: var(--color-patient-primary);">
+              Real Example: Getting an MRI
+            </h3>
+
+            <div style="background: var(--color-patient-light); padding: 24px; border-radius: var(--radius-xl); margin-bottom: 24px;">
+              <p style="margin-bottom: 12px;">
+                <strong>Scenario:</strong> You need an MRI. You haven't met your deductible yet.
+              </p>
+
+              <p style="margin-bottom: 12px;"><strong>Option A: MegaHealth Hospital</strong></p>
+              <ul style="margin-bottom: 16px; padding-left: 24px;">
+                <li>MRI costs: $2,800</li>
+                <li>You pay: $2,800 (toward deductible)</li>
+                <li>Insurance pays: $0</li>
+                <li><strong>Your bill: $2,800</strong></li>
+              </ul>
+
+              <p style="margin-bottom: 12px;"><strong>Option B: HighQuality Imaging</strong></p>
+              <ul style="margin-bottom: 16px; padding-left: 24px;">
+                <li>MRI costs: $425</li>
+                <li>You pay: $425 (toward deductible)</li>
+                <li>Insurance pays: $0</li>
+                <li><strong>Your bill: $425</strong></li>
+              </ul>
+
+              <p style="font-weight: var(--font-bold); color: var(--color-success); margin: 0;">
+                You saved $2,375 by shopping around. Same scan, same quality (actually better!).
+              </p>
+            </div>
+
+            <div class="alert alert-warning">
+              <div>
+                <strong><i class="fa-solid fa-lightbulb" style="margin-right: 4px;"></i> Pro Tip:</strong> If you have a high deductible ($3,000+), ask about the CASH price.
+                Sometimes it's cheaper to pay cash directly than use insurance. Yes, really.
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-outline module-toggle" onclick="toggleModule('module2')" style="margin-top: 16px; display: none;">
+            Show Less
+          </button>
+        </div>
+
+        <!-- Module 3: When to Pay Cash -->
+        <div class="card module-card" id="module3" style="cursor: pointer;">
+          <div style="display: flex; align-items: flex-start; gap: 16px;" onclick="toggleModule('module3')">
+            <div style="
+              width: 64px;
+              height: 64px;
+              background: var(--color-patient-primary);
+              color: white;
+              border-radius: var(--radius-xl);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: var(--text-3xl);
+              font-weight: var(--font-bold);
+              flex-shrink: 0;
+            ">3</div>
+            <div style="flex: 1;">
+              <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+                When Should You Pay Cash Instead of Using Insurance?
+              </h2>
+              <p style="font-size: var(--text-lg); color: var(--color-gray-600); margin: 0;">
+                2 minute read • This sounds crazy but can save you thousands
+              </p>
+            </div>
+          </div>
+
+          <div class="module-content" style="display: none; margin-top: 24px;">
+            <h3 style="font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 16px; color: var(--color-patient-primary);">
+              The Math Makes Sense
+            </h3>
+
+            <p style="margin-bottom: 24px;">
+              Hospitals charge insurance companies inflated "negotiated rates." But they offer lower "cash prices"
+              if you pay directly. If the cash price is less than your deductible, pay cash and save money.
+            </p>
+
+            <div style="background: var(--color-success); color: white; padding: 24px; border-radius: var(--radius-xl); margin-bottom: 24px;">
+              <h4 style="font-weight: var(--font-semibold); margin-bottom: 16px; color: white;">
+                When to Pay Cash:
+              </h4>
+              <ul style="margin: 0; padding-left: 24px;">
+                <li style="margin-bottom: 8px;"><i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> You haven't met your deductible yet</li>
+                <li style="margin-bottom: 8px;"><i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> The cash price is lower than the insurance price</li>
+                <li style="margin-bottom: 8px;"><i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> You can afford to pay upfront</li>
+                <li><i class="fa-solid fa-circle-check" style="margin-right: 8px;"></i> The procedure is non-emergency (you have time to shop)</li>
+              </ul>
+            </div>
+
+            <div style="background: var(--color-gray-50); padding: 24px; border-radius: var(--radius-xl); margin-bottom: 24px;">
+              <h4 style="font-weight: var(--font-semibold); margin-bottom: 12px;">Real Example:</h4>
+              <p style="margin-bottom: 12px;">
+                You need a colonoscopy. You have a $5,000 deductible and haven't met it yet.
+              </p>
+
+              <p style="margin-bottom: 8px;"><strong>Option 1: Use Insurance</strong></p>
+              <ul style="margin-bottom: 16px; padding-left: 24px;">
+                <li>Insurance "negotiated rate": $4,500</li>
+                <li>You pay all of it (deductible not met): $4,500</li>
+              </ul>
+
+              <p style="margin-bottom: 8px;"><strong>Option 2: Pay Cash</strong></p>
+              <ul style="margin-bottom: 16px; padding-left: 24px;">
+                <li>Cash price: $2,200</li>
+                <li>You pay: $2,200</li>
+              </ul>
+
+              <p style="font-weight: var(--font-bold); color: var(--color-success); margin: 0;">
+                Saved $2,300 by paying cash. Insurance would have cost you MORE.
+              </p>
+            </div>
+
+            <div class="alert alert-info">
+              <div>
+                <strong><i class="fa-solid fa-thumbtack" style="margin-right: 4px;"></i> Important:</strong> Cash payments usually DON'T count toward your deductible.
+                But if you're not going to hit your deductible anyway, who cares? Save the money.
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-outline module-toggle" onclick="toggleModule('module3')" style="margin-top: 16px; display: none;">
+            Show Less
+          </button>
+        </div>
+
+        <!-- Module 4: Reading Your Bill -->
+        <div class="card module-card" id="module4" style="cursor: pointer;">
+          <div style="display: flex; align-items: flex-start; gap: 16px;" onclick="toggleModule('module4')">
+            <div style="
+              width: 64px;
+              height: 64px;
+              background: var(--color-patient-primary);
+              color: white;
+              border-radius: var(--radius-xl);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: var(--text-3xl);
+              font-weight: var(--font-bold);
+              flex-shrink: 0;
+            ">4</div>
+            <div style="flex: 1;">
+              <h2 style="font-size: var(--text-3xl); font-weight: var(--font-bold); margin-bottom: 8px;">
+                How to Read (and Fight) a Medical Bill
+              </h2>
+              <p style="font-size: var(--text-lg); color: var(--color-gray-600); margin: 0;">
+                4 minute read • What all those numbers mean and what to do if it's wrong
+              </p>
+            </div>
+          </div>
+
+          <div class="module-content" style="display: none; margin-top: 24px;">
+            <h3 style="font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 16px; color: var(--color-patient-primary);">
+              Understanding Your EOB (Explanation of Benefits)
+            </h3>
+
+            <p style="margin-bottom: 24px;">
+              Your EOB is NOT a bill - it's a summary of what happened. Here's what each column means:
+            </p>
+
+            <div style="background: var(--color-gray-50); padding: 24px; border-radius: var(--radius-xl); margin-bottom: 24px;">
+              <div style="margin-bottom: 16px;">
+                <strong>1. Provider Charges:</strong> Made-up number (ignore this - it's fantasy)
+              </div>
+              <div style="margin-bottom: 16px;">
+                <strong>2. Negotiated Rate:</strong> What insurance agreed to pay (this matters)
+              </div>
+              <div style="margin-bottom: 16px;">
+                <strong>3. Insurance Paid:</strong> What insurance actually paid
+              </div>
+              <div>
+                <strong>4. You Owe:</strong> What you need to pay (ONLY number that matters!)
+              </div>
+            </div>
+
+            <h3 style="font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 16px; color: var(--color-patient-primary);">
+              Red Flags: When to Fight Your Bill
+            </h3>
+
+            <div style="background: var(--color-error); color: white; padding: 24px; border-radius: var(--radius-xl); margin-bottom: 24px;">
+              <h4 style="font-weight: var(--font-semibold); margin-bottom: 16px; color: white;">
+                Fight the bill if you see:
+              </h4>
+              <ul style="margin: 0; padding-left: 24px;">
+                <li style="margin-bottom: 8px;"><i class="fa-solid fa-flag" style="margin-right: 8px;"></i> "Out of network" for emergency care (illegal under No Surprises Act)</li>
+                <li style="margin-bottom: 8px;"><i class="fa-solid fa-flag" style="margin-right: 8px;"></i> Procedures you didn't receive</li>
+                <li style="margin-bottom: 8px;"><i class="fa-solid fa-flag" style="margin-right: 8px;"></i> Multiple charges for the same thing</li>
+                <li style="margin-bottom: 8px;"><i class="fa-solid fa-flag" style="margin-right: 8px;"></i> Charges WAY above market rate (check our search tool)</li>
+                <li><i class="fa-solid fa-flag" style="margin-right: 8px;"></i> Balance billing (provider charging you more than insurance agreed)</li>
+              </ul>
+            </div>
+
+            <h3 style="font-size: var(--text-xl); font-weight: var(--font-semibold); margin-bottom: 16px; color: var(--color-patient-primary);">
+              How to Fight It
+            </h3>
+
+            <div style="background: var(--color-success); color: white; padding: 24px; border-radius: var(--radius-xl);">
+              <h4 style="font-weight: var(--font-semibold); margin-bottom: 16px; color: white;">
+                Step-by-step:
+              </h4>
+              <ol style="margin: 0; padding-left: 24px;">
+                <li style="margin-bottom: 12px;"><strong>DON'T PAY YET.</strong> Paying admits the charge is correct.</li>
+                <li style="margin-bottom: 12px;"><strong>Call the billing department.</strong> Ask for an itemized bill and explanation of each charge.</li>
+                <li style="margin-bottom: 12px;"><strong>Compare to market rates.</strong> Use our search tool to see if you're being overcharged.</li>
+                <li style="margin-bottom: 12px;"><strong>File an appeal.</strong> In writing. Keep copies of everything.</li>
+                <li><strong>Don't give up.</strong> Most people pay without fighting. Don't be most people.</li>
+              </ol>
+            </div>
+          </div>
+
+          <button class="btn btn-outline module-toggle" onclick="toggleModule('module4')" style="margin-top: 16px; display: none;">
+            Show Less
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Reference Card -->
+  <section class="section bg-gray-50">
+    <div class="container">
+      <h2 class="section-title">Healthcare Cheat Sheet</h2>
+      <p class="section-subtitle">Print this and keep it in your wallet</p>
+
+      <div class="card" style="max-width: 700px; margin: 0 auto; background: var(--color-patient-light);">
+        <h3 style="font-size: var(--text-2xl); font-weight: var(--font-bold); margin-bottom: 24px; text-align: center;">
+          <i class="fa-solid fa-clipboard-check" style="margin-right: 8px; color: var(--color-patient-primary);"></i> Before Any Medical Procedure
+        </h3>
+
+        <div style="display: grid; gap: 16px;">
+          <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: var(--color-patient-primary); color: white; border-radius: var(--radius-lg); font-size: 16px; font-weight: var(--font-bold); flex-shrink: 0;">1</span>
+            <div>
+              <strong>Ask for the CPT code</strong> - That's the billing code. You need it to compare prices.
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: var(--color-patient-primary); color: white; border-radius: var(--radius-lg); font-size: 16px; font-weight: var(--font-bold); flex-shrink: 0;">2</span>
+            <div>
+              <strong>Search our tool</strong> - Find 3-5 providers who do that procedure in your area.
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: var(--color-patient-primary); color: white; border-radius: var(--radius-lg); font-size: 16px; font-weight: var(--font-bold); flex-shrink: 0;">3</span>
+            <div>
+              <strong>Ask for cash prices</strong> - Many places have lower cash prices than insurance.
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: var(--color-patient-primary); color: white; border-radius: var(--radius-lg); font-size: 16px; font-weight: var(--font-bold); flex-shrink: 0;">4</span>
+            <div>
+              <strong>Get it in writing</strong> - Before the procedure, get a written estimate of what you'll owe.
+            </div>
+          </div>
+
+          <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <span style="display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: var(--color-patient-primary); color: white; border-radius: var(--radius-lg); font-size: 16px; font-weight: var(--font-bold); flex-shrink: 0;">5</span>
+            <div>
+              <strong>Check quality grades</strong> - Don't just go cheap. Look for Grade A + fair price = best value.
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 24px; padding: 16px; background: white; border-radius: var(--radius-md); text-align: center;">
+          <a href="search.html" class="btn btn-primary btn-lg" style="width: 100%; max-width: 300px;">
+            Search Procedures Now →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background-color: var(--color-gray-900); color: var(--color-gray-300); padding: 48px 0;">
+    <div class="container">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Patient Tools
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="search.html" style="color: var(--color-gray-300);">Search Procedures</a></li>
+            <li style="margin-bottom: 8px;"><a href="learn.html" style="color: var(--color-gray-300);">Healthcare 101</a></li>
+            <li style="margin-bottom: 8px;"><a href="index.html" style="color: var(--color-gray-300);">Back to Patient Home</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            More Learning
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="../learn/stakeholder-map.html" style="color: var(--color-gray-300);">How Healthcare Works</a></li>
+            <li style="margin-bottom: 8px;"><a href="../../glossary.html" style="color: var(--color-gray-300);">Glossary of Terms</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Your Rights</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Other Roles
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="../employers/index.html" style="color: var(--color-gray-300);">For Employers</a></li>
+            <li style="margin-bottom: 8px;"><a href="../providers/index.html" style="color: var(--color-gray-300);">For Providers</a></li>
+            <li style="margin-bottom: 8px;"><a href="../index.html" style="color: var(--color-gray-300);">Back to Home</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--color-gray-700); margin-top: 32px; padding-top: 32px; text-align: center; font-size: var(--text-sm);">
+        <p>&copy; 2025 Healthcare Transparency Platform. Knowledge is power.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleModule(moduleId) {
+      const module = document.getElementById(moduleId);
+      const content = module.querySelector('.module-content');
+      const toggle = module.querySelector('.module-toggle');
+
+      if (content.style.display === 'none') {
+        // Expand
+        content.style.display = 'block';
+        content.style.animation = 'fadeIn 0.4s ease-out';
+        toggle.style.display = 'inline-block';
+        toggle.textContent = 'Show Less';
+        module.style.cursor = 'default';
+      } else {
+        // Collapse
+        content.style.display = 'none';
+        toggle.style.display = 'none';
+        toggle.textContent = 'Show More';
+        module.style.cursor = 'pointer';
+      }
+    }
+
+    // Auto-expand first module on load
+    document.addEventListener('DOMContentLoaded', () => {
+      const firstModule = document.getElementById('module1');
+      const firstContent = firstModule.querySelector('.module-content');
+      const firstToggle = firstModule.querySelector('.module-toggle');
+
+      firstContent.style.display = 'block';
+      firstToggle.style.display = 'inline-block';
+      firstModule.style.cursor = 'default';
+    });
+  </script>
+</body>
+</html>

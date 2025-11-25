@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Transformation - Before & After | Payerset</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="shared/diagram-common.css">
+    <style>
+        /* Diagram 5 Specific Styles */
+        .view-toggle {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .toggle-btn {
+            padding: 10px 20px;
+            border: 2px solid var(--payerset-blue);
+            background: white;
+            color: var(--payerset-blue);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .toggle-btn:hover {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .toggle-btn.active {
+            background: var(--payerset-blue);
+            color: white;
+        }
+
+        .toggle-btn.before.active {
+            background: var(--color-problem);
+            border-color: var(--color-problem);
+        }
+
+        .toggle-btn.after.active {
+            background: var(--payerset-green);
+            border-color: var(--payerset-green);
+        }
+
+        .transformation-metrics {
+            padding: 20px 30px;
+            background: linear-gradient(135deg, #fff5f5 0%, #e6ffe6 100%);
+            border-bottom: 2px solid #d4edda;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--payerset-blue);
+        }
+
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .metric-comparison {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .metric-before {
+            font-size: 18px;
+            font-weight: bold;
+            color: #e74c3c;
+            text-decoration: line-through;
+        }
+
+        .metric-arrow {
+            font-size: 20px;
+            color: #667eea;
+        }
+
+        .metric-after {
+            font-size: 20px;
+            font-weight: bold;
+            color: #27ae60;
+        }
+
+        .metric-impact {
+            font-size: 11px;
+            color: #27ae60;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .narrative-panel {
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .narrative-card {
+            background: white;
+            padding: 20px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .narrative-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--payerset-blue);
+            margin-bottom: 15px;
+        }
+
+        .narrative-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .narrative-content strong {
+            color: var(--payerset-blue);
+        }
+
+        .highlight-box {
+            background: #fff9e6;
+            border-left: 4px solid #f39c12;
+            padding: 12px;
+            margin: 15px 0;
+            border-radius: 4px;
+        }
+
+        .highlight-box.success {
+            background: #e6ffe6;
+            border-left-color: #27ae60;
+        }
+
+        .tooltip .change {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #27ae60;
+            border-radius: 3px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .tooltip li:before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+        }
+
+        .transformation-summary {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .transformation-summary h3 {
+            color: var(--payerset-blue);
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .transformation-summary p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .key-outcomes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .outcome-box {
+            background: #e6ffe6;
+            padding: 12px;
+            border-radius: 4px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .outcome-box h4 {
+            color: #27ae60;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .outcome-box p {
+            font-size: 13px;
+            color: #333;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="diagram-nav">
+        <div class="nav-left">
+            <a href="../index.html" class="nav-logo">Payerset</a>
+            <span class="nav-divider">|</span>
+            <span class="diagram-title">Transformation</span>
+        </div>
+        <div class="nav-right">
+            <div class="nav-dropdown">
+                <button class="nav-dropdown-toggle">Diagrams <i class="fas fa-chevron-down"></i></button>
+                <div class="nav-dropdown-menu">
+                    <a href="diagram1.html" class="nav-dropdown-item"><i class="fas fa-network-wired"></i> Ecosystem Map</a>
+                    <a href="diagram2.html" class="nav-dropdown-item"><i class="fas fa-dollar-sign"></i> Money Flows</a>
+                    <a href="diagram3.html" class="nav-dropdown-item"><i class="fas fa-bolt"></i> Power Map</a>
+                    <a href="diagram4.html" class="nav-dropdown-item"><i class="fas fa-shield-alt"></i> Conflicts Map</a>
+                    <a href="diagram5.html" class="nav-dropdown-item active"><i class="fas fa-sync-alt"></i> Transformation</a>
+                    <a href="diagram-test.html" class="nav-dropdown-item"><i class="fas fa-flask"></i> Data Explorer <span class="alpha-badge">Alpha</span></a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="diagram-header">
+            <h1>🔄 The Transformation</h1>
+            <p>Healthcare's complete before & after: How transparency changes everything</p>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <div class="control-label">Complexity Level:</div>
+                <div class="layer-buttons">
+                    <button class="layer-btn active" data-layer="0">
+                        📊 Simple: The Big Picture
+                    </button>
+                    <button class="layer-btn" data-layer="1">
+                        🔍 Medium: Ecosystem Shift
+                    </button>
+                    <button class="layer-btn" data-layer="2">
+                        🎯 Complete: Full Transformation
+                    </button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">Compare:</div>
+                <div class="view-toggle">
+                <button class="toggle-btn before active" data-view="before">
+                    ❌ Before Transparency
+                </button>
+                <button class="toggle-btn after" data-view="after">
+                    ✅ After Transparency
+                </button>
+                <button class="toggle-btn" data-view="split">
+                    ⚖️ Side-by-Side
+                </button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="control-label">Layout Controls:</div>
+                <div class="save-load-buttons">
+                    <button id="saveLayout" class="action-btn">
+                        <i class="fas fa-save"></i> Save Layout
+                    </button>
+                    <button id="resetLayout" class="action-btn secondary">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                    <button id="exportLayout" class="action-btn secondary">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                    <button id="importLayout" class="action-btn secondary">
+                        <i class="fas fa-upload"></i> Import
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="transformation-metrics" id="metrics-panel">
+            <!-- Metrics will be dynamically inserted here -->
+        </div>
+
+        <div class="narrative-panel" id="narrative-panel">
+            <!-- Narrative will be dynamically inserted here -->
+        </div>
+
+        <div id="cy"></div>
+        <div class="tooltip" id="tooltip"></div>
+
+        <div class="footer">
+            <div class="transformation-summary">
+                <h3>The Bottom Line</h3>
+                <p>
+                    Transparency doesn't just reveal problems—it fundamentally transforms the market. 
+                    When information asymmetry is eliminated, power shifts from extractive intermediaries 
+                    to value-aligned stakeholders. The result: 20-30% cost savings while improving quality and access.
+                </p>
+                <div class="key-outcomes">
+                    <div class="outcome-box">
+                        <h4>For Employers</h4>
+                        <p>$20-30M saved on $100M spend, better outcomes, competitive advantage</p>
+                    </div>
+                    <div class="outcome-box">
+                        <h4>For Employees</h4>
+                        <p>$5,000+ per family (wages/savings), better access, know costs before care</p>
+                    </div>
+                    <div class="outcome-box">
+                        <h4>For Providers</h4>
+                        <p>Good providers thrive on merit, paid fairly and promptly, less admin burden</p>
+                    </div>
+                    <div class="outcome-box">
+                        <h4>For Society</h4>
+                        <p>Healthcare becomes affordable, quality improves, market functions rationally</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Transformation data
+        const transformationData = {
+            // Layer 0: Simple - The Big Picture
+            0: {
+                metrics: [
+                    {
+                        label: "Healthcare Spending",
+                        before: "$100M",
+                        after: "$80M",
+                        impact: "20% reduction (to actual care cost)"
+                    },
+                    {
+                        label: "Money Leaked",
+                        before: "$30M",
+                        after: "$5M",
+                        impact: "$25M recovered"
+                    },
+                    {
+                        label: "Providers Receive",
+                        before: "$70M",
+                        after: "$75M",
+                        impact: "More money, less hassle"
+                    },
+                    {
+                        label: "Per-Family Impact",
+                        before: "-$5,000",
+                        after: "+$5,000",
+                        impact: "$10K swing (wages/savings)"
+                    }
+                ],
+                narrative: {
+                    title: "The Big Picture Transformation",
+                    before: `
+                        <strong>Before Transparency:</strong> The system is broken.
+                        <div class="highlight-box">
+                            • Employers pay $100M but only $70M reaches providers<br>
+                            • $30M leaks through spread pricing, hidden fees, and inefficiency<br>
+                            • Families lose $5,000/year to excess healthcare costs<br>
+                            • Patients can't see prices or quality before care<br>
+                            • Good providers can't compete; bad actors thrive on opacity
+                        </div>
+                    `,
+                    after: `
+                        <strong>After Transparency:</strong> The market transforms.
+                        <div class="highlight-box success">
+                            • Employers pay $80M and $75M reaches providers (better!)<br>
+                            • Leakage cut to $5M (legitimate admin only)<br>
+                            • Families gain $5,000/year (wages up, costs down)<br>
+                            • Patients see prices and quality, make informed choices<br>
+                            • Good providers win on merit; market rewards value
+                        </div>
+                    `
+                },
+                before: {
+                    nodes: [
+                        { id: 'before-employer', label: 'EMPLOYER\nPays $100M', type: 'source', size: 120 },
+                        { id: 'before-leakage', label: 'LEAKAGE\n$30M', type: 'bad', size: 100 },
+                        { id: 'before-providers', label: 'PROVIDERS\nReceive $70M', type: 'destination', size: 100 },
+                        { id: 'before-patients', label: 'PATIENTS\nLose $5K/family', type: 'victim', size: 90 }
+                    ],
+                    edges: [
+                        { source: 'before-employer', target: 'before-leakage', label: '$30M\nleaks out', type: 'bad-flow' },
+                        { source: 'before-employer', target: 'before-providers', label: '$70M\nreaches care', type: 'weak-flow' },
+                        { source: 'before-patients', target: 'before-employer', label: 'Overpay', type: 'burden' }
+                    ]
+                },
+                after: {
+                    nodes: [
+                        { id: 'after-employer', label: 'EMPLOYER\nPays $80M', type: 'source', size: 120 },
+                        { id: 'after-transparency', label: 'TRANSPARENCY\nTOOLS', type: 'enabler', size: 90 },
+                        { id: 'after-leakage', label: 'ADMIN\n$5M only', type: 'neutral', size: 60 },
+                        { id: 'after-providers', label: 'PROVIDERS\nReceive $75M', type: 'destination', size: 110 },
+                        { id: 'after-patients', label: 'PATIENTS\nGain $5K/family', type: 'winner', size: 90 }
+                    ],
+                    edges: [
+                        { source: 'after-employer', target: 'after-transparency', label: 'Uses data', type: 'good-flow' },
+                        { source: 'after-transparency', target: 'after-leakage', label: 'Only $5M\nlegit admin', type: 'controlled' },
+                        { source: 'after-employer', target: 'after-providers', label: '$75M\nreaches care', type: 'strong-flow' },
+                        { source: 'after-employer', target: 'after-patients', label: 'Saves $20M\n→ Wages', type: 'benefit' }
+                    ]
+                }
+            },
+
+            // Layer 1: Medium - Ecosystem Shift
+            1: {
+                metrics: [
+                    {
+                        label: "TPA/PBM Power",
+                        before: "HIGH",
+                        after: "MEDIUM",
+                        impact: "Must compete on value"
+                    },
+                    {
+                        label: "Employer Power",
+                        before: "MEDIUM",
+                        after: "HIGH",
+                        impact: "Data enables leverage"
+                    },
+                    {
+                        label: "Patient Power",
+                        before: "LOW",
+                        after: "MEDIUM",
+                        impact: "Can see and choose"
+                    },
+                    {
+                        label: "Quality Link to Volume",
+                        before: "NONE",
+                        after: "STRONG",
+                        impact: "Merit-based competition"
+                    }
+                ],
+                narrative: {
+                    title: "The Ecosystem Shift",
+                    before: `
+                        <strong>Before Transparency:</strong> Power concentrated in middlemen.
+                        <div class="highlight-box">
+                            • TPAs/PBMs control data and networks (HIGH power)<br>
+                            • Employers have market power but don't use it (MEDIUM power, underutilized)<br>
+                            • Patients have no information or alternatives (LOW power)<br>
+                            • Quality invisible, so brand beats merit in competition<br>
+                            • Conflicts everywhere: misaligned incentives dominate
+                        </div>
+                    `,
+                    after: `
+                        <strong>After Transparency:</strong> Power shifts to value creators.
+                        <div class="highlight-box success">
+                            • Employers gain HIGH power through data and direct contracts<br>
+                            • TPAs/PBMs reduced to MEDIUM power, must compete transparently<br>
+                            • Patients gain MEDIUM power through visibility and choice<br>
+                            • Quality becomes visible, good providers win on merit<br>
+                            • Conflicts resolve: incentives align around value creation
+                        </div>
+                    `
+                },
+                before: {
+                    nodes: [
+                        // Core players
+                        { id: 'b-employer', label: 'EMPLOYER\n(Med Power)', type: 'player', power: 'medium', size: 80 },
+                        { id: 'b-tpa', label: 'TPA/CARRIER\n(High Power)', type: 'player', power: 'high', size: 100 },
+                        { id: 'b-pbm', label: 'PBM\n(High Power)', type: 'player', power: 'high', size: 100 },
+                        { id: 'b-hospital', label: 'HOSPITAL\n(High Power)', type: 'player', power: 'high', size: 95 },
+                        { id: 'b-patient', label: 'PATIENT\n(Low Power)', type: 'player', power: 'low', size: 60 },
+                        { id: 'b-good-provider', label: 'GOOD PROVIDER\n(Low Power)', type: 'player', power: 'low', size: 65 },
+                        { id: 'b-consultant', label: 'CONFLICTED\nCONSULTANT', type: 'player', power: 'medium', size: 70 },
+                        
+                        // Control points
+                        { id: 'b-data', label: 'DATA\n(Hidden)', type: 'control', size: 70 },
+                        { id: 'b-pricing', label: 'PRICING\n(Opaque)', type: 'control', size: 70 },
+                        { id: 'b-quality', label: 'QUALITY\n(Invisible)', type: 'control', size: 70 }
+                    ],
+                    edges: [
+                        // TPAs/PBMs control everything
+                        { source: 'b-tpa', target: 'b-data', label: 'Withholds', type: 'control' },
+                        { source: 'b-tpa', target: 'b-pricing', label: 'Obscures', type: 'control' },
+                        { source: 'b-pbm', target: 'b-pricing', label: 'Obscures', type: 'control' },
+                        { source: 'b-hospital', target: 'b-quality', label: 'Hides', type: 'control' },
+                        
+                        // Conflicts
+                        { source: 'b-employer', target: 'b-tpa', label: 'Overpays', type: 'conflict' },
+                        { source: 'b-employer', target: 'b-consultant', label: 'Misled by', type: 'conflict' },
+                        { source: 'b-patient', target: 'b-hospital', label: 'Can\'t choose', type: 'conflict' },
+                        { source: 'b-good-provider', target: 'b-hospital', label: 'Loses to brand', type: 'conflict' },
+                        
+                        // Weak relationships
+                        { source: 'b-employer', target: 'b-patient', label: 'Can\'t help', type: 'weak' }
+                    ]
+                },
+                after: {
+                    nodes: [
+                        // Core players (transformed power)
+                        { id: 'a-employer', label: 'EMPLOYER\n(High Power)', type: 'player', power: 'high', size: 110 },
+                        { id: 'a-tpa', label: 'TPA/CARRIER\n(Med Power)', type: 'player', power: 'medium', size: 75 },
+                        { id: 'a-pbm', label: 'PASS-THROUGH PBM\n(Med Power)', type: 'player', power: 'medium', size: 75 },
+                        { id: 'a-hospital', label: 'HOSPITAL\n(Med Power)', type: 'player', power: 'medium', size: 80 },
+                        { id: 'a-patient', label: 'PATIENT\n(Med Power)', type: 'player', power: 'medium', size: 80 },
+                        { id: 'a-good-provider', label: 'GOOD PROVIDER\n(Med Power)', type: 'player', power: 'medium', size: 85 },
+                        { id: 'a-consultant', label: 'UNCONFLICTED\nCONSULTANT', type: 'player', power: 'medium', size: 75 },
+                        
+                        // New enablers
+                        { id: 'a-transparency', label: 'TRANSPARENCY\nTOOLS', type: 'enabler', size: 90 },
+                        { id: 'a-coalition', label: 'EMPLOYER\nCOALITION', type: 'enabler', size: 80 },
+                        
+                        // Control points (now accessible)
+                        { id: 'a-data', label: 'DATA\n(Accessible)', type: 'control', size: 70 },
+                        { id: 'a-pricing', label: 'PRICING\n(Transparent)', type: 'control', size: 70 },
+                        { id: 'a-quality', label: 'QUALITY\n(Visible)', type: 'control', size: 70 }
+                    ],
+                    edges: [
+                        // Employers now control via transparency
+                        { source: 'a-employer', target: 'a-transparency', label: 'Uses', type: 'strong' },
+                        { source: 'a-transparency', target: 'a-data', label: 'Accesses', type: 'enable' },
+                        { source: 'a-transparency', target: 'a-pricing', label: 'Reveals', type: 'enable' },
+                        { source: 'a-transparency', target: 'a-quality', label: 'Integrates', type: 'enable' },
+                        
+                        // Positive relationships
+                        { source: 'a-employer', target: 'a-patient', label: 'Advocates for', type: 'ally' },
+                        { source: 'a-employer', target: 'a-good-provider', label: 'Direct contract', type: 'ally' },
+                        { source: 'a-employer', target: 'a-consultant', label: 'Aligned advice', type: 'ally' },
+                        { source: 'a-patient', target: 'a-good-provider', label: 'Chooses quality', type: 'market' },
+                        
+                        // Forced adaptation
+                        { source: 'a-employer', target: 'a-tpa', label: 'Accountable', type: 'accountability' },
+                        { source: 'a-employer', target: 'a-pbm', label: 'Transparent', type: 'accountability' }
+                    ]
+                }
+            },
+
+            // Layer 2: Complete - Full Transformation
+            2: {
+                metrics: [
+                    {
+                        label: "Total Savings",
+                        before: "$0",
+                        after: "$25M",
+                        impact: "On $100M spend (25%)"
+                    },
+                    {
+                        label: "Spread Pricing",
+                        before: "$15M",
+                        after: "$0",
+                        impact: "Eliminated through exposure"
+                    },
+                    {
+                        label: "Conflicts Resolved",
+                        before: "7 of 7",
+                        after: "7 of 7",
+                        impact: "All major conflicts transformed"
+                    },
+                    {
+                        label: "Market Function",
+                        before: "Broken",
+                        after: "Working",
+                        impact: "Competition on value"
+                    }
+                ],
+                narrative: {
+                    title: "The Complete Transformation",
+                    before: `
+                        <strong>Before Transparency:</strong> A fundamentally broken system.
+                        <div class="highlight-box">
+                            <strong>Money Flow:</strong> $100M → $30M leaks → $70M to care<br>
+                            <strong>Power:</strong> Concentrated in middlemen extracting value<br>
+                            <strong>Conflicts:</strong> 7 major fights, all won by bad actors<br>
+                            <strong>Quality:</strong> Invisible, so brand beats merit<br>
+                            <strong>Patients:</strong> Functionally uninsured, can't afford care<br>
+                            <strong>Employers:</strong> Have power but don't use it<br>
+                            <strong>Market:</strong> Not functioning (information asymmetry prevents competition)
+                        </div>
+                    `,
+                    after: `
+                        <strong>After Transparency:</strong> A transformed, functioning market.
+                        <div class="highlight-box success">
+                            <strong>Money Flow:</strong> $80M → $5M admin → $75M to care (more efficient!)<br>
+                            <strong>Power:</strong> Shifted to employers and patients via data<br>
+                            <strong>Conflicts:</strong> 7 major fights resolved through alignment<br>
+                            <strong>Quality:</strong> Visible via Leapfrog, drives competition<br>
+                            <strong>Patients:</strong> Know costs, see quality, can choose<br>
+                            <strong>Employers:</strong> Using all levers, direct contracting common<br>
+                            <strong>Market:</strong> Functioning (transparency enables competition on value)
+                        </div>
+                    `
+                },
+                before: {
+                    nodes: [
+                        // Money sources
+                        { id: 'b2-employer-budget', label: 'EMPLOYER\n$100M Budget', type: 'source', size: 100 },
+                        { id: 'b2-employee', label: 'EMPLOYEES\n& FAMILIES', type: 'source', size: 70 },
+                        
+                        // Middlemen (high power)
+                        { id: 'b2-tpa', label: 'TPA\nSpread: $8M', type: 'bad-actor', size: 85 },
+                        { id: 'b2-pbm', label: 'PBM\nSpread: $6M', type: 'bad-actor', size: 85 },
+                        { id: 'b2-consultant', label: 'CONSULTANT\nCommission: $5M', type: 'bad-actor', size: 75 },
+                        
+                        // Providers
+                        { id: 'b2-hospital-bad', label: 'EXPENSIVE\nHOSPITAL\n$42K hip', type: 'bad-actor', size: 80 },
+                        { id: 'b2-hospital-good', label: 'GOOD HOSPITAL\n$18K hip\n(invisible)', type: 'good-hidden', size: 70 },
+                        
+                        // Destinations
+                        { id: 'b2-total-leaked', label: 'TOTAL LEAKED\n$30M', type: 'leakage', size: 95 },
+                        { id: 'b2-providers-receive', label: 'PROVIDERS\nReceive $70M', type: 'destination', size: 85 },
+                        
+                        // Control points
+                        { id: 'b2-data', label: 'Claims Data\n(Withheld)', type: 'control-blocked', size: 60 },
+                        { id: 'b2-pricing', label: 'Pricing Info\n(Hidden)', type: 'control-blocked', size: 60 },
+                        { id: 'b2-quality', label: 'Quality Data\n(Invisible)', type: 'control-blocked', size: 60 }
+                    ],
+                    edges: [
+                        // Money flows with leakage
+                        { source: 'b2-employer-budget', target: 'b2-tpa', label: '$75M', type: 'money-flow' },
+                        { source: 'b2-employer-budget', target: 'b2-pbm', label: '$15M', type: 'money-flow' },
+                        { source: 'b2-employer-budget', target: 'b2-consultant', label: '$5M', type: 'money-flow' },
+                        
+                        { source: 'b2-tpa', target: 'b2-total-leaked', label: '$8M spread', type: 'leak' },
+                        { source: 'b2-pbm', target: 'b2-total-leaked', label: '$6M spread', type: 'leak' },
+                        { source: 'b2-consultant', target: 'b2-total-leaked', label: '$5M conflict', type: 'leak' },
+                        
+                        { source: 'b2-tpa', target: 'b2-hospital-bad', label: 'Overpays', type: 'weak-flow' },
+                        { source: 'b2-hospital-bad', target: 'b2-providers-receive', label: 'Part of $70M', type: 'destination-flow' },
+                        { source: 'b2-hospital-good', target: 'b2-providers-receive', label: 'Loses volume', type: 'weak-destination' },
+                        
+                        // Control
+                        { source: 'b2-tpa', target: 'b2-data', label: 'Blocks', type: 'block' },
+                        { source: 'b2-tpa', target: 'b2-pricing', label: 'Hides', type: 'block' },
+                        { source: 'b2-hospital-bad', target: 'b2-quality', label: 'Obscures', type: 'block' },
+                        
+                        // Victims
+                        { source: 'b2-employee', target: 'b2-employer-budget', label: 'Pay more', type: 'burden' },
+                        { source: 'b2-employee', target: 'b2-hospital-bad', label: 'Can\'t avoid', type: 'forced' }
+                    ]
+                },
+                after: {
+                    nodes: [
+                        // Money sources (reduced spend)
+                        { id: 'a2-employer-budget', label: 'EMPLOYER\n$80M Budget', type: 'source', size: 100 },
+                        { id: 'a2-employee', label: 'EMPLOYEES\n& FAMILIES\n+$5K each', type: 'winner', size: 75 },
+                        
+                        // Enablers (new power centers)
+                        { id: 'a2-transparency', label: 'TRANSPARENCY\nTOOLS', type: 'enabler', size: 95 },
+                        { id: 'a2-coalition', label: 'EMPLOYER\nCOALITIONS', type: 'enabler', size: 85 },
+                        
+                        // Reformed middlemen
+                        { id: 'a2-tpa', label: 'TPA\nAdmin: $3M', type: 'reformed', size: 70 },
+                        { id: 'a2-pbm', label: 'PASS-THROUGH PBM\nFee: $1M', type: 'reformed', size: 70 },
+                        { id: 'a2-consultant', label: 'UNCONFLICTED\nCONSULTANT\nFee: $2M', type: 'reformed', size: 70 },
+                        
+                        // Providers (quality visible)
+                        { id: 'a2-hospital-good', label: 'GOOD HOSPITAL\n$18K hip\nA-grade', type: 'winner-provider', size: 90 },
+                        { id: 'a2-hospital-bad', label: 'EXPENSIVE\nHOSPITAL\n$42K hip\nC-grade\n(loses volume)', type: 'loser', size: 65 },
+                        
+                        // Destinations
+                        { id: 'a2-legit-admin', label: 'LEGIT ADMIN\n$5M only', type: 'neutral', size: 65 },
+                        { id: 'a2-providers-receive', label: 'PROVIDERS\nReceive $75M', type: 'destination', size: 95 },
+                        { id: 'a2-savings', label: 'SAVINGS\n$20M\n→ Wages', type: 'benefit', size: 85 },
+                        
+                        // Control points (now open)
+                        { id: 'a2-data', label: 'Claims Data\n(Accessible)', type: 'control-open', size: 60 },
+                        { id: 'a2-pricing', label: 'Pricing Info\n(Transparent)', type: 'control-open', size: 60 },
+                        { id: 'a2-quality', label: 'Quality Data\n(Visible)', type: 'control-open', size: 60 }
+                    ],
+                    edges: [
+                        // Transparency enables everything
+                        { source: 'a2-employer-budget', target: 'a2-transparency', label: 'Uses', type: 'enable-flow' },
+                        { source: 'a2-transparency', target: 'a2-data', label: 'Accesses', type: 'opens' },
+                        { source: 'a2-transparency', target: 'a2-pricing', label: 'Reveals', type: 'opens' },
+                        { source: 'a2-transparency', target: 'a2-quality', label: 'Integrates', type: 'opens' },
+                        { source: 'a2-employer-budget', target: 'a2-coalition', label: 'Joins', type: 'coordinate' },
+                        
+                        // Clean money flows
+                        { source: 'a2-employer-budget', target: 'a2-tpa', label: '$3M admin', type: 'clean-flow' },
+                        { source: 'a2-employer-budget', target: 'a2-pbm', label: '$1M fee', type: 'clean-flow' },
+                        { source: 'a2-employer-budget', target: 'a2-consultant', label: '$2M fee', type: 'clean-flow' },
+                        
+                        { source: 'a2-tpa', target: 'a2-legit-admin', label: 'Transparent', type: 'legit' },
+                        { source: 'a2-pbm', target: 'a2-legit-admin', label: 'Transparent', type: 'legit' },
+                        
+                        // Direct to good providers
+                        { source: 'a2-employer-budget', target: 'a2-hospital-good', label: 'Direct contract', type: 'strong-flow' },
+                        { source: 'a2-hospital-good', target: 'a2-providers-receive', label: 'Volume winner', type: 'strong-destination' },
+                        { source: 'a2-hospital-bad', target: 'a2-providers-receive', label: 'Loses volume', type: 'weak-destination' },
+                        
+                        // Benefits flow back
+                        { source: 'a2-employer-budget', target: 'a2-savings', label: '$20M saved', type: 'benefit-flow' },
+                        { source: 'a2-savings', target: 'a2-employee', label: '→ Wages', type: 'benefit-flow' },
+                        
+                        // Empowered relationships
+                        { source: 'a2-employee', target: 'a2-transparency', label: 'Uses', type: 'empower' },
+                        { source: 'a2-employee', target: 'a2-hospital-good', label: 'Chooses quality', type: 'informed-choice' }
+                    ]
+                }
+            }
+        };
+
+        // Cytoscape initialization
+        let cy;
+        let currentLayer = 0;
+        let currentView = 'before';
+
+        function updateMetrics(layerNum) {
+            const data = transformationData[layerNum];
+            const panel = document.getElementById('metrics-panel');
+            
+            let html = '<div class="metrics-grid">';
+            data.metrics.forEach(metric => {
+                html += `
+                    <div class="metric-card">
+                        <div class="metric-label">${metric.label}</div>
+                        <div class="metric-comparison">
+                            <span class="metric-before">${metric.before}</span>
+                            <span class="metric-arrow">→</span>
+                            <span class="metric-after">${metric.after}</span>
+                        </div>
+                        <div class="metric-impact">${metric.impact}</div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            panel.innerHTML = html;
+        }
+
+        function updateNarrative(layerNum, view) {
+            const data = transformationData[layerNum];
+            const panel = document.getElementById('narrative-panel');
+            
+            let content = '';
+            if (view === 'before' || view === 'split') {
+                content += data.narrative.before;
+            }
+            if (view === 'after' || view === 'split') {
+                content += data.narrative.after;
+            }
+            
+            panel.innerHTML = `
+                <div class="narrative-card">
+                    <div class="narrative-title">${data.narrative.title}</div>
+                    <div class="narrative-content">${content}</div>
+                </div>
+            `;
+        }
+
+        // Layout management functions
+        function saveLayout() {
+            const positions = {};
+            cy.nodes().forEach(node => {
+                positions[node.id()] = node.position();
+            });
+
+            const layoutData = {
+                layer: currentLayer,
+                view: currentView,
+                positions: positions,
+                zoom: cy.zoom(),
+                pan: cy.pan()
+            };
+
+            localStorage.setItem(`diagram5_layout_${currentLayer}_${currentView}`, JSON.stringify(layoutData));
+
+            // Visual feedback
+            const btn = document.getElementById('saveLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Saved!';
+            btn.style.borderColor = 'var(--payerset-green)';
+            btn.style.color = 'var(--payerset-green)';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.borderColor = '';
+                btn.style.color = '';
+            }, 2000);
+        }
+
+        async function loadSavedLayout(layerNum, view) {
+            // First, check localStorage (user's saved layout)
+            const savedData = localStorage.getItem(`diagram5_layout_${layerNum}_${view}`);
+            if (savedData) {
+                try {
+                    const layoutData = JSON.parse(savedData);
+                    console.log('Loaded layout from localStorage');
+                    return layoutData;
+                } catch (e) {
+                    console.error('Error loading saved layout from localStorage:', e);
+                }
+            }
+
+            // If no localStorage data, try to load default layout
+            try {
+                const response = await fetch(`layouts/diagram5-layer${layerNum}-${view}.json`);
+                if (response.ok) {
+                    const layoutData = await response.json();
+                    console.log('Loaded default layout from file');
+                    return layoutData;
+                }
+            } catch (e) {
+                console.log('No default layout file found, will use algorithmic layout');
+            }
+
+            return null;
+        }
+
+        function exportLayout() {
+            const positions = {};
+            cy.nodes().forEach(node => {
+                positions[node.id()] = node.position();
+            });
+
+            const layoutData = {
+                diagram: 'diagram5',
+                layer: currentLayer,
+                view: currentView,
+                positions: positions,
+                zoom: cy.zoom(),
+                pan: cy.pan(),
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = JSON.stringify(layoutData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `diagram5-layer${currentLayer}-${currentView}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            // Visual feedback
+            const btn = document.getElementById('exportLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Exported!';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 1500);
+        }
+
+        function importLayout() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const layoutData = JSON.parse(event.target.result);
+
+                        // Validate it's the right diagram
+                        if (layoutData.diagram !== 'diagram5') {
+                            alert('This layout file is not for Diagram 5');
+                            return;
+                        }
+
+                        // Save to localStorage
+                        localStorage.setItem(`diagram5_layout_${layoutData.layer}_${layoutData.view}`, JSON.stringify(layoutData));
+
+                        // If it's for current layer and view, apply immediately
+                        if (layoutData.layer === currentLayer && layoutData.view === currentView) {
+                            initCytoscape(currentLayer, currentView);
+                        }
+
+                        // Show feedback
+                        const btn = document.getElementById('importLayout');
+                        const originalText = btn.innerHTML;
+                        btn.innerHTML = '<i class="fas fa-check"></i> Imported!';
+
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                        }, 1500);
+
+                    } catch (error) {
+                        alert('Error importing layout file: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        function resetLayout() {
+            localStorage.removeItem(`diagram5_layout_${currentLayer}_${currentView}`);
+            initCytoscape(currentLayer, currentView);
+
+            // Visual feedback
+            const btn = document.getElementById('resetLayout');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check"></i> Reset!';
+
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+            }, 1500);
+        }
+
+        async function initCytoscape(layerNum, view) {
+            const data = transformationData[layerNum];
+
+            // Update metrics and narrative
+            updateMetrics(layerNum);
+            updateNarrative(layerNum, view);
+
+            // Check for saved layout (localStorage or default file)
+            const savedLayout = await loadSavedLayout(layerNum, view);
+            
+            // Get the appropriate node/edge data based on view
+            let elements = [];
+            if (view === 'before') {
+                elements = [
+                    ...data.before.nodes.map(n => ({
+                        data: {
+                            id: n.id,
+                            label: n.label,
+                            type: n.type,
+                            power: n.power,
+                            size: n.size
+                        }
+                    })),
+                    ...data.before.edges.map(e => ({
+                        data: {
+                            id: `${e.source}-${e.target}-${Math.random()}`,
+                            source: e.source,
+                            target: e.target,
+                            label: e.label || '',
+                            type: e.type
+                        }
+                    }))
+                ];
+            } else if (view === 'after') {
+                elements = [
+                    ...data.after.nodes.map(n => ({
+                        data: {
+                            id: n.id,
+                            label: n.label,
+                            type: n.type,
+                            power: n.power,
+                            size: n.size
+                        }
+                    })),
+                    ...data.after.edges.map(e => ({
+                        data: {
+                            id: `${e.source}-${e.target}-${Math.random()}`,
+                            source: e.source,
+                            target: e.target,
+                            label: e.label || '',
+                            type: e.type
+                        }
+                    }))
+                ];
+            } else { // split view
+                // Combine both with offset positions
+                elements = [
+                    ...data.before.nodes.map(n => ({
+                        data: {
+                            id: n.id,
+                            label: n.label,
+                            type: n.type,
+                            power: n.power,
+                            size: n.size * 0.8,
+                            side: 'before'
+                        }
+                    })),
+                    ...data.before.edges.map(e => ({
+                        data: {
+                            id: `${e.source}-${e.target}-${Math.random()}`,
+                            source: e.source,
+                            target: e.target,
+                            label: e.label || '',
+                            type: e.type
+                        }
+                    })),
+                    ...data.after.nodes.map(n => ({
+                        data: {
+                            id: n.id,
+                            label: n.label,
+                            type: n.type,
+                            power: n.power,
+                            size: n.size * 0.8,
+                            side: 'after'
+                        }
+                    })),
+                    ...data.after.edges.map(e => ({
+                        data: {
+                            id: `${e.source}-${e.target}-${Math.random()}`,
+                            source: e.source,
+                            target: e.target,
+                            label: e.label || '',
+                            type: e.type
+                        }
+                    }))
+                ];
+            }
+
+            // Destroy existing instance if it exists
+            if (cy) {
+                cy.destroy();
+            }
+
+            // Create new instance
+            cy = cytoscape({
+                container: document.getElementById('cy'),
+                elements: elements,
+                style: [
+                    // Base node style
+                    {
+                        selector: 'node',
+                        style: {
+                            'label': 'data(label)',
+                            'text-valign': 'center',
+                            'text-halign': 'center',
+                            'font-size': '10px',
+                            'font-weight': 'bold',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '90px',
+                            'width': function(ele) { return ele.data('size') || 80; },
+                            'height': function(ele) { return ele.data('size') || 80; },
+                            'border-width': 3,
+                            'transition-property': 'background-color, border-color, border-width',
+                            'transition-duration': '0.3s'
+                        }
+                    },
+                    // Node types - BEFORE states
+                    {
+                        selector: 'node[type="source"]',
+                        style: {
+                            'shape': 'ellipse',
+                            'background-color': '#95a5a6',
+                            'border-color': '#7f8c8d'
+                        }
+                    },
+                    {
+                        selector: 'node[type="bad-actor"]',
+                        style: {
+                            'shape': 'rectangle',
+                            'background-color': '#e74c3c',
+                            'border-color': '#c0392b',
+                            'color': '#fff'
+                        }
+                    },
+                    {
+                        selector: 'node[type="bad"]',
+                        style: {
+                            'shape': 'diamond',
+                            'background-color': '#e74c3c',
+                            'border-color': '#c0392b',
+                            'color': '#fff'
+                        }
+                    },
+                    {
+                        selector: 'node[type="leakage"]',
+                        style: {
+                            'shape': 'diamond',
+                            'background-color': '#e74c3c',
+                            'border-color': '#c0392b',
+                            'color': '#fff',
+                            'font-size': '12px'
+                        }
+                    },
+                    {
+                        selector: 'node[type="victim"]',
+                        style: {
+                            'shape': 'ellipse',
+                            'background-color': '#e8e8e8',
+                            'border-color': '#7f8c8d'
+                        }
+                    },
+                    {
+                        selector: 'node[type="destination"]',
+                        style: {
+                            'shape': 'ellipse',
+                            'background-color': '#95a5a6',
+                            'border-color': '#7f8c8d'
+                        }
+                    },
+                    {
+                        selector: 'node[type="good-hidden"]',
+                        style: {
+                            'shape': 'ellipse',
+                            'background-color': '#bdc3c7',
+                            'border-color': '#95a5a6',
+                            'opacity': 0.6
+                        }
+                    },
+                    {
+                        selector: 'node[type="control-blocked"]',
+                        style: {
+                            'shape': 'rectangle',
+                            'background-color': '#e8e8e8',
+                            'border-color': '#95a5a6',
+                            'border-style': 'dashed',
+                            'font-size': '9px'
+                        }
+                    },
+                    {
+                        selector: 'node[type="player"]',
+                        style: {
+                            'shape': 'ellipse'
+                        }
+                    },
+                    {
+                        selector: 'node[type="player"][power="high"]',
+                        style: {
+                            'background-color': '#e74c3c',
+                            'border-color': '#c0392b',
+                            'color': '#fff'
+                        }
+                    },
+                    {
+                        selector: 'node[type="player"][power="medium"]',
+                        style: {
+                            'background-color': '#f39c12',
+                            'border-color': '#d68910'
+                        }
+                    },
+                    {
+                        selector: 'node[type="player"][power="low"]',
+                        style: {
+                            'background-color': '#bdc3c7',
+                            'border-color': '#95a5a6'
+                        }
+                    },
+                    {
+                        selector: 'node[type="control"]',
+                        style: {
+                            'shape': 'diamond',
+                            'background-color': '#e8e8e8',
+                            'border-color': '#95a5a6'
+                        }
+                    },
+                    // Node types - AFTER states
+                    {
+                        selector: 'node[type="enabler"]',
+                        style: {
+                            'shape': 'hexagon',
+                            'background-color': '#667eea',
+                            'border-color': '#764ba2',
+                            'color': '#fff',
+                            'font-size': '11px'
+                        }
+                    },
+                    {
+                        selector: 'node[type="reformed"]',
+                        style: {
+                            'shape': 'rectangle',
+                            'background-color': '#95a5a6',
+                            'border-color': '#7f8c8d'
+                        }
+                    },
+                    {
+                        selector: 'node[type="winner"]',
+                        style: {
+                            'shape': 'ellipse',
+                            'background-color': '#27ae60',
+                            'border-color': '#229954',
+                            'color': '#fff'
+                        }
+                    },
+                    {
+                        selector: 'node[type="winner-provider"]',
+                        style: {
+                            'shape': 'ellipse',
+                            'background-color': '#27ae60',
+                            'border-color': '#229954',
+                            'color': '#fff'
+                        }
+                    },
+                    {
+                        selector: 'node[type="loser"]',
+                        style: {
+                            'shape': 'ellipse',
+                            'background-color': '#bdc3c7',
+                            'border-color': '#95a5a6',
+                            'opacity': 0.6
+                        }
+                    },
+                    {
+                        selector: 'node[type="neutral"]',
+                        style: {
+                            'shape': 'rectangle',
+                            'background-color': '#95a5a6',
+                            'border-color': '#7f8c8d'
+                        }
+                    },
+                    {
+                        selector: 'node[type="benefit"]',
+                        style: {
+                            'shape': 'diamond',
+                            'background-color': '#27ae60',
+                            'border-color': '#229954',
+                            'color': '#fff'
+                        }
+                    },
+                    {
+                        selector: 'node[type="control-open"]',
+                        style: {
+                            'shape': 'diamond',
+                            'background-color': '#52b788',
+                            'border-color': '#27ae60',
+                            'font-size': '9px',
+                            'color': '#fff'
+                        }
+                    },
+                    {
+                        selector: 'node:hover',
+                        style: {
+                            'border-width': 6,
+                            'border-color': '#667eea'
+                        }
+                    },
+                    // Edge types
+                    {
+                        selector: 'edge',
+                        style: {
+                            'width': 2,
+                            'line-color': '#666',
+                            'target-arrow-color': '#666',
+                            'target-arrow-shape': 'triangle',
+                            'curve-style': 'bezier',
+                            'label': 'data(label)',
+                            'font-size': '8px',
+                            'text-background-color': '#fff',
+                            'text-background-opacity': 0.9,
+                            'text-background-padding': '2px',
+                            'text-wrap': 'wrap',
+                            'text-max-width': '70px'
+                        }
+                    },
+                    // BEFORE edge types
+                    {
+                        selector: 'edge[type="bad-flow"]',
+                        style: {
+                            'line-color': '#e74c3c',
+                            'target-arrow-color': '#e74c3c',
+                            'width': 5,
+                            'line-style': 'dashed'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="weak-flow"]',
+                        style: {
+                            'line-color': '#95a5a6',
+                            'target-arrow-color': '#95a5a6',
+                            'width': 3
+                        }
+                    },
+                    {
+                        selector: 'edge[type="burden"]',
+                        style: {
+                            'line-color': '#e74c3c',
+                            'target-arrow-color': '#e74c3c',
+                            'width': 2,
+                            'line-style': 'dotted'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="leak"]',
+                        style: {
+                            'line-color': '#e74c3c',
+                            'target-arrow-color': '#e74c3c',
+                            'width': 4,
+                            'line-style': 'dashed'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="money-flow"]',
+                        style: {
+                            'line-color': '#95a5a6',
+                            'target-arrow-color': '#95a5a6',
+                            'width': 3
+                        }
+                    },
+                    {
+                        selector: 'edge[type="destination-flow"]',
+                        style: {
+                            'line-color': '#95a5a6',
+                            'target-arrow-color': '#95a5a6',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="weak-destination"]',
+                        style: {
+                            'line-color': '#bdc3c7',
+                            'target-arrow-color': '#bdc3c7',
+                            'width': 1,
+                            'line-style': 'dotted',
+                            'opacity': 0.5
+                        }
+                    },
+                    {
+                        selector: 'edge[type="block"]',
+                        style: {
+                            'line-color': '#e74c3c',
+                            'target-arrow-color': '#e74c3c',
+                            'width': 2,
+                            'line-style': 'dashed'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="control"]',
+                        style: {
+                            'line-color': '#e74c3c',
+                            'target-arrow-color': '#e74c3c',
+                            'width': 3
+                        }
+                    },
+                    {
+                        selector: 'edge[type="conflict"]',
+                        style: {
+                            'line-color': '#e74c3c',
+                            'target-arrow-color': '#e74c3c',
+                            'width': 3,
+                            'line-style': 'dashed'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="weak"]',
+                        style: {
+                            'line-color': '#bdc3c7',
+                            'target-arrow-color': '#bdc3c7',
+                            'width': 1,
+                            'line-style': 'dotted'
+                        }
+                    },
+                    {
+                        selector: 'edge[type="forced"]',
+                        style: {
+                            'line-color': '#e74c3c',
+                            'target-arrow-color': '#e74c3c',
+                            'width': 2
+                        }
+                    },
+                    // AFTER edge types
+                    {
+                        selector: 'edge[type="good-flow"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 4
+                        }
+                    },
+                    {
+                        selector: 'edge[type="strong-flow"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 5
+                        }
+                    },
+                    {
+                        selector: 'edge[type="benefit"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 4
+                        }
+                    },
+                    {
+                        selector: 'edge[type="controlled"]',
+                        style: {
+                            'line-color': '#95a5a6',
+                            'target-arrow-color': '#95a5a6',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="enable-flow"]',
+                        style: {
+                            'line-color': '#667eea',
+                            'target-arrow-color': '#667eea',
+                            'width': 3
+                        }
+                    },
+                    {
+                        selector: 'edge[type="opens"]',
+                        style: {
+                            'line-color': '#667eea',
+                            'target-arrow-color': '#667eea',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="coordinate"]',
+                        style: {
+                            'line-color': '#667eea',
+                            'target-arrow-color': '#667eea',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="clean-flow"]',
+                        style: {
+                            'line-color': '#95a5a6',
+                            'target-arrow-color': '#95a5a6',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="legit"]',
+                        style: {
+                            'line-color': '#95a5a6',
+                            'target-arrow-color': '#95a5a6',
+                            'width': 1
+                        }
+                    },
+                    {
+                        selector: 'edge[type="strong-destination"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 4
+                        }
+                    },
+                    {
+                        selector: 'edge[type="benefit-flow"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 4
+                        }
+                    },
+                    {
+                        selector: 'edge[type="empower"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="informed-choice"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 3
+                        }
+                    },
+                    {
+                        selector: 'edge[type="strong"]',
+                        style: {
+                            'line-color': '#667eea',
+                            'target-arrow-color': '#667eea',
+                            'width': 3
+                        }
+                    },
+                    {
+                        selector: 'edge[type="enable"]',
+                        style: {
+                            'line-color': '#667eea',
+                            'target-arrow-color': '#667eea',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="ally"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 3
+                        }
+                    },
+                    {
+                        selector: 'edge[type="market"]',
+                        style: {
+                            'line-color': '#27ae60',
+                            'target-arrow-color': '#27ae60',
+                            'width': 2
+                        }
+                    },
+                    {
+                        selector: 'edge[type="accountability"]',
+                        style: {
+                            'line-color': '#667eea',
+                            'target-arrow-color': '#667eea',
+                            'width': 2,
+                            'line-style': 'dashed'
+                        }
+                    }
+                ],
+                layout: {
+                    name: savedLayout ? 'preset' : (view === 'split' ? 'grid' : 'cose'),
+                    positions: savedLayout ? (node => savedLayout.positions[node.id()]) : undefined,
+                    animate: !savedLayout,
+                    animationDuration: savedLayout ? 0 : 1000,
+                    nodeRepulsion: 8000,
+                    idealEdgeLength: 120,
+                    edgeElasticity: 100,
+                    gravity: 1,
+                    numIter: 1000,
+                    rows: view === 'split' ? 1 : undefined,
+                    cols: view === 'split' ? 2 : undefined
+                },
+                wheelSensitivity: 0.2
+            });
+
+            // Apply saved zoom and pan if available
+            if (savedLayout) {
+                cy.zoom(savedLayout.zoom);
+                cy.pan(savedLayout.pan);
+            }
+
+            // Add interactivity
+            setupInteractivity();
+        }
+
+        function setupInteractivity() {
+            const tooltip = document.getElementById('tooltip');
+
+            // Hover tooltips
+            cy.on('mouseover', 'node', function(evt) {
+                const node = evt.target;
+                const data = node.data();
+                
+                let content = `<h4>${data.label}</h4>`;
+                if (data.type) {
+                    content += `<p style="color: #aaa; font-size: 11px;">${data.type.replace('-', ' ')}</p>`;
+                }
+                
+                tooltip.innerHTML = content;
+                tooltip.style.display = 'block';
+            });
+
+            cy.on('mousemove', 'node', function(evt) {
+                tooltip.style.left = evt.originalEvent.pageX + 15 + 'px';
+                tooltip.style.top = evt.originalEvent.pageY + 15 + 'px';
+            });
+
+            cy.on('mouseout', 'node', function() {
+                tooltip.style.display = 'none';
+            });
+
+            cy.on('mouseover', 'edge', function(evt) {
+                const edge = evt.target;
+                const data = edge.data();
+                
+                if (data.label) {
+                    let content = `<h4>Flow</h4><p>${data.label}</p>`;
+                    tooltip.innerHTML = content;
+                    tooltip.style.display = 'block';
+                }
+            });
+
+            cy.on('mouseout', 'edge', function() {
+                tooltip.style.display = 'none';
+            });
+        }
+
+        // Layer switching
+        document.querySelectorAll('.layer-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const layer = parseInt(this.dataset.layer);
+                
+                document.querySelectorAll('.layer-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                currentLayer = layer;
+                initCytoscape(layer, currentView);
+            });
+        });
+
+        // View toggle
+        document.querySelectorAll('.toggle-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const view = this.dataset.view;
+
+                document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                currentView = view;
+                initCytoscape(currentLayer, view);
+            });
+        });
+
+        // Layout control buttons
+        document.getElementById('saveLayout').addEventListener('click', saveLayout);
+        document.getElementById('resetLayout').addEventListener('click', resetLayout);
+        document.getElementById('exportLayout').addEventListener('click', exportLayout);
+        document.getElementById('importLayout').addEventListener('click', importLayout);
+
+        // Dropdown navigation toggle
+        const dropdown = document.querySelector('.nav-dropdown');
+        const dropdownToggle = document.querySelector('.nav-dropdown-toggle');
+        dropdownToggle.addEventListener('click', (e) => { e.stopPropagation(); dropdown.classList.toggle('open'); });
+        document.addEventListener('click', (e) => { if (!dropdown.contains(e.target)) dropdown.classList.remove('open'); });
+
+        // Initialize with Layer 0, Before view
+        initCytoscape(0, 'before');
+    </script>
+</body>
+</html>

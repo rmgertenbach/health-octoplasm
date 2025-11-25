@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healthcare Transparency Platform - Know Before You Go</title>
+  <meta name="description" content="Discover what healthcare actually costs. Compare prices, find high-value providers, and stop overpaying.">
+  <link rel="stylesheet" href="shared/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <a href="index.html" class="logo">Healthcare Transparency</a>
+      <nav class="nav">
+        <a href="../use-cases.html" class="nav-link">Use Cases</a>
+        <a href="learn/stakeholder-map.html" class="nav-link">Learn</a>
+        <a href="#about" class="nav-link">About</a>
+        <a href="#data" class="nav-link">Data Sources</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title fade-in">Know Before You Go</h1>
+      <p class="hero-subtitle fade-in">
+        Real healthcare prices. Real quality scores. Real transparency.
+        <br>Choose your path below to start saving money and making informed decisions.
+      </p>
+
+      <div class="alert alert-info" style="max-width: 700px; margin: 32px auto 0;">
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <i class="fa-solid fa-graduation-cap" style="font-size: 24px;"></i>
+          <div>
+            <strong>New to healthcare transparency?</strong>
+            <a href="../index.html" style="margin-left: 8px; text-decoration: underline;">Learn how the system works first →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Persona Selection -->
+  <section class="section bg-gray-50">
+    <div class="container">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+        <!-- PATIENT CARD -->
+        <a href="patients/index.html" class="persona-card card patient" style="text-decoration: none; color: inherit;">
+          <div style="font-size: 48px; margin-bottom: 16px; color: var(--color-patient-primary);">
+            <i class="fa-solid fa-hospital"></i>
+          </div>
+          <h3 class="card-title" style="color: var(--color-patient-primary); font-size: var(--text-3xl);">
+            I'm a Patient
+          </h3>
+          <p style="font-size: var(--text-lg); color: var(--color-gray-700); margin-bottom: 24px;">
+            Find out what healthcare actually costs BEFORE you get the bill
+          </p>
+
+          <div style="background: var(--color-patient-light); padding: 16px; border-radius: var(--radius-lg); margin-bottom: 24px;">
+            <h4 style="font-size: var(--text-base); font-weight: var(--font-semibold); margin-bottom: 12px;">
+              What you can do:
+            </h4>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="margin-bottom: 8px; padding-left: 24px; position: relative;">
+                <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 0; color: var(--color-patient-primary);"></i>
+                Compare provider prices for any procedure
+              </li>
+              <li style="margin-bottom: 8px; padding-left: 24px; position: relative;">
+                <i class="fa-solid fa-star" style="position: absolute; left: 0; color: var(--color-patient-primary);"></i>
+                See quality and safety grades
+              </li>
+              <li style="margin-bottom: 8px; padding-left: 24px; position: relative;">
+                <i class="fa-solid fa-dollar-sign" style="position: absolute; left: 0; color: var(--color-patient-primary);"></i>
+                Know your estimated out-of-pocket cost
+              </li>
+              <li style="margin-bottom: 8px; padding-left: 24px; position: relative;">
+                <i class="fa-solid fa-book" style="position: absolute; left: 0; color: var(--color-patient-primary);"></i>
+                Learn how healthcare pricing actually works
+              </li>
+            </ul>
+          </div>
+
+          <div class="text-center">
+            <span class="btn btn-primary btn-lg" style="width: 100%;">Search Procedures</span>
+          </div>
+        </a>
+
+        <!-- EMPLOYER CARD -->
+        <a href="employers/index.html" class="persona-card card employer" style="text-decoration: none; color: inherit;">
+          <div style="font-size: 48px; margin-bottom: 16px; color: var(--color-employer-primary);">
+            <i class="fa-solid fa-briefcase"></i>
+          </div>
+          <h3 class="card-title" style="color: var(--color-employer-primary); font-size: var(--text-3xl);">
+            I'm an Employer
+          </h3>
+          <p style="font-size: var(--text-lg); color: var(--color-gray-700); margin-bottom: 24px;">
+            Discover if you're overpaying - and by how much
+          </p>
+
+          <div style="background: var(--color-employer-light); padding: 16px; border-radius: var(--radius-lg); margin-bottom: 24px;">
+            <h4 style="font-size: var(--text-base); font-weight: var(--font-semibold); margin-bottom: 12px;">
+              What you can do:
+            </h4>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="margin-bottom: 8px; padding-left: 24px; position: relative;">
+                <i class="fa-solid fa-chart-line" style="position: absolute; left: 0; color: var(--color-employer-primary);"></i>
+                Benchmark your rates vs. Medicare + peers
+              </li>
+              <li style="margin-bottom: 8px; padding-left: 24px; position: relative;">
+                <i class="fa-solid fa-magnifying-glass-chart" style="position: absolute; left: 0; color: var(--color-employer-primary);"></i>
+                Detect hidden spread pricing
+              </li>
+              <li style="margin-bottom: 8px; padding-left: 24px; position: relative;">
+                <i class="fa-solid fa-bullseye" style="position: absolute; left: 0; color: var(--color-employer-primary);"></i>
+                Identify high-value providers
+              </li>
+              <li style="margin-bottom: 8px; padding-left: 24px; position: relative;">
+                <i class="fa-solid fa-clipboard-check" style="position: absolute; left: 0; color: var(--color-employer-primary);"></i>
+                Meet CAA fiduciary compliance
+              </li>
+            </ul>
+          </div>
+
+          <div class="text-center">
+            <span class="btn btn-primary btn-lg" style="width: 100%; background-color: var(--color-employer-primary);">Get Free Audit</span>
+          </div>
+        </a>
+
+        <!-- PROVIDER CARD -->
+        <a href="providers/index.html" class="persona-card card provider" style="text-decoration: none; color: inherit;">
+          <div style="font-size: 48px; margin-bottom: 16px; color: var(--color-provider-primary);">
+            <i class="fa-solid fa-user-doctor"></i>
+          </div>
+          <h3 class="card-title" style="color: var(--color-provider-primary); font-size: var(--text-3xl);">
+            I'm a Provider
+          </h3>
+          <p style="font-size: var(--text-lg); color: var(--color-gray-700); margin-bottom: 24px;">
+            Prove your value with data and connect directly with patients and employers
+          </p>
+
+          <div style="background: var(--color-provider-light); padding: 16px; border-radius: var(--radius-lg); margin-bottom: 24px;">
+            <h4 style="font-size: var(--text-base); font-weight: var(--font-semibold); margin-bottom: 12px;">
+              What you can do:
+            </h4>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+              <li style="margin-bottom: 8px; padding-left: 24px; position: relative;">
+                <i class="fa-solid fa-chart-simple" style="position: absolute; left: 0; color: var(--color-provider-primary);"></i>
+                See market rates for your services
+              </li>
+              <li style="margin-bottom: 8px; padding-left: 24px; position: relative;">
+                <i class="fa-solid fa-handshake" style="position: absolute; left: 0; color: var(--color-provider-primary);"></i>
+                Build direct contract proposals
+              </li>
+              <li style="margin-bottom: 8px; padding-left: 24px; position: relative;">
+                <i class="fa-solid fa-scale-balanced" style="position: absolute; left: 0; color: var(--color-provider-primary);"></i>
+                Validate fair pricing vs. Medicare
+              </li>
+              <li style="margin-bottom: 8px; padding-left: 24px; position: relative;">
+                <i class="fa-solid fa-trophy" style="position: absolute; left: 0; color: var(--color-provider-primary);"></i>
+                Showcase your quality scores
+              </li>
+            </ul>
+          </div>
+
+          <div class="text-center">
+            <span class="btn btn-primary btn-lg" style="width: 100%; background-color: var(--color-provider-primary);">View Market Intel</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Value Proposition -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">Why Healthcare Transparency Matters</h2>
+      <p class="section-subtitle">
+        The same MRI can cost $400 at one facility and $3,000 at another.
+        Healthcare transparency laws now require disclosure of these prices - we make them actionable.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div class="text-center">
+          <div style="
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--color-patient-primary), var(--color-patient-secondary));
+            border-radius: var(--radius-2xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 32px;
+            color: white;
+          ">
+            <i class="fa-solid fa-lightbulb"></i>
+          </div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); margin-bottom: 12px;">
+            Real Data
+          </h3>
+          <p style="color: var(--color-gray-600);">
+            Actual negotiated rates from commercial payers and hospitals, not estimates.
+            This is what providers really charge and what insurers really pay.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div style="
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--color-employer-primary), var(--color-employer-secondary));
+            border-radius: var(--radius-2xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 32px;
+            color: white;
+          ">
+            <i class="fa-solid fa-chart-column"></i>
+          </div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); margin-bottom: 12px;">
+            Actionable Insights
+          </h3>
+          <p style="color: var(--color-gray-600);">
+            Not just data dumps - we turn transparency into tools.
+            Compare providers, detect overpayment, build direct contracts.
+          </p>
+        </div>
+
+        <div class="text-center">
+          <div style="
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--color-provider-primary), var(--color-provider-secondary));
+            border-radius: var(--radius-2xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 32px;
+            color: white;
+          ">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
+          <h3 style="font-size: var(--text-xl); font-weight: var(--font-bold); margin-bottom: 12px;">
+            Education First
+          </h3>
+          <p style="color: var(--color-gray-600);">
+            Healthcare is complex. We explain how the system works, why prices vary,
+            and how to navigate it effectively.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Impact Stats -->
+  <section class="section bg-gray-50">
+    <div class="container">
+      <h2 class="section-title">The Impact of Transparency</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div class="card text-center">
+          <div style="font-size: var(--text-5xl); font-weight: var(--font-bold); color: var(--color-employer-primary); margin-bottom: 8px;">
+            30%
+          </div>
+          <p style="color: var(--color-gray-700); font-weight: var(--font-medium);">
+            Average overpayment discovered by employers who audit their healthcare rates
+          </p>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-500); margin-top: 12px;">
+            Source: PBGH Transparency Initiative
+          </p>
+        </div>
+
+        <div class="card text-center">
+          <div style="font-size: var(--text-5xl); font-weight: var(--font-bold); color: var(--color-patient-primary); margin-bottom: 8px;">
+            7x
+          </div>
+          <p style="color: var(--color-gray-700); font-weight: var(--font-medium);">
+            Price variation for the same procedure in the same market
+          </p>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-500); margin-top: 12px;">
+            $400 vs. $2,800 for an MRI in Austin, TX
+          </p>
+        </div>
+
+        <div class="card text-center">
+          <div style="font-size: var(--text-5xl); font-weight: var(--font-bold); color: var(--color-success); margin-bottom: 8px;">
+            $0
+          </div>
+          <p style="color: var(--color-gray-700); font-weight: var(--font-medium);">
+            Correlation between price and quality - expensive doesn't mean better
+          </p>
+          <p style="font-size: var(--text-sm); color: var(--color-gray-500); margin-top: 12px;">
+            High-priced facilities often have lower safety grades
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="section">
+    <div class="container text-center">
+      <h2 class="section-title">Ready to Stop Overpaying?</h2>
+      <p class="section-subtitle">
+        Choose your role above to get started, or learn more about how healthcare transparency works.
+      </p>
+      <div class="flex justify-center gap-4 mt-8">
+        <a href="learn/stakeholder-map.html" class="btn btn-outline btn-lg">Learn How Healthcare Works</a>
+        <a href="#data" class="btn btn-secondary btn-lg">View Data Sources</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background-color: var(--color-gray-900); color: var(--color-gray-300); padding: 48px 0;">
+    <div class="container">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Healthcare Transparency
+          </h4>
+          <p style="font-size: var(--text-sm);">
+            Making healthcare prices and quality transparent, actionable, and understandable for everyone.
+          </p>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            For Patients
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="patients/search.html" style="color: var(--color-gray-300);">Search Procedures</a></li>
+            <li style="margin-bottom: 8px;"><a href="patients/learn.html" style="color: var(--color-gray-300);">Healthcare 101</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Your Rights</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Report Price Gouging</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            For Employers
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="employers/benchmark.html" style="color: var(--color-gray-300);">Benchmark Rates</a></li>
+            <li style="margin-bottom: 8px;"><a href="employers/spread-calculator.html" style="color: var(--color-gray-300);">Detect Spread Pricing</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">CAA Compliance</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Case Studies</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="color: var(--color-white); font-weight: var(--font-bold); margin-bottom: 16px;">
+            Learn More
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; font-size: var(--text-sm);">
+            <li style="margin-bottom: 8px;"><a href="learn/stakeholder-map.html" style="color: var(--color-gray-300);">Healthcare System Map</a></li>
+            <li style="margin-bottom: 8px;"><a href="../glossary.html" style="color: var(--color-gray-300);">Glossary of Terms</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Data Sources</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">Methodology</a></li>
+            <li style="margin-bottom: 8px;"><a href="#" style="color: var(--color-gray-300);">About Us</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--color-gray-700); margin-top: 32px; padding-top: 32px; text-align: center; font-size: var(--text-sm);">
+        <p>
+          Built with data from the Transparency in Coverage (TiC) mandate and Hospital Price Transparency rules.
+          <br>
+          Powered by <strong>Payerset</strong> - Real transparency data, real impact.
+        </p>
+        <p style="margin-top: 16px; color: var(--color-gray-500);">
+          &copy; 2025 Healthcare Transparency Platform. Data updated monthly.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="shared/components.js"></script>
+  <script>
+    // Add smooth scroll behavior
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Animate cards on hover
+    document.querySelectorAll('.persona-card').forEach(card => {
+      card.addEventListener('mouseenter', () => {
+        card.style.transform = 'translateY(-8px) scale(1.02)';
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0) scale(1)';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,135 @@
+{
+  "description": "Sample pricing and spread data from TiC Files + Claims Data",
+  "sources": ["Transparency in Coverage (TiC) - Monthly", "Claims Data Premium Tier - Quarterly"],
+  "fields": ["billing_code", "billing_code_type", "negotiated_rate", "remit_amount", "spread_amount", "payer", "provider_npi", "tin_value"],
+  "sample_records": [
+    {
+      "record_type": "Medical Service - TiC",
+      "billing_code": "99214",
+      "billing_code_type": "CPT",
+      "description": "Office Visit - Established Patient, Level 4",
+      "provider_npi": "1234567890",
+      "provider_tin": "12-3456789",
+      "payer": "Blue Cross Blue Shield of Texas",
+      "plan_id": "BCBS-TX-PPO-001",
+      "negotiated_rate": "$185.00",
+      "negotiation_type": "fee schedule",
+      "service_codes": ["office-visit", "evaluation-management"],
+      "effective_date": "2025-01-01",
+      "expiration_date": "2025-12-31"
+    },
+    {
+      "record_type": "Medical Service with Spread - Claims",
+      "billing_code": "99214",
+      "billing_code_type": "CPT",
+      "description": "Office Visit - Established Patient, Level 4",
+      "provider_npi": "1234567890",
+      "payer": "Blue Cross Blue Shield of Texas",
+      "avg_claim_amount": "$185.00",
+      "avg_remit_amount": "$142.00",
+      "spread_amount": "$43.00",
+      "spread_percentage": "23.2%",
+      "claim_count": 2500,
+      "note": "TPA charges employer $185 but pays provider $142 = $43 spread"
+    },
+    {
+      "record_type": "Pharmacy - PBM Spread",
+      "billing_code": "00378-0123-01",
+      "billing_code_type": "NDC",
+      "drug_name": "Atorvastatin 20mg (30 tablets)",
+      "payer": "CVS Caremark",
+      "plan_id": "CVSC-STD-001",
+      "charged_to_employer": "$150.00",
+      "paid_to_pharmacy": "$25.00",
+      "pharmacy_acquisition_cost": "$18.00",
+      "spread_amount": "$125.00",
+      "spread_percentage": "83.3%",
+      "rebate_retained": "$8.00",
+      "note": "Employer pays $150 → PBM keeps $125 + $8 rebate → Pharmacy gets $25"
+    },
+    {
+      "record_type": "Hospital Procedure - High Variation",
+      "billing_code": "470",
+      "billing_code_type": "DRG",
+      "description": "Hip Replacement with Major Complication",
+      "hospital_id": "CC-360060",
+      "hospital_name": "Cleveland Clinic",
+      "gross_charge": "$85,000",
+      "discounted_cash": "$32,000",
+      "pricing_by_payer": [
+        {
+          "payer": "Aetna",
+          "negotiated_rate": "$45,000",
+          "actual_remit": "$43,200"
+        },
+        {
+          "payer": "UnitedHealthcare",
+          "negotiated_rate": "$52,000",
+          "actual_remit": "$48,800"
+        },
+        {
+          "payer": "Medicare",
+          "negotiated_rate": "$24,000",
+          "actual_remit": "$24,000"
+        }
+      ],
+      "min_negotiated": "$24,000",
+      "max_negotiated": "$68,000",
+      "variation_ratio": "2.83x",
+      "note": "Same procedure, same hospital, 2.8x price difference by payer"
+    }
+  ],
+  "spread_pricing_analysis": {
+    "medical_tpa_average_spread": "20-40%",
+    "pbm_average_spread": "100-600%",
+    "float_income_estimate": "$2-5 PMPM",
+    "data_withholding_period": "6-12 months average",
+    "total_annual_spread_extracted": "$70-140B estimate"
+  },
+  "claims_data_metrics": {
+    "total_claims_analyzed": "250M+",
+    "unique_billing_codes": "21,000+",
+    "payers_tracked": "1,200+",
+    "geographic_coverage": "All 50 states",
+    "update_frequency": "Quarterly",
+    "fields_available": [
+      "NPI",
+      "SETTING",
+      "PLACE_OF_SERVICE",
+      "CHANNEL",
+      "SUBCHANNEL",
+      "PAYER",
+      "AVG_CLAIM_AMOUNT",
+      "MIN/MAX/AVG/MEDIAN_REMIT_AMOUNT",
+      "OPEN_CLAIMS_COUNT",
+      "REMIT_COUNT"
+    ]
+  },
+  "tic_data_metrics": {
+    "total_negotiated_rates": "~2B",
+    "machine_readable_files": "5,000+",
+    "payers_publishing": "1,200+",
+    "update_frequency": "Monthly",
+    "key_fields": [
+      "BILLING_CODE",
+      "BILLING_CODE_TYPE",
+      "CODE_MODIFIER",
+      "NEGOTIATED_RATE",
+      "NEGOTIATED_TYPE",
+      "NEGOTIATION_ARRANGEMENT",
+      "PROVIDER_NPI",
+      "TIN_VALUE",
+      "SERVICE_CODES",
+      "PLAN_ID",
+      "PAYER"
+    ]
+  },
+  "query_examples": [
+    "Calculate average spread percentage for top 10 TPAs",
+    "Show PBM spread pricing for common generic drugs",
+    "Compare negotiated rates for MRI across payers",
+    "Identify providers with highest price variation",
+    "Find procedures with >3x price difference (min to max)",
+    "Calculate float income by withholding claims data for 9 months"
+  ]
+}

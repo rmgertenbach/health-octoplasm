@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Healthcare Terminology Glossary - Payerset</title>
+  <meta name="description" content="Comprehensive guide to healthcare finance terminology - PMPM, spread pricing, insurance plan types, and more.">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/use-cases.css">
+
+  <style>
+    .glossary-nav {
+      background: white;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 24px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .glossary-nav-content {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .glossary-nav-link {
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #64748b;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .glossary-nav-link:hover {
+      background: #f1f5f9;
+      color: #0066CC;
+    }
+
+    .glossary-section {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 32px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .glossary-section h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 3px solid #0066CC;
+    }
+
+    .glossary-section h3 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #0066CC;
+      margin-top: 32px;
+      margin-bottom: 16px;
+    }
+
+    .glossary-section h4 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #334155;
+      margin-top: 20px;
+      margin-bottom: 12px;
+    }
+
+    .glossary-term {
+      background: #f8fafc;
+      border-left: 4px solid #0066CC;
+      padding: 20px;
+      margin-bottom: 24px;
+      border-radius: 0 8px 8px 0;
+    }
+
+    .glossary-term strong {
+      color: #0066CC;
+      font-size: 1.1rem;
+    }
+
+    .glossary-term ul {
+      margin-top: 12px;
+      padding-left: 24px;
+    }
+
+    .glossary-term li {
+      margin-bottom: 8px;
+      color: #475569;
+    }
+
+    .example-box {
+      background: #fef3c7;
+      border-left: 4px solid #F59E0B;
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .example-box strong {
+      color: #92400e;
+    }
+
+    .warning-box {
+      background: #fee2e2;
+      border-left: 4px solid #EF4444;
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .warning-box strong {
+      color: #991b1b;
+    }
+
+    .tip-box {
+      background: #d1fae5;
+      border-left: 4px solid #10B981;
+      padding: 16px;
+      margin: 16px 0;
+      border-radius: 0 6px 6px 0;
+    }
+
+    .tip-box strong {
+      color: #065f46;
+    }
+
+    .search-box {
+      max-width: 600px;
+      margin: 24px auto;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 16px 48px 16px 20px;
+      font-size: 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      transition: all 0.2s;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: #0066CC;
+      box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+    }
+
+    .search-box i {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+      font-size: 1.2rem;
+    }
+
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      color: #334155;
+      font-size: 0.9em;
+    }
+
+    pre {
+      background: #1e293b;
+      color: #e2e8f0;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      margin: 16px 0;
+    }
+
+    .acronym-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .acronym-card {
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .acronym-card strong {
+      color: #0066CC;
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .acronym-card p {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    .search-highlight {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    .glossary-term.hidden,
+    .acronym-card.hidden {
+      display: none !important;
+    }
+
+    .glossary-section.all-hidden {
+      display: none !important;
+    }
+
+    #noResults {
+      background: #fee2e2;
+      border: 2px solid #fca5a5;
+      border-radius: 12px;
+      padding: 48px 24px;
+      text-align: center;
+      margin: 32px auto;
+      max-width: 600px;
+    }
+
+    #noResults i {
+      font-size: 4rem;
+      color: #ef4444;
+      margin-bottom: 16px;
+    }
+
+    #noResults h3 {
+      color: #991b1b;
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+    }
+
+    #noResults p {
+      color: #991b1b;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="nav" id="nav">
+    <a href="index.html" class="nav-logo">Payerset</a>
+    <div class="nav-links">
+      <a href="index.html#problem" class="nav-link">The Problem</a>
+      <a href="index.html#cuban" class="nav-link">The Questions</a>
+      <a href="index.html#proof" class="nav-link">The Proof</a>
+      <a href="index.html#solution" class="nav-link">The Solution</a>
+      <a href="index.html#impact" class="nav-link">Impact</a>
+      <a href="use-cases.html" class="nav-link">Use Cases</a>
+
+      <div class="nav-dropdown" id="diagrams-dropdown">
+        <div class="nav-link nav-dropdown-toggle">
+          Diagrams
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="nav-dropdown-menu">
+          <a href="timeline.html" class="nav-dropdown-item">
+            <i class="fas fa-timeline"></i>
+            Transparency Timeline
+          </a>
+          <a href="diagrams/diagram1.html" class="nav-dropdown-item">
+            <i class="fas fa-network-wired"></i>
+            Ecosystem Map
+          </a>
+          <a href="diagrams/diagram2.html" class="nav-dropdown-item">
+            <i class="fas fa-dollar-sign"></i>
+            Money Flows
+          </a>
+          <a href="diagrams/diagram3.html" class="nav-dropdown-item">
+            <i class="fas fa-bolt"></i>
+            Power Map
+          </a>
+          <a href="diagrams/diagram4.html" class="nav-dropdown-item">
+            <i class="fas fa-shield-alt"></i>
+            Conflicts Map
+          </a>
+          <a href="diagrams/diagram5.html" class="nav-dropdown-item">
+            <i class="fas fa-sync-alt"></i>
+            Transformation
+          </a>
+          <a href="diagrams/diagram-test.html" class="nav-dropdown-item">
+            <i class="fas fa-flask"></i>
+            Data Explorer
+            <span class="alpha-badge">Alpha</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" id="tools-dropdown">
+        <div class="nav-link nav-dropdown-toggle">
+          Use Tools
+          <i class="fas fa-chevron-down"></i>
+        </div>
+        <div class="nav-dropdown-menu">
+          <a href="experiments/patients/index.html" class="nav-dropdown-item">
+            <i class="fas fa-user"></i>
+            Patient Tools
+          </a>
+          <a href="experiments/employers/index.html" class="nav-dropdown-item">
+            <i class="fas fa-briefcase"></i>
+            Employer Tools
+          </a>
+          <a href="experiments/providers/index.html" class="nav-dropdown-item">
+            <i class="fas fa-user-doctor"></i>
+            Provider Tools
+          </a>
+          <a href="experiments/learn/stakeholder-map.html" class="nav-dropdown-item">
+            <i class="fas fa-graduation-cap"></i>
+            Learn: Stakeholder Map
+          </a>
+        </div>
+      </div>
+
+      <a href="https://payerset.com" class="nav-link nav-cta" target="_blank" rel="noopener noreferrer">Visit Payerset</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero hero-small" style="background: linear-gradient(135deg, #0066CC 0%, #004C99 100%); padding: 100px 0 80px;">
+    <div class="container">
+      <div style="max-width: 900px; margin: 0 auto; text-align: center;">
+        <h1 style="font-size: 3rem; font-weight: 700; color: white; margin-bottom: 20px; line-height: 1.2;">
+          <i class="fas fa-book"></i> Healthcare Terminology Glossary
+        </h1>
+        <p style="font-size: 1.3rem; color: rgba(255,255,255,0.9); margin-bottom: 30px; line-height: 1.6;">
+          Essential terms and concepts for understanding healthcare finance and transparency
+        </p>
+
+        <!-- Search Box -->
+        <div class="search-box">
+          <input
+            type="text"
+            id="glossarySearch"
+            placeholder="Search terms (e.g., PMPM, spread pricing, HMO)..."
+            autocomplete="off"
+          >
+          <button id="clearSearch" style="
+            position: absolute;
+            right: 52px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #94a3b8;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 8px;
+            display: none;
+            transition: color 0.2s;
+          " onmouseover="this.style.color='#ef4444'" onmouseout="this.style.color='#94a3b8'">
+            <i class="fas fa-times-circle"></i>
+          </button>
+          <i class="fas fa-search" style="pointer-events: none;"></i>
+        </div>
+        <div id="searchResults" style="
+          text-align: center;
+          margin-top: 16px;
+          font-size: 0.95rem;
+          color: rgba(255,255,255,0.8);
+          min-height: 24px;
+        "></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Navigation -->
+  <div class="glossary-nav">
+    <div class="container">
+      <div class="glossary-nav-content">
+        <a href="#payment" class="glossary-nav-link"><i class="fas fa-dollar-sign"></i> Payment Terms</a>
+        <a href="#plans" class="glossary-nav-link"><i class="fas fa-shield-alt"></i> Plan Types</a>
+        <a href="#admin" class="glossary-nav-link"><i class="fas fa-file-invoice"></i> Administration</a>
+        <a href="#value-based" class="glossary-nav-link"><i class="fas fa-chart-line"></i> Value-Based Care</a>
+        <a href="#contracts" class="glossary-nav-link"><i class="fas fa-file-contract"></i> Contracts</a>
+        <a href="#pharmacy" class="glossary-nav-link"><i class="fas fa-pills"></i> Pharmacy</a>
+        <a href="#regulatory" class="glossary-nav-link"><i class="fas fa-gavel"></i> Regulatory</a>
+        <a href="#acronyms" class="glossary-nav-link"><i class="fas fa-list"></i> Quick Reference</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <section style="padding: 60px 0 100px; background: #f5f7fa;">
+    <div class="container" style="max-width: 1200px;">
+
+      <!-- No Results Message (hidden by default) -->
+      <div id="noResults" style="display: none;">
+        <i class="fas fa-search"></i>
+        <h3>No terms found</h3>
+        <p>Try searching for different keywords like "PMPM", "HMO", "spread pricing", or "deductible"</p>
+      </div>
+
+      <!-- Introduction -->
+      <div class="glossary-section">
+        <h2><i class="fas fa-lightbulb"></i> About This Glossary</h2>
+        <p style="font-size: 1.1rem; color: #475569; line-height: 1.8; margin-bottom: 16px;">
+          Healthcare finance is deliberately complex. This glossary cuts through the jargon to help you understand
+          what these terms really mean and why they matter for transparency work.
+        </p>
+        <div class="tip-box">
+          <strong><i class="fas fa-info-circle"></i> How to Use This Guide:</strong>
+          <ul style="margin-top: 8px; margin-bottom: 0;">
+            <li>Use the search box above to find specific terms (matching text will be highlighted)</li>
+            <li>Press <kbd style="background: white; padding: 2px 6px; border-radius: 3px; border: 1px solid #cbd5e1;">Ctrl+K</kbd> or <kbd style="background: white; padding: 2px 6px; border-radius: 3px; border: 1px solid #cbd5e1;">⌘K</kbd> to quickly focus the search</li>
+            <li>Press <kbd style="background: white; padding: 2px 6px; border-radius: 3px; border: 1px solid #cbd5e1;">Esc</kbd> to clear your search</li>
+            <li>Click the navigation links to jump to different sections</li>
+            <li>Pay special attention to red flag warnings and green flag tips</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Payment and Pricing Terminology -->
+      <div class="glossary-section" id="payment">
+        <h2><i class="fas fa-dollar-sign"></i> Payment and Pricing Terminology</h2>
+
+        <div class="glossary-term">
+          <h3>PMPM (Per Member Per Month)</h3>
+          <p><strong>Definition:</strong> A flat fee paid each month for each person covered, regardless of whether they use services.</p>
+
+          <h4>How it's used:</h4>
+          <ul>
+            <li><strong>Carrier/TPA fees:</strong> "We charge $25 PMPM for administration"</li>
+            <li><strong>Wraparound networks:</strong> "Blue Cross charges $18 PMPM for out-of-area coverage"</li>
+            <li><strong>Capitation payments:</strong> "We pay the primary care group $45 PMPM to manage all primary care"</li>
+            <li><strong>Reinsurance premiums:</strong> "$500 PMPM for stop-loss coverage starting at $50K"</li>
+          </ul>
+
+          <div class="tip-box">
+            <strong>Why it matters:</strong>
+            <ul style="margin-top: 8px; margin-bottom: 0;">
+              <li>Creates predictable costs for budgeting</li>
+              <li>Aligns incentives (provider gets paid whether patient comes in or not)</li>
+              <li>Can hide true costs when bundled with other fees</li>
+            </ul>
+          </div>
+
+          <h4>Related terms:</h4>
+          <ul>
+            <li><strong>PMPY</strong> (Per Member Per Year): Annual equivalent</li>
+            <li><strong>PEPM</strong> (Per Employee Per Month): Same as PMPM but counts only employees, not dependents</li>
+            <li><strong>Capitation:</strong> PMPM payment for all care (provider takes full risk)</li>
+          </ul>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Spread Pricing</h3>
+          <p><strong>Definition:</strong> The difference between what a middleman (carrier/TPA/PBM) charges an employer and what they actually pay the provider or pharmacy.</p>
+
+          <div class="example-box">
+            <strong>Medical Example:</strong>
+            <pre style="background: white; color: #334155; padding: 12px; margin-top: 8px;">
+Hospital bills: $10,000
+Carrier "negotiated rate": $10,000
+Carrier charges employer: $13,000
+Carrier pays hospital: $9,500 (underpayment)
+Carrier keeps: $3,500 spread</pre>
+          </div>
+
+          <div class="example-box">
+            <strong>Pharmacy Example:</strong>
+            <pre style="background: white; color: #334155; padding: 12px; margin-top: 8px;">
+Pharmacy's drug cost (NADAC): $20
+PBM charges employer: $150
+PBM pays pharmacy: $25
+PBM keeps: $125 spread (625% markup!)</pre>
+          </div>
+
+          <div class="warning-box">
+            <strong><i class="fas fa-exclamation-triangle"></i> Why it's problematic:</strong>
+            <ul style="margin-top: 8px; margin-bottom: 0;">
+              <li>Hidden from employer in aggregate reporting</li>
+              <li>Not disclosed in contracts (buried in fine print)</li>
+              <li>Can be 20-40% of total costs</li>
+              <li>Creates incentive to INCREASE prices (higher prices = higher spread dollars)</li>
+            </ul>
+          </div>
+
+          <h4>Types of spread:</h4>
+          <ul>
+            <li><strong>Medical spread:</strong> Difference between provider payment and employer charge</li>
+            <li><strong>Pharmacy spread:</strong> Difference between pharmacy reimbursement and employer charge</li>
+            <li><strong>Rebate retention:</strong> PBM keeps manufacturer rebates instead of passing through</li>
+            <li><strong>Network access fees:</strong> Charges for using "proprietary" networks</li>
+            <li><strong>Data access fees:</strong> Charging employers to see their own data</li>
+          </ul>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Cost-Sharing Terms</h3>
+
+          <h4>Deductible</h4>
+          <p>Amount patient must pay before insurance coverage begins. Example: $3,000 deductible means patient pays first $3,000 of care.</p>
+          <p><em>Problem: 40% of Americans have less than $400 in savings</em></p>
+
+          <h4>Coinsurance</h4>
+          <p>Percentage patient pays after meeting deductible. Example: 80/20 means insurance pays 80%, patient pays 20%.</p>
+          <p><em>Can be catastrophic for expensive care (20% of $100,000 = $20,000)</em></p>
+
+          <h4>Copay (Copayment)</h4>
+          <p>Flat fee per service. Example: $25 to see primary care doctor, $50 for specialist.</p>
+
+          <h4>Out-of-Pocket Maximum (OOPM)</h4>
+          <p>Cap on what patient pays in a year (deductible + coinsurance + copays). After hitting OOPM, insurance pays 100%.</p>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Reference Pricing Terms</h3>
+
+          <h4>Medicare Rates</h4>
+          <p>Prices Medicare pays providers (set by government). Used as benchmark: "We'll pay Medicare + 40%". Generally covers provider costs but not excessive profits.</p>
+
+          <h4>NADAC (National Average Drug Acquisition Cost)</h4>
+          <p>What pharmacies actually pay wholesalers for drugs. Updated weekly by CMS. Transparent benchmark for pharmacy pricing.</p>
+          <div class="tip-box">
+            <strong><i class="fas fa-check-circle"></i> Critical for transparency:</strong> Shows PBM spread clearly.
+            Example: NADAC = $20, PBM charges $150 = $130 spread
+          </div>
+
+          <h4>AWP (Average Wholesale Price)</h4>
+          <p>Outdated "list price" for drugs (like hospital chargemaster). Inflated and meaningless ("Ain't What's Paid").</p>
+          <div class="warning-box">
+            <strong>Problem:</strong> Still used in many PBM contracts: "AWP minus 18%". Since AWP itself is inflated, the "discount" is fake.
+          </div>
+
+          <h4>Chargemaster Rates</h4>
+          <p>Hospital's official price list (fantasy numbers). 3-5× actual payments. Used to calculate "discounts".</p>
+          <p><em>Example: Chargemaster = $100,000, insurance pays $30,000 = "70% discount!"</em></p>
+          <div class="warning-box">
+            <strong>For analysis:</strong> Ignore these completely - they're meaningless.
+          </div>
+        </div>
+      </div>
+
+      <!-- Insurance Plan Types and Networks -->
+      <div class="glossary-section" id="plans">
+        <h2><i class="fas fa-shield-alt"></i> Insurance Plan Types and Networks</h2>
+
+        <div class="glossary-term">
+          <h3>HMO (Health Maintenance Organization)</h3>
+          <p><strong>Structure:</strong> Requires choosing a primary care physician (PCP) who acts as "gatekeeper". Only covers in-network care (except emergencies). Most restrictive but usually cheapest.</p>
+
+          <h4>How it works:</h4>
+          <ul>
+            <li>Patient sees PCP for any issue</li>
+            <li>PCP coordinates all care</li>
+            <li>Need referral to see specialist</li>
+            <li>Out-of-network care not covered</li>
+          </ul>
+
+          <h4>Pros:</h4>
+          <ul>
+            <li>Lower premiums</li>
+            <li>Coordinated care</li>
+            <li>Less paperwork</li>
+          </ul>
+
+          <h4>Cons:</h4>
+          <ul>
+            <li>Limited provider choice</li>
+            <li>Referral requirements slow access</li>
+            <li>May delay necessary care</li>
+          </ul>
+        </div>
+
+        <div class="glossary-term">
+          <h3>PPO (Preferred Provider Organization)</h3>
+          <p><strong>Structure:</strong> Large network of "preferred" providers. Can see any provider (in or out of network). No PCP requirement. No referrals needed. Most common plan type for employers.</p>
+
+          <div class="example-box">
+            <strong>Cost-sharing example:</strong>
+            <pre style="background: white; color: #334155; padding: 12px; margin-top: 8px;">
+In-Network:
+• $1,500 deductible
+• 80/20 coinsurance
+• $6,000 out-of-pocket max
+
+Out-of-Network:
+• $3,000 deductible
+• 60/40 coinsurance
+• $12,000 out-of-pocket max</pre>
+          </div>
+
+          <h4>Pros:</h4>
+          <ul>
+            <li>Provider choice and flexibility</li>
+            <li>No referrals needed</li>
+            <li>Can see specialists directly</li>
+          </ul>
+
+          <h4>Cons:</h4>
+          <ul>
+            <li>Higher premiums</li>
+            <li>Complex to understand costs</li>
+            <li>Easy to accidentally go out-of-network</li>
+          </ul>
+        </div>
+
+        <div class="glossary-term">
+          <h3>EPO (Exclusive Provider Organization)</h3>
+          <p><strong>Structure:</strong> Like PPO but NO out-of-network coverage (except emergencies). No PCP requirement. No referrals needed. More restrictive than PPO, less than HMO.</p>
+
+          <div class="tip-box">
+            <strong>Why it exists:</strong> Insurers can negotiate harder (providers must join or lose all patients). Employers save money vs. PPO. Patients get some flexibility vs. HMO.
+          </div>
+        </div>
+
+        <div class="glossary-term">
+          <h3>High-Deductible Health Plan (HDHP)</h3>
+          <p><strong>Not a network type</strong> - can be paired with PPO, EPO, or HMO.</p>
+          <p><strong>Key feature:</strong> High deductible ($1,600+ individual, $3,200+ family for 2024)</p>
+
+          <h4>HSA (Health Savings Account):</h4>
+          <ul>
+            <li>Tax-advantaged savings for medical expenses</li>
+            <li>Triple tax benefit (contributions, growth, withdrawals all tax-free)</li>
+            <li>Rolls over year to year (unlike FSA)</li>
+            <li>Requires HDHP enrollment</li>
+            <li>2024 limits: $4,150 individual, $8,300 family</li>
+          </ul>
+
+          <div class="warning-box">
+            <strong>Reality:</strong> Creates functionally uninsured population. Delays necessary care. Turns providers into debt collectors.
+          </div>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Network Tier Terminology</h3>
+
+          <h4>Narrow Network</h4>
+          <p>Limited number of providers. Usually lower cost. May exclude expensive hospitals.</p>
+
+          <h4>Tiered Network</h4>
+          <p>Providers grouped by cost/quality:</p>
+          <ul>
+            <li><strong>Tier 1:</strong> Lowest cost-sharing (high-value providers)</li>
+            <li><strong>Tier 2:</strong> Medium cost-sharing (standard providers)</li>
+            <li><strong>Tier 3:</strong> Highest cost-sharing (expensive/low-value providers)</li>
+          </ul>
+
+          <h4>Centers of Excellence (COE)</h4>
+          <p>Specific providers selected for complex care (transplants, joint replacements, cancer). Usually negotiated rates or bundled pricing. Often includes travel coverage.</p>
+
+          <h4>Direct Contracting Network</h4>
+          <p>Employer negotiates directly with providers. No carrier intermediary. Usually cash prices or Medicare-based.</p>
+        </div>
+      </div>
+
+      <!-- Administrative and Payment Terms -->
+      <div class="glossary-section" id="admin">
+        <h2><i class="fas fa-file-invoice"></i> Administrative and Payment Terms</h2>
+
+        <div class="glossary-term">
+          <h3>Claims Processing Terms</h3>
+
+          <h4>Claim</h4>
+          <p>Bill from provider to insurance for services rendered. Contains: Patient info, diagnosis codes (ICD), procedure codes (CPT/DRG), charges.</p>
+
+          <h4>Adjudication</h4>
+          <p>Process of evaluating and paying a claim. Checks: Eligibility, coverage, medical necessity, pricing. Results in: Paid, denied, or pended.</p>
+
+          <h4>EOB (Explanation of Benefits)</h4>
+          <p>Document showing how claim was processed. Shows: Billed charges, allowed amount, insurance paid, patient owes.</p>
+          <div class="warning-box">
+            <strong>Notorious for:</strong> Confusing language, appears like a bill (but isn't), incomprehensible format.
+          </div>
+
+          <h4>Clean Claim</h4>
+          <p>Claim with no errors, processed immediately. Industry standard: 95%+ should be clean claims.</p>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Denial and Authorization Terms</h3>
+
+          <h4>Prior Authorization (Pre-Auth, PA)</h4>
+          <p>Approval required before service. Carrier/TPA reviews medical necessity. Required for expensive services (MRI, surgery, specialty drugs).</p>
+
+          <h4>Denial</h4>
+          <p>Claim rejected, not paid. Reasons: Not medically necessary, not covered, coding error, eligibility issue.</p>
+          <div class="tip-box">
+            <strong>Important:</strong> 50% of denials overturned on appeal (but most patients don't appeal).
+          </div>
+
+          <h4>Step Therapy</h4>
+          <p>Must try cheaper treatment before expensive one. Example: Generic drug → brand drug → specialty drug. Insurance forces progression even if doctor prescribes specialty first.</p>
+
+          <h4>Utilization Management (UM)</h4>
+          <p>Process to ensure appropriate use of services. Includes: Prior auth, concurrent review, retrospective review.</p>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Financial Terms</h3>
+
+          <h4>Premium</h4>
+          <p>Monthly payment for insurance coverage. Split between employer and employee (typically 70/30 or 80/20).</p>
+
+          <h4>Stop-Loss Insurance (Reinsurance)</h4>
+          <p>Insurance for self-insured employers. Protects against catastrophic claims.</p>
+          <ul>
+            <li><strong>Specific stop-loss:</strong> Per individual (kicks in at $50K, $100K, $250K, etc.)</li>
+            <li><strong>Aggregate stop-loss:</strong> Total claims above expected amount</li>
+          </ul>
+
+          <h4>MLR (Medical Loss Ratio)</h4>
+          <p>Percentage of premiums spent on medical care (vs. admin/profit). ACA requires 80-85% MLR.</p>
+          <div class="warning-box">
+            <strong>Perverse incentive:</strong> Higher prices = higher dollar profit (15% of bigger number).
+            <br><br>
+            If $100M premium at 85% MLR: Keep $15M for admin + profit<br>
+            If prices rise to $120M: Keep $18M (+$3M profit from medical inflation!)
+          </div>
+        </div>
+      </div>
+
+      <!-- Value-Based Care -->
+      <div class="glossary-section" id="value-based">
+        <h2><i class="fas fa-chart-line"></i> Value-Based Care and Alternative Payment Models</h2>
+
+        <div class="glossary-term">
+          <h3>Capitation</h3>
+          <p>Fixed PMPM payment regardless of services provided. Provider takes full risk.</p>
+          <p><em>Example: $45 PMPM for all primary care services</em></p>
+          <p><strong>Incentive:</strong> Keep patients healthy (profit = PMPM - costs)</p>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Bundled Payments</h3>
+          <p>Single payment for entire episode of care.</p>
+          <p><em>Example: $25,000 for hip replacement (includes surgery, hospital, PT, complications)</em></p>
+          <p>Provider keeps savings if efficient. Provider absorbs costs if complications.</p>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Shared Savings / Shared Risk</h3>
+          <h4>Shared Savings</h4>
+          <p>Provider shares in cost reductions below benchmark. Upside only (no risk for overspending).</p>
+
+          <h4>Shared Risk</h4>
+          <p>Provider shares in savings AND losses. Two-sided risk. Higher potential rewards, higher potential losses.</p>
+        </div>
+      </div>
+
+      <!-- Contract and Negotiation Terms -->
+      <div class="glossary-section" id="contracts">
+        <h2><i class="fas fa-file-contract"></i> Contract and Negotiation Terms</h2>
+
+        <div class="glossary-term">
+          <h3>Red Flag Contract Terms</h3>
+
+          <h4>Most Favored Nations (MFN)</h4>
+          <p>Clause requiring provider to give lowest rate. "We get your best price or better."</p>
+          <div class="warning-box">
+            <strong>Problem:</strong> Prevents competition (everyone gets same rate). Illegal in many contexts (antitrust).
+          </div>
+
+          <h4>All-or-Nothing Clause</h4>
+          <p>Must contract with all facilities/providers in system. Can't select only low-cost, high-quality providers.</p>
+          <p><em>Example: Want community hospital? Must also take expensive academic center.</em></p>
+
+          <h4>Anti-Steering Clause</h4>
+          <p>Prohibits plan from steering patients away. Can't offer incentives to use other providers. Protects expensive/low-quality providers.</p>
+
+          <h4>Gag Clause</h4>
+          <p>Prohibits disclosing contract terms. Can't tell patients about cash prices. Can't share savings information.</p>
+          <div class="tip-box">
+            <strong>Note:</strong> Banned by CAA in 2021 (but enforcement weak).
+          </div>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Reference-Based Pricing (RBP)</h3>
+          <p>Employer sets maximum payment (usually Medicare + X%). Pays that amount regardless of provider's charge.</p>
+          <div class="warning-box">
+            <strong>Major risk:</strong> Provider can balance bill patient. Requires patient protection.
+          </div>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Balance Billing</h3>
+          <p>Provider bills patient for difference between charged amount and insurance payment.</p>
+          <p><em>Example: Provider charges $20K, insurance pays $10K, patient gets bill for $10K</em></p>
+          <p><strong>Protected against:</strong> In-network (by contract) and emergencies (by law)</p>
+        </div>
+      </div>
+
+      <!-- Pharmacy-Specific Terms -->
+      <div class="glossary-section" id="pharmacy">
+        <h2><i class="fas fa-pills"></i> Pharmacy-Specific Terms (PBM World)</h2>
+
+        <div class="glossary-term">
+          <h3>Formulary</h3>
+          <p>List of covered drugs. Tiered structure:</p>
+          <ul>
+            <li><strong>Tier 1:</strong> Generic drugs (lowest cost)</li>
+            <li><strong>Tier 2:</strong> Preferred brand drugs</li>
+            <li><strong>Tier 3:</strong> Non-preferred brand drugs</li>
+            <li><strong>Tier 4:</strong> Specialty drugs (highest cost)</li>
+          </ul>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Rebates</h3>
+          <p>Money manufacturers pay PBMs for formulary placement.</p>
+          <p><em>Example: Drug A pays 40% rebate to be preferred over Drug B</em></p>
+          <div class="warning-box">
+            <strong>Problem:</strong> PBMs may not pass rebates to employers. Creates perverse incentive (prefer high-cost drug with big rebate).
+          </div>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Pass-Through PBM</h3>
+          <p>PBM passes all rebates to employer. Charges transparent flat fee (not percentage). No spread pricing.</p>
+          <div class="tip-box">
+            <strong><i class="fas fa-star"></i> What good looks like:</strong> Mark Cuban advocates for this model.
+          </div>
+        </div>
+
+        <div class="glossary-term">
+          <h3>DIR Fees (Direct and Indirect Remuneration)</h3>
+          <p>Fees PBMs charge pharmacies after claim is paid. Retroactive clawbacks. Hidden from employers and patients.</p>
+          <div class="warning-box">
+            <strong>Predatory:</strong> Especially hurts independent pharmacies. Can reduce pharmacy reimbursement below NADAC.
+          </div>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Specialty Pharmacy</h3>
+          <p>Handles expensive, complex drugs (biologics, injectables). Often owned by PBMs. Captive network (must use PBM's specialty pharmacy). Massive profits (30-40% margins).</p>
+        </div>
+      </div>
+
+      <!-- Regulatory and Legal Terms -->
+      <div class="glossary-section" id="regulatory">
+        <h2><i class="fas fa-gavel"></i> Regulatory and Legal Terms</h2>
+
+        <div class="glossary-term">
+          <h3>ERISA (Employee Retirement Income Security Act)</h3>
+          <p>Federal law governing employer benefit plans. Preempts most state insurance laws for self-insured plans. Sets fiduciary duty standards.</p>
+        </div>
+
+        <div class="glossary-term">
+          <h3>Fiduciary Duty</h3>
+          <p>Legal obligation to act in plan participants' best interest. Applies to employers, not carriers/PBMs (usually).</p>
+          <div class="warning-box">
+            <strong>Problem:</strong> Often violated unknowingly. Conflicts of interest rampant.
+          </div>
+        </div>
+
+        <div class="glossary-term">
+          <h3>CAA (Consolidated Appropriations Act)</h3>
+          <p>2021 law with transparency requirements:</p>
+          <ul>
+            <li>Machine-readable files (MRFs)</li>
+            <li>Gag clause prohibitions</li>
+            <li>Broker/consultant disclosure requirements</li>
+          </ul>
+          <div class="tip-box">
+            <strong>For transparency:</strong> MRFs must be published by carriers - this is your data source!
+          </div>
+        </div>
+
+        <div class="glossary-term">
+          <h3>No Surprises Act</h3>
+          <p>Protects patients from surprise medical bills. Covers emergencies and certain non-emergency situations. Requires good faith estimates.</p>
+        </div>
+
+        <div class="glossary-term">
+          <h3>HIPAA (Health Insurance Portability and Accountability Act)</h3>
+          <p>Protects patient privacy. Governs how health information is shared.</p>
+          <div class="warning-box">
+            <strong>Not an excuse:</strong> Employers can access de-identified data. Often misused to prevent transparency.
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Reference: Acronyms -->
+      <div class="glossary-section" id="acronyms">
+        <h2><i class="fas fa-list"></i> Quick Reference: Common Acronyms</h2>
+
+        <h3>When analyzing claims:</h3>
+        <div class="acronym-grid">
+          <div class="acronym-card">
+            <strong>PMPM / PEPM</strong>
+            <p>Per Member/Employee Per Month payment rates</p>
+          </div>
+          <div class="acronym-card">
+            <strong>DRG / CPT</strong>
+            <p>Procedure codes for billing</p>
+          </div>
+          <div class="acronym-card">
+            <strong>ICD</strong>
+            <p>Diagnosis codes</p>
+          </div>
+          <div class="acronym-card">
+            <strong>EOB</strong>
+            <p>Explanation of Benefits</p>
+          </div>
+          <div class="acronym-card">
+            <strong>OOPM</strong>
+            <p>Out-of-Pocket Maximum</p>
+          </div>
+          <div class="acronym-card">
+            <strong>NPI</strong>
+            <p>National Provider Identifier</p>
+          </div>
+        </div>
+
+        <h3>When evaluating pharmacy:</h3>
+        <div class="acronym-grid">
+          <div class="acronym-card">
+            <strong>NADAC</strong>
+            <p>Real drug cost benchmark</p>
+          </div>
+          <div class="acronym-card">
+            <strong>AWP</strong>
+            <p>Fake drug cost (inflated)</p>
+          </div>
+          <div class="acronym-card">
+            <strong>MAC</strong>
+            <p>PBM pricing list</p>
+          </div>
+          <div class="acronym-card">
+            <strong>DIR</strong>
+            <p>Hidden pharmacy fees</p>
+          </div>
+          <div class="acronym-card">
+            <strong>Rebate</strong>
+            <p>Manufacturer payment to PBM</p>
+          </div>
+          <div class="acronym-card">
+            <strong>Spread</strong>
+            <p>PBM profit from price difference</p>
+          </div>
+        </div>
+
+        <h3>When reviewing networks:</h3>
+        <div class="acronym-grid">
+          <div class="acronym-card">
+            <strong>HMO / PPO / EPO / POS</strong>
+            <p>Insurance plan types</p>
+          </div>
+          <div class="acronym-card">
+            <strong>COE</strong>
+            <p>Centers of Excellence</p>
+          </div>
+          <div class="acronym-card">
+            <strong>MFN</strong>
+            <p>Most Favored Nations pricing clause</p>
+          </div>
+          <div class="acronym-card">
+            <strong>RBP</strong>
+            <p>Reference-Based Pricing</p>
+          </div>
+        </div>
+
+        <h3>When reading contracts:</h3>
+        <div class="acronym-grid">
+          <div class="acronym-card">
+            <strong>ASO</strong>
+            <p>Admin Services Only</p>
+          </div>
+          <div class="acronym-card">
+            <strong>TPA</strong>
+            <p>Third-Party Administrator</p>
+          </div>
+          <div class="acronym-card">
+            <strong>ERISA</strong>
+            <p>Federal benefit law</p>
+          </div>
+          <div class="acronym-card">
+            <strong>MLR</strong>
+            <p>Medical Loss Ratio</p>
+          </div>
+          <div class="acronym-card">
+            <strong>CAA</strong>
+            <p>Consolidated Appropriations Act</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Translation Guide -->
+      <div class="glossary-section">
+        <h2><i class="fas fa-language"></i> The Essential Translation Guide</h2>
+        <p style="font-size: 1.1rem; color: #475569; margin-bottom: 24px;">What they say → What it actually means</p>
+
+        <div style="display: grid; gap: 16px;">
+          <div class="warning-box">
+            <strong>"Industry-leading discounts off billed charges"</strong>
+            <p style="margin: 8px 0 0 0; color: #991b1b;">→ Meaningless (discounts off fake chargemaster prices)</p>
+          </div>
+
+          <div class="warning-box">
+            <strong>"Proprietary high-performance network"</strong>
+            <p style="margin: 8px 0 0 0; color: #991b1b;">→ We excluded expensive providers (maybe for good reason, maybe not)</p>
+          </div>
+
+          <div class="warning-box">
+            <strong>"Average wholesale price minus 18%"</strong>
+            <p style="margin: 8px 0 0 0; color: #991b1b;">→ Inflated benchmark minus fake discount = you're overpaying</p>
+          </div>
+
+          <div class="warning-box">
+            <strong>"Competitive PMPM administrative fees"</strong>
+            <p style="margin: 8px 0 0 0; color: #991b1b;">→ Plus hidden spread, DIR fees, rebate retention, data fees...</p>
+          </div>
+
+          <div class="tip-box">
+            <strong>"Transparent pass-through pricing"</strong>
+            <p style="margin: 8px 0 0 0; color: #065f46;">→ (Hopefully true! But verify in contract)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Final Note -->
+      <div class="glossary-section">
+        <h2><i class="fas fa-compass"></i> Remember</h2>
+        <div style="background: linear-gradient(135deg, #0066CC 0%, #004C99 100%); color: white; padding: 32px; border-radius: 12px;">
+          <p style="font-size: 1.3rem; font-weight: 600; margin-bottom: 16px; color: white;">
+            Healthcare business is simple: cost, payment, risk.
+          </p>
+          <p style="font-size: 1.1rem; margin-bottom: 16px; color: rgba(255,255,255,0.95);">
+            All this terminology exists to obscure those three simple questions.
+          </p>
+          <p style="font-size: 1.2rem; font-weight: 600; margin: 0; color: #FFD700;">
+            The question behind every term: "Is this adding value or extracting it?"
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer style="background: #1a1a1a; color: white; padding: 80px 0 40px;">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; margin-bottom: 40px;">
+        <div>
+          <h4 style="font-size: 1.2rem; margin-bottom: 16px; font-weight: 600;">Healthcare Transparency</h4>
+          <p style="color: #a0aec0; line-height: 1.6; font-size: 0.9rem;">
+            Comprehensive resources to understand and navigate the complex world of healthcare finance.
+          </p>
+        </div>
+
+        <div>
+          <h4 style="font-size: 1.2rem; margin-bottom: 16px; font-weight: 600;">Explore More</h4>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 12px;">
+              <a href="index.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-book-open"></i> The Full Story
+              </a>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <a href="experiments/learn/stakeholder-map.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-diagram-project"></i> Stakeholder Map
+              </a>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <a href="use-cases.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-list-check"></i> Use Cases
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 style="font-size: 1.2rem; margin-bottom: 16px; font-weight: 600;">By Persona</h4>
+          <ul style="list-style: none; padding: 0; margin: 0;">
+            <li style="margin-bottom: 12px;">
+              <a href="experiments/employers/index.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-briefcase"></i> Employers
+              </a>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <a href="experiments/patients/index.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-user"></i> Patients
+              </a>
+            </li>
+            <li style="margin-bottom: 12px;">
+              <a href="experiments/providers/index.html" style="color: #a0aec0; text-decoration: none; display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-user-doctor"></i> Providers
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid #374151; padding-top: 30px; text-align: center; color: #a0aec0; font-size: 0.9rem;">
+        Healthcare Transparency Resources • Built to demonstrate the power of price transparency
+      </div>
+    </div>
+  </footer>
+
+  <!-- Navigation Dropdown Script -->
+  <script>
+    // Handle dropdown functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      const diagramsDropdown = document.getElementById('diagrams-dropdown');
+      const toolsDropdown = document.getElementById('tools-dropdown');
+
+      function toggleDropdown(dropdown, otherDropdown) {
+        dropdown.classList.toggle('open');
+        if (otherDropdown) {
+          otherDropdown.classList.remove('open');
+        }
+      }
+
+      // Diagrams dropdown
+      const diagramsToggle = diagramsDropdown.querySelector('.nav-dropdown-toggle');
+      diagramsToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        toggleDropdown(diagramsDropdown, toolsDropdown);
+      });
+
+      // Tools dropdown
+      const toolsToggle = toolsDropdown.querySelector('.nav-dropdown-toggle');
+      toolsToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        toggleDropdown(toolsDropdown, diagramsDropdown);
+      });
+
+      // Close dropdowns when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!diagramsDropdown.contains(e.target) && !toolsDropdown.contains(e.target)) {
+          diagramsDropdown.classList.remove('open');
+          toolsDropdown.classList.remove('open');
+        }
+      });
+
+      // Enhanced Search Functionality
+      const searchInput = document.getElementById('glossarySearch');
+      const clearButton = document.getElementById('clearSearch');
+      const searchResults = document.getElementById('searchResults');
+      const noResults = document.getElementById('noResults');
+
+      // Store original content for each searchable element
+      const searchableElements = new Map();
+
+      function initializeSearchableElements() {
+        document.querySelectorAll('.glossary-term, .acronym-card').forEach(el => {
+          searchableElements.set(el, el.innerHTML);
+        });
+      }
+
+      function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function highlightText(element, searchTerm) {
+        if (!searchTerm) {
+          return element.innerHTML;
+        }
+
+        const regex = new RegExp(`(${escapeRegExp(searchTerm)})`, 'gi');
+        const walker = document.createTreeWalker(
+          element,
+          NodeFilter.SHOW_TEXT,
+          null,
+          false
+        );
+
+        const nodesToReplace = [];
+        let node;
+
+        while (node = walker.nextNode()) {
+          if (node.textContent.toLowerCase().includes(searchTerm.toLowerCase())) {
+            nodesToReplace.push(node);
+          }
+        }
+
+        nodesToReplace.forEach(textNode => {
+          const span = document.createElement('span');
+          span.innerHTML = textNode.textContent.replace(regex, '<span class="search-highlight">$1</span>');
+          textNode.parentNode.replaceChild(span, textNode);
+        });
+      }
+
+      function performSearch(searchTerm) {
+        searchTerm = searchTerm.trim().toLowerCase();
+
+        // Show/hide clear button
+        clearButton.style.display = searchTerm ? 'block' : 'none';
+
+        // Reset all elements to original state
+        searchableElements.forEach((originalHTML, element) => {
+          element.innerHTML = originalHTML;
+          element.classList.remove('hidden');
+        });
+
+        // Hide all sections initially
+        document.querySelectorAll('.glossary-section').forEach(section => {
+          section.classList.remove('all-hidden');
+        });
+
+        // If no search term, show everything
+        if (!searchTerm) {
+          searchResults.textContent = '';
+          noResults.style.display = 'none';
+          return;
+        }
+
+        // Search and filter
+        let matchCount = 0;
+        const matchedElements = [];
+
+        searchableElements.forEach((originalHTML, element) => {
+          const text = element.textContent.toLowerCase();
+          if (text.includes(searchTerm)) {
+            matchCount++;
+            matchedElements.push(element);
+          } else {
+            element.classList.add('hidden');
+          }
+        });
+
+        // Highlight matches
+        matchedElements.forEach(element => {
+          highlightText(element, searchTerm);
+        });
+
+        // Hide sections with no visible terms
+        document.querySelectorAll('.glossary-section').forEach(section => {
+          const visibleTerms = section.querySelectorAll('.glossary-term:not(.hidden), .acronym-card:not(.hidden)');
+          if (visibleTerms.length === 0 && section.id !== 'noResults') {
+            section.classList.add('all-hidden');
+          }
+        });
+
+        // Update results message
+        if (matchCount === 0) {
+          searchResults.textContent = '';
+          noResults.style.display = 'block';
+        } else {
+          noResults.style.display = 'none';
+          const plural = matchCount === 1 ? 'term' : 'terms';
+          searchResults.innerHTML = `<i class="fas fa-check-circle" style="color: #10B981; margin-right: 8px;"></i>Found ${matchCount} ${plural} matching "${searchTerm}"`;
+        }
+
+        // Scroll to first result
+        if (matchCount > 0) {
+          const firstMatch = matchedElements[0];
+          setTimeout(() => {
+            const offset = 120;
+            const elementPosition = firstMatch.getBoundingClientRect().top + window.pageYOffset - offset;
+            window.scrollTo({
+              top: elementPosition,
+              behavior: 'smooth'
+            });
+          }, 100);
+        }
+      }
+
+      // Initialize on page load
+      initializeSearchableElements();
+
+      // Search on input
+      let searchTimeout;
+      searchInput.addEventListener('input', function(e) {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+          performSearch(e.target.value);
+        }, 300); // Debounce for better performance
+      });
+
+      // Clear search
+      clearButton.addEventListener('click', function() {
+        searchInput.value = '';
+        performSearch('');
+        searchInput.focus();
+      });
+
+      // Search on Enter key
+      searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          clearTimeout(searchTimeout);
+          performSearch(e.target.value);
+        }
+      });
+
+      // Clear search on Escape key
+      searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && searchInput.value) {
+          e.preventDefault();
+          searchInput.value = '';
+          performSearch('');
+        }
+      });
+
+      // Focus search on Ctrl/Cmd + K
+      document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+          e.preventDefault();
+          searchInput.focus();
+          searchInput.select();
+        }
+      });
+
+      // Smooth scroll for navigation links
+      document.querySelectorAll('.glossary-nav-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href').substring(1);
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            const offset = 100; // Account for sticky nav
+            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - offset;
+            window.scrollTo({
+              top: targetPosition,
+              behavior: 'smooth'
+            });
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
